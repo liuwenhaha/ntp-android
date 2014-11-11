@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/MyGraduation.iml" filepath="$PROJECT_DIR$/MyGraduation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/NetworkTeachPlatform/NetworkTeachPlatform.iml" filepath="$PROJECT_DIR$/NetworkTeachPlatform/NetworkTeachPlatform.iml" />
+    </modules>
+  </component>
+</project>
+
