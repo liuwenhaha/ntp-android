@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="menu_text_pressed">#2dc82d</color>
+    <color name="menu_text_reserve">#888888</color>
+    <color name="menu_text_normal">#757474</color>
+    <color name="layout_bg_pressed">#eee</color>
+    <!-- 灰色-->
+    <color name="layout_bg_normal">#ffffff</color>
+    <color name="course_name">#434343</color>
+</resources>
