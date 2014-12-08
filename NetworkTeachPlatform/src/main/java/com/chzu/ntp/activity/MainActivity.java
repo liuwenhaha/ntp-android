@@ -1,13 +1,10 @@
 package com.chzu.ntp.activity;
 
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chzu.ntp.util.FragAdapter;
@@ -23,9 +20,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private List<Fragment> fragments;
     private Fragment allCourseFragment, homeworkFragment, meFragment;//三个主界面
 
-    //底部导航菜单名
+    //顶部导航菜单名
     private TextView allCourse, homework, me;//课程,作业，我
-    private LinearLayout search;//搜索
+    private TextView courseIndicator,homeworkIndicator,meIndicator;//课程、作业、我指示下划线
 
 
     @Override
@@ -43,11 +40,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         allCourse = (TextView) findViewById(R.id.allCourse);
         homework = (TextView) findViewById(R.id.homework);
         me = (TextView) findViewById(R.id.me);
-        search = (LinearLayout) findViewById(R.id.search);
+        courseIndicator= (TextView) findViewById(R.id.courseIndicator);
+        homeworkIndicator= (TextView) findViewById(R.id.homeworkIndicator);
+        meIndicator= (TextView) findViewById(R.id.meIndicator);
         allCourse.setOnClickListener(this);
         homework.setOnClickListener(this);
         me.setOnClickListener(this);
-        search.setOnClickListener(this);
         fragments = new ArrayList<Fragment>();
         allCourseFragment = new AllCourseFragment();
         homeworkFragment = new HomeworkFragment();
@@ -73,9 +71,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             case R.id.me:
                 viewPager.setCurrentItem(2);
                 break;
-            case R.id.search://搜索课程
-                Intent intent = new Intent(getApplicationContext(), SearchCourseActivity.class);
-                startActivity(intent);
+
         }
     }
 
@@ -111,7 +107,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
 
         /**
-         * 设置Fragment被选中时菜单字体颜色
+         * 设置Fragment被选中时菜单字体颜色和指示下划线
          *
          * @param position Fragment索引值
          */
@@ -119,12 +115,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             allCourse.setTextColor(getResources().getColor(R.color.menu_text_normal));
             homework.setTextColor(getResources().getColor(R.color.menu_text_normal));
             me.setTextColor(getResources().getColor(R.color.menu_text_normal));
+            courseIndicator.setVisibility(View.GONE);
+            homeworkIndicator.setVisibility(View.GONE);
+            meIndicator.setVisibility(View.GONE);
             if (position == 0) {
                 allCourse.setTextColor(getResources().getColor(R.color.menu_text_pressed));
+                courseIndicator.setVisibility(View.VISIBLE);
             } else if (position == 1) {
                 homework.setTextColor(getResources().getColor(R.color.menu_text_pressed));
+                homeworkIndicator.setVisibility(View.VISIBLE);
             } else if (position == 2) {
                 me.setTextColor(getResources().getColor(R.color.menu_text_pressed));
+                meIndicator.setVisibility(View.VISIBLE);
             }
         }
     }

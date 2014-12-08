@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/list_bottom_line" />
+            android:background="@drawable/list_top_line" />
     </RelativeLayout>
 
 

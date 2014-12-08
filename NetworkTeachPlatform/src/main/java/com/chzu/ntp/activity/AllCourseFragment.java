@@ -1,5 +1,6 @@
 package com.chzu.ntp.activity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.chzu.ntp.util.CardView;
 import com.chzu.ntp.util.CardViewAdapter;
@@ -22,17 +24,15 @@ import java.util.List;
 /**
  * 课程界面,供学生浏览课程
  */
-public class AllCourseFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+public class AllCourseFragment extends Fragment implements View.OnClickListener{
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private ListView listView;
+    //定义Android-PullToRefresh中的listview控件，具有下拉刷新特征
     PullToRefreshListView pullToRefreshView;
+    private TextView search;//搜索课程类型
 
 //
 //    private OnFragmentInteractionListener mListener;
@@ -71,40 +71,36 @@ public class AllCourseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_all_course, container, false);
-        // Set a listener to be invoked when the list should be refreshed.
+        search= (TextView) view.findViewById(R.id.search);
+        search.setOnClickListener(this);
         pullToRefreshView = (PullToRefreshListView) view.findViewById(R.id.pull_to_refresh_listview);
         pullToRefreshView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
                 String label = DateUtils.formatDateTime(getActivity().getApplicationContext(), System.currentTimeMillis(),
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
-
-                // Update the LastUpdatedLabel
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel("更新于:"+label);
-                // Do work to refresh the list here.
                 new GetDataTask().execute();
             }
 
         });
-
-//
-//        listView = (ListView) view.findViewById(R.id.listView);
         CardViewAdapter adapter = new CardViewAdapter(getItems(), getActivity());
-//        listView.setAdapter(adapter);
-//        setListViewHeightBasedOnChildren(listView);
         pullToRefreshView.setAdapter(adapter);
-//        pullToRefreshView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, options));
-//        setListViewHeightBasedOnChildren(pullToRefreshView);
-
         return view;
 
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case  R.id.search://搜索课程
+                Intent intent=new Intent(getActivity(),SearchCourseActivity.class);
+                startActivity(intent);
+        }
+    }
+
     private class GetDataTask extends AsyncTask<Void, Void, String[]> {
-
-
         @Override
         protected String[] doInBackground(Void... params) {
             try {
@@ -130,20 +126,6 @@ public class AllCourseFragment extends Fragment {
         }
         return cards;
     }
-
-    private int getResource(int index) {
-        int result = 0;
-        switch (index % 2) {
-            case 0:
-                result = R.drawable.java;
-                break;
-            case 1:
-                result = R.drawable.q;
-                break;
-        }
-        return result;
-    }
-
 
 //    // TODO: Rename method, update argument and hook method into UI event
 //    public void onButtonPressed(Uri uri) {
