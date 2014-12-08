@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MyGraduation.iml" filepath="$PROJECT_DIR$/MyGraduation.iml" />
       <module fileurl="file://$PROJECT_DIR$/NetworkTeachPlatform/NetworkTeachPlatform.iml" filepath="$PROJECT_DIR$/NetworkTeachPlatform/NetworkTeachPlatform.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ntp-android.iml" filepath="$PROJECT_DIR$/ntp-android.iml" />
     </modules>
   </component>
 </project>

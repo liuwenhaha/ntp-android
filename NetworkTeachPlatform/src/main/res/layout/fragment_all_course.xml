@@ -1,43 +1,36 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:scrollbars="none"
-    android:background="@color/layout_bg_pressed">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="match_parent">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:background="@color/layout_bg_normal"
-            android:layout_height="180dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:textColor="@color/menu_text_normal"
-                android:layout_marginLeft="14dp"
-                android:text="@string/courseType" />
+    android:background="@color/layout_bg_pressed"
+    android:orientation="vertical">
 
 
-        </RelativeLayout>
+    <!-- 自定义样式，PullToRefresh样式属性文件attrs.xml,加入命名空间
+         xmlns:ptr="http://schemas.android.com/apk/res-auto" ，ptr:加上
+         attrs.xml文件中的属性-->
+    <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/pull_to_refresh_listview"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:divider="@null"
+        ptr:ptrHeaderTextColor="@color/menu_text_reserve"
+        android:dividerHeight="10dp"
+        android:scrollbarStyle="outsideOverlay"
+        android:listSelector="@color/layout_bg_pressed"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:scrollbars="none" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ListView
-                android:id="@+id/listView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:divider="@null"
-                android:dividerHeight="10dp"
-                android:scrollbarStyle="outsideOverlay"
-                android:listSelector="@color/layout_bg_pressed"
-                android:scrollbars="none" />
-        </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    <TextView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="30dp"
+        android:layout_marginRight="23dp"
+        android:paddingTop="10dp"
+        android:paddingLeft="7dp"
+        android:text="@string/type"
+        android:textColor="@color/menu_text_reserve"
+        android:background="@drawable/fragment_all_course_type" />
+</RelativeLayout>

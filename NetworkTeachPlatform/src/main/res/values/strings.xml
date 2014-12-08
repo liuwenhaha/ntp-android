@@ -14,5 +14,6 @@
     <string name="searchCourse">搜索您感兴趣的课程</string>
     <string name="load">玩命加载中...</string>
     <string name="courseType">课程类型</string>
+    <string name="type">类型</string>
 
 </resources>
