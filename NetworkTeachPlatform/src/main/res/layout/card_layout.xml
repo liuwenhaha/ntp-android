@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/rounded_card"
+    android:background="@drawable/layout_selector_bg"
     android:orientation="horizontal">
     <!-- 课程图片-->
     <ImageView

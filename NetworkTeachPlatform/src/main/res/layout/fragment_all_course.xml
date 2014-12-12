@@ -14,24 +14,8 @@
         android:layout_width="fill_parent"
         android:divider="@null"
         ptr:ptrHeaderTextColor="@color/menu_text_reserve"
-        android:dividerHeight="10dp"
+        android:dividerHeight="1dp"
         android:scrollbarStyle="outsideOverlay"
         android:listSelector="@color/layout_bg_pressed"
-        android:paddingLeft="6dp"
-        android:paddingRight="6dp"
         android:scrollbars="none" />
-
-    <TextView
-        android:id="@+id/search"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="30dp"
-        android:layout_marginRight="23dp"
-        android:paddingTop="10dp"
-        android:paddingLeft="7dp"
-        android:text="@string/search"
-        android:textColor="@color/menu_text_reserve"
-        android:background="@drawable/rounded_search_text" />
 </RelativeLayout>

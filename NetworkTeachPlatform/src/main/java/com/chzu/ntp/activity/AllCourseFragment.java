@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * 课程界面,供学生浏览课程
  */
-public class AllCourseFragment extends Fragment implements View.OnClickListener{
+public class AllCourseFragment extends Fragment implements View.OnClickListener {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -32,7 +32,6 @@ public class AllCourseFragment extends Fragment implements View.OnClickListener{
     private String mParam2;
     //定义Android-PullToRefresh中的listview控件，具有下拉刷新特征
     PullToRefreshListView pullToRefreshView;
-    private TextView search;//搜索课程类型
 
 //
 //    private OnFragmentInteractionListener mListener;
@@ -72,15 +71,13 @@ public class AllCourseFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_course, container, false);
-        search= (TextView) view.findViewById(R.id.search);
-        search.setOnClickListener(this);
         pullToRefreshView = (PullToRefreshListView) view.findViewById(R.id.pull_to_refresh_listview);
         pullToRefreshView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
                 String label = DateUtils.formatDateTime(getActivity().getApplicationContext(), System.currentTimeMillis(),
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
-                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel("更新于:"+label);
+                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel("更新于:" + label);
                 new GetDataTask().execute();
             }
 
@@ -93,10 +90,8 @@ public class AllCourseFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case  R.id.search://搜索课程
-                Intent intent=new Intent(getActivity(),SearchCourseActivity.class);
-                startActivity(intent);
+        switch (v.getId()) {
+
         }
     }
 
@@ -120,7 +115,7 @@ public class AllCourseFragment extends Fragment implements View.OnClickListener{
 
     private List<CardView> getItems() {
         List<CardView> cards = new ArrayList<CardView>();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 40; i++) {
             CardView card = new CardView(R.drawable.java, "Java程序设计", "编程语言", "杨传健");
             cards.add(card);
         }
@@ -165,7 +160,6 @@ public class AllCourseFragment extends Fragment implements View.OnClickListener{
 //        // TODO: Update argument type and name
 //        public void onFragmentInteraction(Uri uri);
 //    }
-
 
 
 }
