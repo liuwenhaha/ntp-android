@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/layout_bg_pressed"
-    tools:context="com.chzu.ntp.activity.homeworkFragment">
+    tools:context="com.chzu.ntp.ui.homeworkFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
