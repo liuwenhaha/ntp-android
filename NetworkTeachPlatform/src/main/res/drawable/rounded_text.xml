@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <corners android:radius="360dp" />
+    <solid android:color="@color/rounded_text_bg" />
+    <stroke
+        android:dashGap="0dp"
+        android:width="0dp"
+        android:color="@color/layout_bg_normal" />
+</shape>

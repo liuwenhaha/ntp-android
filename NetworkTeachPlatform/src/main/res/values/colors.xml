@@ -10,4 +10,5 @@
     <color name="course_name">#434343</color>
     <color name="ptrHeaderTextColor">#CC3300</color>
     <color name="translucent">#3c000000</color>
+    <color name="rounded_text_bg">#e5e3e3</color>
 </resources>

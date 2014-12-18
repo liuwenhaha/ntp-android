@@ -34,8 +34,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     //顶部导航菜单名
     private ImageView allCourse, homework, me;//课程,作业，我
     private TextView courseIndicator, homeworkIndicator, meIndicator;//课程、作业、我指示下划线
-    private TextView courseType, courseTypeBg;//所有课程及其背景
-    private LinearLayout courseTypeChoice;//所有课程
+    //所有课程及其背景
+    private TextView courseType;
+    private ImageView courseTypeBg;
+    private LinearLayout courseTypeChoice;//所有课程位于的LinearLayout
 
     //加载课程成功后更新界面
     Handler handler = new Handler() {
@@ -47,7 +49,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.loadCourse, allCourseFragment);//替换提示加载课程LoadCourseFragment
-                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                     fragmentTransaction.commit();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -77,7 +78,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         meIndicator = (TextView) findViewById(R.id.meIndicator);
         courseTypeChoice = (LinearLayout) findViewById(R.id.courseTypeChoice);
         courseType = (TextView) findViewById(R.id.courseType);
-        courseTypeBg = (TextView) findViewById(R.id.courseTypeBg);
+        courseTypeBg = (ImageView) findViewById(R.id.courseTypeBg);
         allCourse.setOnClickListener(this);
         homework.setOnClickListener(this);
         me.setOnClickListener(this);
@@ -168,7 +169,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
          * @param position Fragment索引值
          */
         public void setTextColor(int position) {
-            allCourse.setImageDrawable(getResources().getDrawable(R.drawable.homepage_normal));
+            allCourse.setImageDrawable(getResources().getDrawable(R.drawable.bb));
             homework.setImageDrawable(getResources().getDrawable(R.drawable.homework_normal));
             me.setImageDrawable(getResources().getDrawable(R.drawable.me_normal));
             courseIndicator.setVisibility(View.INVISIBLE);

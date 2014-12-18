@@ -44,7 +44,7 @@ public class FragAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getItemPosition(Object object) {
-        return POSITION_NONE;
+            return POSITION_NONE;
     }
 
 }

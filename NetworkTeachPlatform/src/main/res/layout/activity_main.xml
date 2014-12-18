@@ -10,15 +10,7 @@
         android:layout_width="fill_parent"
         android:orientation="horizontal"
         android:layout_height="46dp">
-        <!--应用名-->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_gravity="center_vertical"
-            android:textColor="@color/menu_text_normal"
-            android:text="@string/app_name"
-            android:textSize="18sp" />
+
         <!--课程类型选项-->
         <LinearLayout
             android:id="@+id/courseTypeChoice"
@@ -38,12 +30,12 @@
                 android:textColor="@color/menu_text_reserve"
                 android:text="@string/allCourse" />
 
-            <TextView
+            <ImageView
                 android:id="@+id/courseTypeBg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/course_all_type" />
+                android:layout_marginTop="10dp"
+                android:src="@drawable/course_all_type" />
         </LinearLayout>
         <!--课程、作业、我菜单选项-->
         <RelativeLayout
