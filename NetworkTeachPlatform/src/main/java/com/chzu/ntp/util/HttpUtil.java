@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import java.util.Map;
 
 /**
+ * 工具类，网络访问
  * 访问服务器类，客户端从后台获取数据都通过这个类
  * 服务器返回的是json数据
  *

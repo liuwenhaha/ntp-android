@@ -44,11 +44,11 @@ public class CardViewAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         TextView courseName, courseType, teacher;
-        ImageView imageView;
+//        ImageView imageView;
         convertView = LayoutInflater.from(context).inflate(R.layout.card_layout, null);
-        imageView = (ImageView) convertView.findViewById(R.id.img);
+//        imageView = (ImageView) convertView.findViewById(R.id.img);
 //        imageView.setBackgroundResource(cardViewList.get(position).getId());//拉伸图片，充满ImageView控件
-        imageView.setImageResource(cardViewList.get(position).getId());
+//        imageView.setImageResource(cardViewList.get(position).getId());
         courseName = (TextView) convertView.findViewById(R.id.courseName);
         courseName.setText(cardViewList.get(position).getName());
         courseType = (TextView) convertView.findViewById(R.id.courseType);

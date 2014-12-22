@@ -28,5 +28,13 @@
     <string name="password">密码</string>
     <string name="login">登陆</string>
     <string name="loginInterface">登录界面</string>
+    <string name="title_activity_setting">Setting</string>
+    <string name="use234G">用2G3G4G网络播放视频和下载课件</string>
+    <string name="about">关于</string>
+    <string name="exit">退出</string>
+    <string name="title_activity_about">AboutActivity</string>
+    <string name="aboutDetail">网络教学客户端</string>
+    <string name="version">Version&#160;&#160;1.0</string>
+    <string name="right">By yanxing</string>
 
 </resources>

@@ -68,7 +68,7 @@ public class MeFragment extends Fragment implements View.OnClickListener{
 
                 break;
             case R.id.setting://设置
-
+                 startActivity(new Intent(getActivity(),SettingActivity.class));
                 break;
         }
     }

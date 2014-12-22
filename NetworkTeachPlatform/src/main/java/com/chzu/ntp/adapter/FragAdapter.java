@@ -38,10 +38,6 @@ public class FragAdapter extends FragmentStatePagerAdapter {
         return fragments.size();
     }
 
-    public FragAdapter(FragmentManager fm) {
-        super(fm);
-    }
-
     @Override
     public int getItemPosition(Object object) {
             return POSITION_NONE;

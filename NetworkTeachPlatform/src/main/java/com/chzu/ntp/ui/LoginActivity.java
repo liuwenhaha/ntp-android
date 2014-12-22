@@ -38,8 +38,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             case R.id.login://登录
                 String nameString = username.getText().toString().trim();
                 String passwordString = password.getText().toString().trim();
-                if (nameString.equals("") && passwordString.equals("")) {
-                    Toast.makeText(getApplicationContext(), "用户名密码不能为空！",
+                if (nameString.equals("")| passwordString.equals("")) {
+                    Toast.makeText(getApplicationContext(), "用户名或密码不能为空！",
                             Toast.LENGTH_SHORT).show();
                 }else{
                     //检查网络是否连接

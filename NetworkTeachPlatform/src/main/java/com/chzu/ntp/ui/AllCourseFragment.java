@@ -102,24 +102,12 @@ public class AllCourseFragment extends Fragment implements View.OnClickListener 
     private List<CardView> getItems() {
         List<CardView> cards = new ArrayList<CardView>();
         for (int i = 0; i < 40; i++) {
-            CardView card = new CardView(getResource(i), "Java程序设计", "编程语言", "杨传健");
+            CardView card = new CardView("Java程序设计", "编程语言", "杨老师");
             cards.add(card);
         }
         return cards;
     }
 
-    private int getResource(int index)
-    {
-        int mResult;
-        if (index>2) {
-           mResult=R.drawable.course_img_default;
-        }else {
-            mResult=R.drawable.java;
-        }
-        return mResult;
-    }
-
-//    // TODO: Rename method, update argument and hook method into UI event
 //    public void onButtonPressed(Uri uri) {
 //        if (mListener != null) {
 //            mListener.onFragmentInteraction(uri);

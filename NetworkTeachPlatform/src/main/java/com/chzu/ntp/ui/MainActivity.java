@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chzu.ntp.adapter.FragAdapter;
+import com.chzu.ntp.util.ExitListApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.loadCourse, allCourseFragment);//替换提示加载课程LoadCourseFragment
-                    fragmentTransaction.commit();
+                    fragmentTransaction.commitAllowingStateLoss();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -62,6 +63,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ExitListApplication.getInstance().addActivity(this);
         initView();
     }
 
@@ -169,7 +171,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
          * @param position Fragment索引值
          */
         public void setTextColor(int position) {
-            allCourse.setImageDrawable(getResources().getDrawable(R.drawable.bb));
+            allCourse.setImageDrawable(getResources().getDrawable(R.drawable.homepage_normal));
             homework.setImageDrawable(getResources().getDrawable(R.drawable.homework_normal));
             me.setImageDrawable(getResources().getDrawable(R.drawable.me_normal));
             courseIndicator.setVisibility(View.INVISIBLE);
