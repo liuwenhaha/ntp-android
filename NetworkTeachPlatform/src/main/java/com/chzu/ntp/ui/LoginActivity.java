@@ -12,6 +12,9 @@ import android.widget.Toast;
 
 import com.chzu.ntp.ui.R;
 
+/**
+ * 登录
+ */
 public class LoginActivity extends Activity implements View.OnClickListener {
 
     private ImageView back;//返回

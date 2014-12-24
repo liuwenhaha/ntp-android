@@ -1,0 +1,20 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layout_bg_pressed">
+
+
+    <!-- 自定义样式，PullToRefresh样式属性文件attrs.xml,加入命名空间
+         xmlns:ptr="http://schemas.android.com/apk/res-auto" ，ptr:加上
+         attrs.xml文件中的属性-->
+    <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/pull_to_refresh_listview"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:divider="@null"
+        ptr:ptrHeaderTextColor="@color/menu_text_reserve"
+        android:dividerHeight="1dp"
+        android:scrollbarStyle="outsideOverlay"
+        android:listSelector="@color/layout_bg_pressed"
+        android:scrollbars="none" />
+</FrameLayout>

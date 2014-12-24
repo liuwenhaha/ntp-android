@@ -16,7 +16,7 @@
             android:layout_height="62dp"
             android:gravity="center"
             android:textColor="@color/menu_text_reserve"
-            android:background="@drawable/rounded_text"
+            android:background="@drawable/rounded_login_text"
             android:text="@string/noLogin" />
     </LinearLayout>
 

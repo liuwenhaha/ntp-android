@@ -1,0 +1,137 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/layout_bg_pressed">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="205dp"
+        android:background="@drawable/course_detail_bg">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:clickable="true"
+            android:layout_marginLeft="6dp"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:layout_marginTop="6dp"
+            android:background="@color/translucent_h"
+            android:src="@drawable/course_detail_back" />
+
+        <TextView
+            android:id="@+id/courseName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_centerVertical="true"
+            android:textSize="15sp"
+            android:textColor="@color/menu_text_reserve"
+            android:background="@drawable/rounded_course_text"
+            android:text="@string/java" />
+
+    </RelativeLayout>
+
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/layout_bg1">
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/overview"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:textColor="@color/menu_text_reserve"
+                android:gravity="center"
+                android:text="@string/overview" />
+
+            <TextView
+                android:id="@+id/courseWare"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:textColor="@color/menu_text_reserve"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="@string/courseWare" />
+
+            <TextView
+                android:id="@+id/courseVideo"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:textColor="@color/menu_text_reserve"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="@string/courseVideo" />
+
+            <TextView
+                android:id="@+id/courseForum"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:textColor="@color/menu_text_reserve"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="@string/courseForum" />
+
+
+        </TableRow>
+
+        <TableRow android:layout_height="1dp">
+
+            <ImageView
+                android:id="@+id/overviewIndicator"
+                android:layout_width="2dp"
+                android:layout_height="2dp"
+                android:layout_weight="1"
+                android:src="@drawable/indicator_line" />
+
+            <ImageView
+                android:id="@+id/courseWareIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="2dp"
+                android:layout_weight="1"
+                android:visibility="invisible"
+                android:src="@drawable/indicator_line" />
+
+            <ImageView
+                android:id="@+id/courseVideoIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="2dp"
+                android:layout_weight="1"
+                android:visibility="invisible"
+                android:src="@drawable/indicator_line" />
+
+            <ImageView
+                android:id="@+id/courseForumIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="2dp"
+                android:visibility="invisible"
+                android:layout_weight="1"
+                android:src="@drawable/indicator_line" />
+
+
+        </TableRow>
+    </TableLayout>
+
+    <!--ViewPager-->
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1.0"
+        android:persistentDrawingCache="animation" />
+
+
+</LinearLayout>

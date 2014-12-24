@@ -21,7 +21,7 @@ public class ExitListApplication extends Application{
         return instance;
     }
 
-    //添加Activity到销毁list中
+    //添加需要销毁的Activity到list中
     public void addActivity(Activity activity) {
         mList.add(activity);
     }

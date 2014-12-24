@@ -5,9 +5,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- * 对课程操作接口
+ * 对课程操作
  */
-public interface CourseDao {
+public class CourseDao {
 
     /**
      * 根据课程id获取单个课程
@@ -15,7 +15,9 @@ public interface CourseDao {
      * @param id 课程id
      * @return 课程json对象
      */
-    public JSONObject getCourse(Integer id);
+    public JSONObject getCourse(Integer id) {
+        return null;
+    }
 
     /**
      * 分页获取课程
@@ -23,5 +25,7 @@ public interface CourseDao {
      * @param pageSize    每页大小
      * @param currentPage 当前第几页
      */
-    public JSONArray getAllCourse(int pageSize, int currentPage);
+    public JSONArray getAllCourse(int pageSize, int currentPage) {
+        return null;
+    }
 }

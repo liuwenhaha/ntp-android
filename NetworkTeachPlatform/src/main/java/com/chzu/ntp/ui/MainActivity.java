@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,7 +28,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private ViewPager viewPager;
     private FragAdapter fragAdapter;//ViewPager适配器
     private List<Fragment> fragments;
-    private Fragment allCourseFragment, homeworkFragment, meFragment;//三个主界面
     private Fragment loadCourse;//加载课程Fragemnt
 
     //顶部导航菜单名
@@ -49,7 +47,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     Thread.sleep(1000);
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.loadCourse, allCourseFragment);//替换提示加载课程LoadCourseFragment
+                    fragmentTransaction.replace(R.id.loadCourse, CourseListFragment.getInstance());//替换提示加载课程LoadCourseFragment
                     fragmentTransaction.commitAllowingStateLoss();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -86,13 +84,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         me.setOnClickListener(this);
         courseTypeChoice.setOnClickListener(this);
         fragments = new ArrayList<Fragment>();
-        allCourseFragment=AllCourseFragment.getInstance();
         loadCourse = LoadCourseFragment.getInstance();
-        homeworkFragment = HomeworkFragment.getInstance();
-        meFragment = MeFragment.getInstance();
         fragments.add(loadCourse);
-        fragments.add(homeworkFragment);
-        fragments.add(meFragment);
+        fragments.add(HomeworkFragment.getInstance());
+        fragments.add(MeFragment.getInstance());
         fragAdapter = new FragAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(fragAdapter);
         viewPager.setOffscreenPageLimit(2);//缓存相邻两个页面
