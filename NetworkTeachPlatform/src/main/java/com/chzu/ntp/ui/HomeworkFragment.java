@@ -24,11 +24,11 @@ public class HomeworkFragment extends Fragment {
 //    private OnFragmentInteractionListener mListener;
 
     /**
-     *创建单例对象
+     * 创建单例对象
      */
     public static HomeworkFragment getInstance() {
-        if (homeworkFragment==null){
-            homeworkFragment=new HomeworkFragment();
+        if (homeworkFragment == null) {
+            homeworkFragment = new HomeworkFragment();
         }
         return homeworkFragment;
     }

@@ -15,11 +15,11 @@ public class CourseOverviewFragment extends Fragment {
     private static CourseOverviewFragment mCourseOverviewFragment;
 
     /**
-     *创建单例对象
+     * 创建单例对象
      */
     public static CourseOverviewFragment getInstance() {
-        if (mCourseOverviewFragment==null){
-            mCourseOverviewFragment=new CourseOverviewFragment();
+        if (mCourseOverviewFragment == null) {
+            mCourseOverviewFragment = new CourseOverviewFragment();
         }
         return mCourseOverviewFragment;
     }

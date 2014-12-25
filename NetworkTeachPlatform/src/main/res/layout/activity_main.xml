@@ -7,114 +7,125 @@
     <!--顶部导航-->
     <LinearLayout
         android:id="@+id/title"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:orientation="horizontal"
         android:layout_height="46dp">
-
-        <!--课程类型选项-->
-        <LinearLayout
-            android:id="@+id/courseTypeChoice"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:clickable="true"
-            android:background="@drawable/layout_selector_bg"
-            android:layout_marginLeft="14dp">
-
-            <TextView
-                android:id="@+id/courseType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:layout_marginTop="12dp"
-                android:textColor="@color/menu_text_reserve"
-                android:text="@string/allCourse" />
-
-            <ImageView
-                android:id="@+id/courseTypeBg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/course_all_type" />
-        </LinearLayout>
         <!--课程、作业、我菜单选项-->
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:orientation="horizontal"
+            android:background="@drawable/layout_selector_bg">
+
+            <!--课程功能-->
+            <LinearLayout
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/allCourse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:src="@drawable/homepage_pressed" />
+
+                <TextView
+                    android:id="@+id/courseTxt"
+                    android:layout_width="wrap_content"
+                    android:text="@string/home"
+                    android:textSize="10sp"
+                    android:textColor="@color/menu_text_pressed"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <!--作业功能-->
+            <LinearLayout
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/homework"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:src="@drawable/homework_normal" />
+
+                <TextView
+                    android:id="@+id/homeworkTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="10sp"
+                    android:text="@string/homework" />
+            </LinearLayout>
+            <!--个人中心功能-->
+            <LinearLayout
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/me"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/me_normal" />
+
+                <TextView
+                    android:id="@+id/meTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/me"
+                    android:textSize="10sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!--课程搜索、类型选项-->
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:background="@drawable/layout_selector_bg">
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="5dp">
-                <!--课程功能-->
-                <RelativeLayout
-                    android:layout_width="60dp"
-                    android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true">
+
+                <LinearLayout
+                    android:id="@+id/search"
+                    android:layout_width="50dp"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:layout_marginRight="2dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/layout_selector_bg">
 
                     <ImageView
-                        android:id="@+id/allCourse"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/homepage_pressed" />
+                        android:layout_marginTop="2dp"
+                        android:src="@drawable/search" />
+                </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/courseIndicator"
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/menu_text_pressed" />
-                </RelativeLayout>
-                <!--作业功能-->
-                <RelativeLayout
-                    android:layout_width="60dp"
-                    android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/navigateMore"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:background="@drawable/layout_selector_bg"
+                    android:layout_alignParentRight="true">
 
                     <ImageView
-                        android:id="@+id/homework"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:layout_centerVertical="true"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/homework_normal" />
-
-                    <TextView
-                        android:id="@+id/homeworkIndicator"
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_alignParentBottom="true"
-                        android:visibility="invisible"
-                        android:background="@color/menu_text_pressed" />
-                </RelativeLayout>
-                <!--个人中心功能-->
-                <RelativeLayout
-                    android:layout_width="60dp"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/me"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:clickable="true"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/me_normal" />
-
-                    <TextView
-                        android:id="@+id/meIndicator"
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_alignParentBottom="true"
-                        android:visibility="invisible"
-                        android:background="@color/menu_text_pressed" />
-                </RelativeLayout>
+                        android:src="@drawable/main_activity_navigate_more" />
+                </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
@@ -124,7 +135,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/list_top_line" />
-
     <!--ViewPager-->
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"

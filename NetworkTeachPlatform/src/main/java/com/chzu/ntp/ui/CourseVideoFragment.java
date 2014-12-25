@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.chzu.ntp.ui.R;
 
 /**
  * 课程教学视频
@@ -17,11 +16,11 @@ public class CourseVideoFragment extends Fragment {
     private static CourseVideoFragment mCourseVideoFragment;
 
     /**
-     *创建单例对象
+     * 创建单例对象
      */
     public static CourseVideoFragment getInstance() {
-        if (mCourseVideoFragment==null){
-            mCourseVideoFragment=new CourseVideoFragment();
+        if (mCourseVideoFragment == null) {
+            mCourseVideoFragment = new CourseVideoFragment();
         }
         return mCourseVideoFragment;
     }

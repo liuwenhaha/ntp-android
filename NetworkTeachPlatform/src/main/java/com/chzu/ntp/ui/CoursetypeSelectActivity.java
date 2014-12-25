@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -18,9 +17,8 @@ import android.widget.TextView;
  *
  * @author yanxing
  */
-public class CoursetypeSelectActivity extends Activity implements View.OnClickListener {
+public class CourseTypeSelectActivity extends Activity implements View.OnClickListener {
     private TextView coursetypeTitle;//课程类型标题
-    private ImageView search;
     private GridView courseTypeName;//课程类型名称
 
     @Override
@@ -29,8 +27,6 @@ public class CoursetypeSelectActivity extends Activity implements View.OnClickLi
         setContentView(R.layout.activity_coursetype_select);
         coursetypeTitle = (TextView) findViewById(R.id.coursetypeTitle);
         courseTypeName = (GridView) findViewById(R.id.courseTypeName);
-        search = (ImageView) findViewById(R.id.search);
-        search.setOnClickListener(this);
         //模拟数据
         String name[] = new String[]{"c语言", "java", "c++", "c#", "硬件", "软件", "网络", "物联网", "c语言", "java", "c++", "c#", "硬件", "软件", "网络", "物联网"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.activity_coursetype_select_gridview, R.id.type, name);
@@ -86,9 +82,8 @@ public class CoursetypeSelectActivity extends Activity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.search://搜索课程
-                Intent intent = new Intent(this, SearchCourseActivity.class);
-                startActivity(intent);
+
+
         }
     }
 }

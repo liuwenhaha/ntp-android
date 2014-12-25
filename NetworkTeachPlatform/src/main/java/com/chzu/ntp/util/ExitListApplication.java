@@ -8,9 +8,8 @@ import java.util.List;
 
 /**
  * 销毁该应用所有的Activity，即完全退出应用
- *
  */
-public class ExitListApplication extends Application{
+public class ExitListApplication extends Application {
     private List<Activity> mList = new LinkedList<Activity>();
     private static ExitListApplication instance;
 
@@ -39,6 +38,7 @@ public class ExitListApplication extends Application{
             System.exit(0);
         }
     }
+
     public void onLowMemory() {
         super.onLowMemory();
         System.gc();

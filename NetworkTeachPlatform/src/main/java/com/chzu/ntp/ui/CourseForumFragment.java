@@ -7,8 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.chzu.ntp.ui.R;
-
 /**
  * 课程跟帖
  */
@@ -16,11 +14,11 @@ public class CourseForumFragment extends Fragment {
     private static CourseForumFragment mCourseForumFragment;
 
     /**
-     *创建单例对象
+     * 创建单例对象
      */
     public static CourseForumFragment getInstance() {
-        if (mCourseForumFragment==null){
-            mCourseForumFragment=new CourseForumFragment();
+        if (mCourseForumFragment == null) {
+            mCourseForumFragment = new CourseForumFragment();
         }
         return mCourseForumFragment;
     }

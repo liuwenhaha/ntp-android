@@ -3,11 +3,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/layout_bg_normal">
+
     <TextView
         android:id="@+id/type"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:textColor="@color/menu_text_normal"
         android:background="@drawable/layout_selector_bg"
-        android:gravity="center"/>
+        android:gravity="center" />
 </LinearLayout>

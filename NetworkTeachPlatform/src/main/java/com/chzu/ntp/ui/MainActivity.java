@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener{
+public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
     private static final int ACTION_DESTORY = 1;
     private static final String TAG = "mActivity";
@@ -30,13 +30,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private List<Fragment> fragments;
     private Fragment loadCourse;//加载课程Fragemnt
 
-    //顶部导航菜单名
-    private ImageView allCourse, homework, me;//课程,作业，我
-    private TextView courseIndicator, homeworkIndicator, meIndicator;//课程、作业、我指示下划线
+    //顶部功能导航图片和文字课程,作业，我
+    private ImageView allCourse, homework, me;
+    private TextView courseTxt, homeworkTxt, meTxt;
     //所有课程及其背景
     private TextView courseType;
-    private ImageView courseTypeBg;
-    private LinearLayout courseTypeChoice;//所有课程位于的LinearLayout
+    private LinearLayout navigateMore, search;
 
     //加载课程成功后更新界面
     Handler handler = new Handler() {
@@ -73,16 +72,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         allCourse = (ImageView) findViewById(R.id.allCourse);
         homework = (ImageView) findViewById(R.id.homework);
         me = (ImageView) findViewById(R.id.me);
-        courseIndicator = (TextView) findViewById(R.id.courseIndicator);
-        homeworkIndicator = (TextView) findViewById(R.id.homeworkIndicator);
-        meIndicator = (TextView) findViewById(R.id.meIndicator);
-        courseTypeChoice = (LinearLayout) findViewById(R.id.courseTypeChoice);
+        courseTxt = (TextView) findViewById(R.id.courseTxt);
+        homeworkTxt = (TextView) findViewById(R.id.homeworkTxt);
+        meTxt = (TextView) findViewById(R.id.meTxt);
+        navigateMore = (LinearLayout) findViewById(R.id.navigateMore);
         courseType = (TextView) findViewById(R.id.courseType);
-        courseTypeBg = (ImageView) findViewById(R.id.courseTypeBg);
+        search = (LinearLayout) findViewById(R.id.search);
         allCourse.setOnClickListener(this);
         homework.setOnClickListener(this);
         me.setOnClickListener(this);
-        courseTypeChoice.setOnClickListener(this);
+        search.setOnClickListener(this);
+        navigateMore.setOnClickListener(this);
         fragments = new ArrayList<Fragment>();
         loadCourse = LoadCourseFragment.getInstance();
         fragments.add(loadCourse);
@@ -125,9 +125,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             case R.id.me:
                 viewPager.setCurrentItem(2);
                 break;
-            case R.id.courseTypeChoice:
-                Intent intent = new Intent(this, CoursetypeSelectActivity.class);
+            case R.id.navigateMore:
+                Intent intent = new Intent(this, CourseTypeSelectActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.search:
+                Intent searchIntent = new Intent(this, SearchCourseActivity.class);
+                startActivity(searchIntent);
+                break;
         }
     }
 
@@ -144,7 +149,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         @Override
         public void onPageSelected(int position) {
             switch (position) {
-                case 0://AllCourseFragment被选中
+                case 0://CourseListFragment被选中
                     setTextColor(0);
                     break;
                 case 1://HomeworkFragment被选择
@@ -161,7 +166,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
 
         /**
-         * 设置Fragment被选中时菜单图片、指示下划线、所有课程区域LinearLayout的文字和背景设置
+         * 设置Fragment被选中时菜单图片、文字颜色
          *
          * @param position Fragment索引值
          */
@@ -169,27 +174,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             allCourse.setImageDrawable(getResources().getDrawable(R.drawable.homepage_normal));
             homework.setImageDrawable(getResources().getDrawable(R.drawable.homework_normal));
             me.setImageDrawable(getResources().getDrawable(R.drawable.me_normal));
-            courseIndicator.setVisibility(View.INVISIBLE);
-            homeworkIndicator.setVisibility(View.INVISIBLE);
-            meIndicator.setVisibility(View.INVISIBLE);
-            if (position == 0) {//AllCourseFragment被选中
+            courseTxt.setTextColor(getResources().getColor(R.color.menu_text_reserve));
+            homeworkTxt.setTextColor(getResources().getColor(R.color.menu_text_reserve));
+            meTxt.setTextColor(getResources().getColor(R.color.menu_text_reserve));
+            if (position == 0) {//CourseListFragment被选中
                 allCourse.setImageDrawable(getResources().getDrawable(R.drawable.homepage_pressed));
-                courseIndicator.setVisibility(View.VISIBLE);
-                courseTypeChoice.setClickable(true);//设置所有课程区域LinearLayout点击
-                courseType.setText(getString(R.string.allCourse));//显示所有课程
-                courseTypeBg.setVisibility(View.VISIBLE);//显示所有课程背景
+                courseTxt.setTextColor(getResources().getColor(R.color.menu_text_pressed));
             } else if (position == 1) {//HomeworkFragment被选择
                 homework.setImageDrawable(getResources().getDrawable(R.drawable.homework_pressed));
-                homeworkIndicator.setVisibility(View.VISIBLE);
-                courseTypeChoice.setClickable(false);//设置所有课程区域LinearLayout不可点击
-                courseType.setText(getString(R.string.homework));//显示我的作业
-                courseTypeBg.setVisibility(View.GONE);//隐藏所有课程背景
+                homeworkTxt.setTextColor(getResources().getColor(R.color.menu_text_pressed));
             } else if (position == 2) {//MeFragment被选择
                 me.setImageDrawable(getResources().getDrawable(R.drawable.me_pressed));
-                meIndicator.setVisibility(View.VISIBLE);
-                courseTypeChoice.setClickable(false);//设置所有课程区域LinearLayout不可点击
-                courseType.setText(getString(R.string.me));//显示个人中心
-                courseTypeBg.setVisibility(View.GONE);//隐藏所有课程背景
+                meTxt.setTextColor(getResources().getColor(R.color.menu_text_pressed));
             }
         }
     }

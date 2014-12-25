@@ -14,11 +14,11 @@ public class CourseWareFragment extends Fragment {
     private static CourseWareFragment mCourseWareFragment;
 
     /**
-     *创建单例对象
+     * 创建单例对象
      */
     public static CourseWareFragment getInstance() {
-        if (mCourseWareFragment==null){
-            mCourseWareFragment=new CourseWareFragment();
+        if (mCourseWareFragment == null) {
+            mCourseWareFragment = new CourseWareFragment();
         }
         return mCourseWareFragment;
     }

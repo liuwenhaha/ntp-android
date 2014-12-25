@@ -27,17 +27,19 @@
             android:textColor="@color/layout_bg_normal"
             android:text="@string/version" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="4dp"
         android:gravity="center">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/layout_bg_normal"
-            android:text="@string/right"/>
-        </LinearLayout>
+            android:text="@string/right" />
+    </LinearLayout>
 
 </RelativeLayout>

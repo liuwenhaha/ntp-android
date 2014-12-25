@@ -2,10 +2,7 @@ package com.chzu.ntp.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
-import android.view.ViewGroup;
 
 import java.util.List;
 
@@ -40,7 +37,7 @@ public class FragAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getItemPosition(Object object) {
-            return POSITION_NONE;
+        return POSITION_NONE;
     }
 
 }

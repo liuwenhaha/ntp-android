@@ -41,8 +41,8 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
      * 创建单例对象
      */
     public static CourseListFragment getInstance() {
-        if (courseListFragment ==null){
-            courseListFragment =new CourseListFragment();
+        if (courseListFragment == null) {
+            courseListFragment = new CourseListFragment();
         }
         return courseListFragment;
     }
@@ -82,10 +82,10 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), CourseDetailActivity.class);
-        TextView text=(TextView) view.findViewById(R.id.courseName);
-        String name=(String) text.getText();
-        Bundle bundle=new Bundle();
-        bundle.putString("name",name);
+        TextView text = (TextView) view.findViewById(R.id.courseName);
+        String name = (String) text.getText();
+        Bundle bundle = new Bundle();
+        bundle.putString("name", name);
         intent.putExtras(bundle);
         startActivity(intent);
     }

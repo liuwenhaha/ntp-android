@@ -7,6 +7,7 @@
     <!-- 灰色-->
     <color name="layout_bg_pressed">#eee</color>
     <color name="layout_bg_normal">#ffffff</color>
+    <color name="layout_main">#f4f4f4</color>
     <color name="course_name">#434343</color>
     <color name="ptrHeaderTextColor">#CC3300</color>
     <color name="translucent">#3c000000</color>
