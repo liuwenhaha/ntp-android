@@ -86,7 +86,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         fragments = new ArrayList<Fragment>();
         loadCourse = LoadCourseFragment.getInstance();
         fragments.add(loadCourse);
-        fragments.add(HomeworkFragment.getInstance());
+        fragments.add(NoticeFragment.getInstance());
         fragments.add(MeFragment.getInstance());
         fragAdapter = new FragAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(fragAdapter);
