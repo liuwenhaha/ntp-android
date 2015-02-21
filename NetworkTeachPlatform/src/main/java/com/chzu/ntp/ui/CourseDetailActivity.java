@@ -62,6 +62,7 @@ public class CourseDetailActivity extends FragmentActivity implements View.OnCli
         fragments.add(CourseForumFragment.getInstance());
         fragAdapter = new FragAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(fragAdapter);
+        viewPager.setOffscreenPageLimit(2);//缓存相邻两个页面
         viewPager.setCurrentItem(0);
         viewPager.setOnPageChangeListener(new MyViewPagerChangeListener());
     }

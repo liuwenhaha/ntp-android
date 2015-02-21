@@ -20,7 +20,9 @@ import com.chzu.ntp.util.ExitListApplication;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * 主程序
+ */
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
     private static final int ACTION_DESTORY = 1;
@@ -30,14 +32,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private List<Fragment> fragments;
     private Fragment loadCourse;//加载课程Fragemnt
 
-    //顶部功能导航图片和文字课程,作业，我
+    //顶部功能导航图片和文字课程,消息（作业），我
     private ImageView allCourse, homework, me;
     private TextView courseTxt, homeworkTxt, meTxt;
     //所有课程及其背景
     private TextView courseType;
     private LinearLayout navigateMore, search;
 
-    //加载课程成功后更新界面
+ /*   //加载课程成功后更新界面
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -53,7 +55,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 }
             }
         }
-    };
+    };*/
 
 
     @Override
@@ -84,21 +86,19 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         search.setOnClickListener(this);
         navigateMore.setOnClickListener(this);
         fragments = new ArrayList<Fragment>();
-        loadCourse = LoadCourseFragment.getInstance();
-        fragments.add(loadCourse);
+        fragments.add(CourseListFragment.getInstance());
         fragments.add(NoticeFragment.getInstance());
         fragments.add(MeFragment.getInstance());
         fragAdapter = new FragAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(fragAdapter);
-        viewPager.setOffscreenPageLimit(2);//缓存相邻两个页面
         viewPager.setCurrentItem(0);//设置默认显示AllCourseFragment界面
         viewPager.setOnPageChangeListener(new MyViewPagerChangeListener());
-        new LoadCourseThread().start();
+        //new LoadCourseThread().start();
     }
 
-    /**
+   /* *//**
      * 加载课程线程，在此模拟3s加载成功
-     */
+     *//*
     private class LoadCourseThread extends Thread {
         @Override
         public void run() {
@@ -111,7 +111,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             msg.what = ACTION_DESTORY;
             handler.sendMessage(msg);
         }
-    }
+    }*/
 
     @Override
     public void onClick(View v) {
@@ -152,7 +152,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 case 0://CourseListFragment被选中
                     setTextColor(0);
                     break;
-                case 1://HomeworkFragment被选择
+                case 1://NoticeFragment被选择
                     setTextColor(1);
                     break;
                 case 2://MeFragment被选择
@@ -180,7 +180,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             if (position == 0) {//CourseListFragment被选中
                 allCourse.setImageDrawable(getResources().getDrawable(R.drawable.homepage_pressed));
                 courseTxt.setTextColor(getResources().getColor(R.color.menu_text_pressed));
-            } else if (position == 1) {//HomeworkFragment被选择
+            } else if (position == 1) {//NoticeFragment被选择
                 homework.setImageDrawable(getResources().getDrawable(R.drawable.homework_pressed));
                 homeworkTxt.setTextColor(getResources().getColor(R.color.menu_text_pressed));
             } else if (position == 2) {//MeFragment被选择

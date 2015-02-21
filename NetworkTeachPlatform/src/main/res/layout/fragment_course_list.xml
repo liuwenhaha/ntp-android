@@ -2,6 +2,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/layout_bg_pressed">
+    <LinearLayout
+        android:id="@+id/load"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateDuration="500"
+            android:indeterminateBehavior="repeat"
+            android:indeterminateDrawable="@drawable/load_course_progress" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/load_course" />
+    </LinearLayout>
 
 
     <!-- 自定义样式，PullToRefresh样式属性文件attrs.xml,加入命名空间
@@ -16,5 +36,5 @@
         android:dividerHeight="1dp"
         android:scrollbarStyle="outsideOverlay"
         android:listSelector="@color/layout_bg_pressed"
-        android:scrollbars="none" />
+        android:scrollbars="horizontal" />
 </FrameLayout>

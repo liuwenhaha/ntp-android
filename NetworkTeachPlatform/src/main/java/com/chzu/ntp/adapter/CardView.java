@@ -2,17 +2,26 @@ package com.chzu.ntp.adapter;
 
 /**
  * 课程类，代表一个课程信息预览，
- * 包括课程名称、类型、课程老师
+ * 包括课程代码、名称、类型、课程老师
  */
 public class CardView {
+    private String code;
     private String name;
     private String type;
     private String teacher;
 
-    public CardView(String name, String type, String teacher) {
+    public CardView(String code,String name, String type, String teacher) {
         this.name = name;
         this.type = type;
         this.teacher = teacher;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getName() {

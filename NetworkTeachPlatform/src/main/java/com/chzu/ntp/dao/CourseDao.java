@@ -1,31 +1,63 @@
 package com.chzu.ntp.dao;
 
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.chzu.ntp.model.Course;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * 对课程操作
+ * 对课程操作,缓存课程信息，最多缓存20条
  */
 public class CourseDao {
+    private static DBOpenHelper dbOpenHelper;
+    private static SQLiteDatabase SQLiteDB;
 
-    /**
-     * 根据课程id获取单个课程
-     *
-     * @param id 课程id
-     * @return 课程json对象
-     */
-    public JSONObject getCourse(Integer id) {
-        return null;
+    public CourseDao(Context content) {
+        dbOpenHelper = new DBOpenHelper(content);
+        SQLiteDB = dbOpenHelper.getWritableDatabase();
     }
 
     /**
-     * 分页获取课程
-     *
-     * @param pageSize    每页大小
-     * @param currentPage 当前第几页
+     * 获取所有课程信息
      */
-    public JSONArray getAllCourse(int pageSize, int currentPage) {
-        return null;
+    public List<Course> getAllCourse() {
+        Cursor cursor = SQLiteDB.rawQuery("select * from course_table", null);
+        List<Course> list = new ArrayList<Course>();
+        while (cursor.moveToNext()) {
+            Course course = new Course(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
+            list.add(course);
+        }
+        cursor.close();
+        return  list;
     }
+
+    public void save(Course course) {
+        ContentValues values = new ContentValues();
+        values.put("name",course.getName());
+        values.put("code",course.getCode());
+        values.put("type",course.getType());
+        values.put("username",course.getUsername());
+        SQLiteDB.insert("course_table",null,values);
+    }
+
+    /**
+     * 关闭数据库连接
+     */
+    public void close() {
+        if (dbOpenHelper != null) {
+            dbOpenHelper.close();
+            dbOpenHelper = null;
+        }
+        if (SQLiteDB != null) {
+            SQLiteDB.close();
+            SQLiteDB = null;
+        }
+    }
+
 }

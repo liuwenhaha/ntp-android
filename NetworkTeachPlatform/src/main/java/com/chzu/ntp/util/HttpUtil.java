@@ -1,5 +1,7 @@
 package com.chzu.ntp.util;
 
+import android.util.Log;
+
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -35,6 +37,27 @@ public class HttpUtil {
             params.put(entry.getKey(), entry.getValue());
         }
         client.post(path, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers,
+                                  JSONObject response) {
+                msg = response;
+                super.onSuccess(statusCode, headers, response);
+
+            }
+        });
+        return msg;
+    }
+
+    /**
+     * 访问服务器端，获取json对象
+     *
+     * @param path 访问的网络路径
+     * @return
+     */
+    public static JSONObject getDataFromInternet(String path) {
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.post(path, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers,
                                   JSONObject response) {

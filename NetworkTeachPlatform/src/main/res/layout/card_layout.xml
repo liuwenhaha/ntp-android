@@ -16,6 +16,12 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="13dp"
         android:orientation="vertical">
+        <!-- 课程代码，不作显示-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/code"
+            android:visibility="gone"/>
         <!-- 课程名称-->
         <TextView
             android:id="@+id/courseName"
