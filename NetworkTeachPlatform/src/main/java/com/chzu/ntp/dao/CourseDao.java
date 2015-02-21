@@ -37,6 +37,9 @@ public class CourseDao {
         return  list;
     }
 
+    /**
+     * 保存课程信息
+     */
     public void save(Course course) {
         ContentValues values = new ContentValues();
         values.put("name",course.getName());
@@ -44,6 +47,13 @@ public class CourseDao {
         values.put("type",course.getType());
         values.put("username",course.getUsername());
         SQLiteDB.insert("course_table",null,values);
+    }
+
+    /**
+     * 清空course_table
+     */
+    public void delete(){
+        SQLiteDB.delete("course_table",null,null);
     }
 
     /**

@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chzu.ntp.adapter.CardView;
 import com.chzu.ntp.adapter.CardViewAdapter;
@@ -26,6 +27,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,16 +36,18 @@ import java.util.List;
  * 课程界面,供学生浏览课程
  */
 public class CourseListFragment extends Fragment implements AdapterView.OnItemClickListener {
-    //Android-PullToRefresh中的ListView控件，具有下拉刷新特征
+
+    /**
+     * Android-PullToRefresh中的ListView控件，具有下拉刷新特征
+     */
     PullToRefreshListView pullToRefreshView;
     private static CourseListFragment courseListFragment;
     private static CardViewAdapter adapter;//课程适配器
     private CourseDao courseDao;
     private LinearLayout load;
     /**
-     * 标识请求网络数据成功
+     * 请求课程网络地址
      */
-    private static final int SUCCESS = 1;
     private static final String path = "http://10.0.2.2/ntp/phone/courseList";
     private static final String TAG = "json";
 
@@ -86,30 +91,40 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             adapter = new CardViewAdapter(getItems(courseList), getActivity());
             pullToRefreshView.setAdapter(adapter);
         } else {//本地没有缓存，请求网络数据
-            JSONObject jb = HttpUtil.getDataFromInternet(path);
-            if (jb != null) {//请求成功
-                try {
-                    JSONArray ja = jb.getJSONArray("list");
-                    for (int i = 0; i < ja.length(); i++) {
-                        JSONObject j = ja.getJSONObject(i);
-                        Course course = new Course(j.getString("code"), j.getString("name"), j.getJSONObject("coursetype").getString("type"), j.getJSONObject("user").getString("name"));
-                        List<Course> list = new ArrayList<Course>();
-                        list.add(course);
-                        load.setVisibility(View.GONE);
-                        adapter = new CardViewAdapter(getItems(list), getActivity());
-                        pullToRefreshView.setAdapter(adapter);
-                        courseDao.save(course);//缓存到数据库
-                        Log.i(TAG, course.toString());
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                Log.i(TAG, "没有获取到后台数据");
-            }
+            load.setVisibility(View.GONE);
+            adapter = new CardViewAdapter(getItems(getData(false)), getActivity());
+            pullToRefreshView.setAdapter(adapter);
         }
         pullToRefreshView.setOnItemClickListener(this);
         return view;
+    }
+
+    /**
+     * 获取网络数据并缓存到数据库
+     */
+    private List<Course> getData(boolean action) {
+        JSONObject jb = HttpUtil.getDataFromInternet(path);
+        List<Course> list = new ArrayList<Course>();
+        if (jb != null) {//请求成功
+            if (action) {//有缓存数据先清空
+                courseDao.delete();
+            }
+            try {
+                JSONArray ja = jb.getJSONArray("list");
+                for (int i = 0; i < ja.length(); i++) {
+                    JSONObject j = ja.getJSONObject(i);
+                    Course course = new Course(j.getString("code"), j.getString("name"), j.getJSONObject("coursetype").getString("type"), j.getJSONObject("user").getString("name"));
+                    list.add(course);
+                    courseDao.save(course);//缓存到数据库
+                    Log.i(TAG, course.toString());
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Log.i(TAG, "没有获取到后台数据");
+        }
+        return list;
     }
 
     //ListView点击事件响应
@@ -126,19 +141,42 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
 
     //下拉刷新线程
     private class GetDataTask extends AsyncTask<Void, Void, String[]> {
-        @Override
+        List<Course> list = new ArrayList<Course>();
+
+        @Override //后台耗时操作
         protected String[] doInBackground(Void... params) {
             try {
-                Thread.sleep(4000);
-            } catch (InterruptedException e) {
+                //Thread.sleep(4000);
+                JSONObject jb = HttpUtil.getDataFromInternet(new URL(path));
+                if (jb != null) {
+                    JSONArray ja = jb.getJSONArray("list");
+                    for (int i = 0; i < ja.length(); i++) {
+                        JSONObject j = ja.getJSONObject(i);
+                        Course course = new Course(j.getString("code"), j.getString("name"), j.getJSONObject("coursetype").getString("type"), j.getJSONObject("user").getString("name"));
+                        list.add(course);
+                        courseDao.save(course);//缓存到数据库
+                        Log.i(TAG, course.toString());
+                    }
+                } else {
+                    Toast.makeText(getActivity().getApplication(), "没有更新到数据，请检查网络，稍后再试", Toast.LENGTH_SHORT).show();
+                }
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
             return null;
         }
 
-        @Override
+        @Override //操作UI
         protected void onPostExecute(String[] result) {
-            // Call onRefreshComplete when the list has been refreshed.
             pullToRefreshView.onRefreshComplete();
+            if (list.size() > 0) {//获取到数据，更新UI
+                load.setVisibility(View.GONE);
+                adapter = new CardViewAdapter(getItems(list), getActivity());
+                pullToRefreshView.setAdapter(adapter);
+                Toast.makeText(getActivity().getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
+            }
             super.onPostExecute(result);
         }
     }

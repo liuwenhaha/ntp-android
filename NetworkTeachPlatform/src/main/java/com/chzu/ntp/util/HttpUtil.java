@@ -1,7 +1,5 @@
 package com.chzu.ntp.util;
 
-import android.util.Log;
-
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -9,6 +7,11 @@ import com.loopj.android.http.RequestParams;
 import org.apache.http.Header;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Map;
 
 /**
@@ -23,7 +26,7 @@ public class HttpUtil {
     private static JSONObject msg;
 
     /**
-     * 访问服务器端，获取json对象
+     * 异步访问服务器端，获取json对象
      *
      * @param path 访问的网络路径
      * @param maps 网络请求参数，是个Map对象，其中的键值对代表：键为后台接收的成员变量名，值为该成员变量的值
@@ -49,7 +52,7 @@ public class HttpUtil {
     }
 
     /**
-     * 访问服务器端，获取json对象
+     * 异步访问服务器端，获取json对象
      *
      * @param path 访问的网络路径
      * @return
@@ -67,5 +70,42 @@ public class HttpUtil {
             }
         });
         return msg;
+    }
+
+    /**
+     * 获取json数据，使用HttpURLConnection，内部没有使用线程，
+     */
+    public static JSONObject getDataFromInternet(URL url) {
+        JSONObject jb = null;
+        try {
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setConnectTimeout(8 * 1000);//设置超时时间为8s
+            conn.setRequestProperty("Charset", "UTF-8");
+            if (conn.getResponseCode() == 200) {
+                InputStream json = conn.getInputStream();
+                byte[] data = read(json);
+                jb = new JSONObject(new String(data));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jb;
+    }
+
+    /**
+     * 把InputStream转化成字节数组
+     */
+    public static byte[] read(InputStream inStream) throws Exception {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int len = 0;
+        while ((len = inStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, len);
+        }
+        inStream.close();
+        return outputStream.toByteArray();
     }
 }
