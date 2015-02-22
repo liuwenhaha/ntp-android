@@ -91,7 +91,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         fragments.add(MeFragment.getInstance());
         fragAdapter = new FragAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(fragAdapter);
-        viewPager.setCurrentItem(0);//设置默认显示AllCourseFragment界面
+        viewPager.setCurrentItem(0);//设置默认显示CourseListFragment界面
         viewPager.setOnPageChangeListener(new MyViewPagerChangeListener());
         //new LoadCourseThread().start();
     }

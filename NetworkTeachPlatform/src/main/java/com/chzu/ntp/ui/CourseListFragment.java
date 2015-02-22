@@ -92,7 +92,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             pullToRefreshView.setAdapter(adapter);
         } else {//本地没有缓存，请求网络数据
             load.setVisibility(View.GONE);
-            adapter = new CardViewAdapter(getItems(getData(false)), getActivity());
+            adapter = new CardViewAdapter(getItems(getData()), getActivity());
             pullToRefreshView.setAdapter(adapter);
         }
         pullToRefreshView.setOnItemClickListener(this);
@@ -102,13 +102,10 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
     /**
      * 获取网络数据并缓存到数据库
      */
-    private List<Course> getData(boolean action) {
+    private List<Course> getData() {
         JSONObject jb = HttpUtil.getDataFromInternet(path);
         List<Course> list = new ArrayList<Course>();
         if (jb != null) {//请求成功
-            if (action) {//有缓存数据先清空
-                courseDao.delete();
-            }
             try {
                 JSONArray ja = jb.getJSONArray("list");
                 for (int i = 0; i < ja.length(); i++) {
@@ -150,6 +147,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 JSONObject jb = HttpUtil.getDataFromInternet(new URL(path));
                 if (jb != null) {
                     JSONArray ja = jb.getJSONArray("list");
+                    courseDao.delete();//先清空缓存
                     for (int i = 0; i < ja.length(); i++) {
                         JSONObject j = ja.getJSONObject(i);
                         Course course = new Course(j.getString("code"), j.getString("name"), j.getJSONObject("coursetype").getString("type"), j.getJSONObject("user").getString("name"));
@@ -158,7 +156,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                         Log.i(TAG, course.toString());
                     }
                 } else {
-                    Toast.makeText(getActivity().getApplication(), "没有更新到数据，请检查网络，稍后再试", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getApplicationContext(), "没有更新到数据，请检查网络，稍后再试", Toast.LENGTH_SHORT).show();
                 }
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -191,6 +189,12 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             cards.add(card);
         }
         return cards;
+    }
+
+    @Override
+    public void onDestroy() {
+        courseDao.close();
+        super.onDestroy();
     }
 }
 

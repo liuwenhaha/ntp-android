@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,14 +13,27 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.chzu.ntp.dao.CourseTypeDao;
+import com.chzu.ntp.util.HttpUtil;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
- * 点击标题栏所有课程，弹出所有课程类型对话框，包含所有课程类型、搜索，所有课程类型从后台获取
+ * 点击标题栏所有课程，弹出所有课程类型对话框，包含所有课程类型
  *
  * @author yanxing
  */
 public class CourseTypeSelectActivity extends Activity implements View.OnClickListener {
     private TextView coursetypeTitle;//课程类型标题
     private GridView courseTypeName;//课程类型名称
+    private CourseTypeDao courseTypeDao;
+    /**
+     * 请求课程类型网络地址
+     */
+    private static final String path = "http://10.0.2.2/ntp/phone/courseType";
+    private static final String TAG="json_courseType";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,10 +41,39 @@ public class CourseTypeSelectActivity extends Activity implements View.OnClickLi
         setContentView(R.layout.activity_coursetype_select);
         coursetypeTitle = (TextView) findViewById(R.id.coursetypeTitle);
         courseTypeName = (GridView) findViewById(R.id.courseTypeName);
-        //模拟数据
-        String name[] = new String[]{"c语言", "java", "c++", "c#", "硬件", "软件", "网络", "物联网", "c语言", "java", "c++", "c#", "硬件", "软件", "网络", "物联网"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.activity_coursetype_select_gridview, R.id.type, name);
-        courseTypeName.setAdapter(adapter);
+        courseTypeDao=new CourseTypeDao(getApplicationContext());
+        String type[]=courseTypeDao.getAllCourseType();
+        if (type.length>0){//本地有缓存
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.activity_coursetype_select_gridview, R.id.type, type);
+            courseTypeName.setAdapter(adapter);
+        }else{//没有缓存
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.activity_coursetype_select_gridview, R.id.type, getData());
+            courseTypeName.setAdapter(adapter);
+        }
+    }
+
+    /**
+     * 获取网络数据并缓存到数据库
+     */
+    public String[] getData() {
+        JSONObject jb = HttpUtil.getDataFromInternet(path);
+        if (jb != null) {
+            try {
+                JSONArray ja = jb.getJSONArray("listCType");
+                String name[] = new String[ja.length()];
+                for (int i = 0; i < ja.length(); i++) {
+                    JSONObject j = ja.getJSONObject(i);
+                    name[i] = j.getString("type");
+                    courseTypeDao.save(name[i]);
+                }
+                return name;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Log.i(TAG, "没有取到后台数据");
+        }
+        return null;
     }
 
     /**
@@ -77,6 +120,12 @@ public class CourseTypeSelectActivity extends Activity implements View.OnClickLi
     protected void onPause() {
         finish();
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        courseTypeDao.close();
+        super.onDestroy();
     }
 
     @Override
