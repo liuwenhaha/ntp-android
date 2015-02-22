@@ -58,10 +58,5 @@
             android:theme="@style/Anim_style2" >
         </activity>
     </application>
-    <!-- 声明Android框架和目标测试包 -->
-    <instrumentation android:name="android.test.InstrumentationTestRunner"
-        android:targetPackage="androidTest.com.chzu.ui.ApplicationTest"
-        android:label="hello android test"
-        />
 
 </manifest>

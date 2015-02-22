@@ -50,8 +50,8 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
     /**
      * 请求课程网络地址
      */
-    public  static final String PATH = "http://10.0.2.2/ntp/phone/courseList";
-    public  static final String TAG = "json";
+    public static final String PATH = "http://10.0.2.2/ntp/phone/courseList";
+    public static final String TAG = "json";
 
 
     /**
@@ -86,7 +86,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
 
         });
         courseDao = new CourseDao(getActivity().getApplicationContext());
-        courseTypeDao=new CourseTypeDao(getActivity().getApplicationContext());
+        courseTypeDao = new CourseTypeDao(getActivity().getApplicationContext());
         List<Course> courseList = courseDao.getAllCourse();
         if (courseList.size() > 0) {//如果本地有缓存,隐藏"提示正在加载课程中"视图
             Log.i(TAG, "本地有缓存。。。");
