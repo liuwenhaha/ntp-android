@@ -32,8 +32,8 @@ public class CourseTypeSelectActivity extends Activity implements View.OnClickLi
     /**
      * 请求课程类型网络地址
      */
-    private static final String path = "http://10.0.2.2/ntp/phone/courseType";
-    private static final String TAG="json_courseType";
+    public  static final String PATH = "http://10.0.2.2/ntp/phone/courseType";
+    public  static final String TAG="json_courseType";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +56,7 @@ public class CourseTypeSelectActivity extends Activity implements View.OnClickLi
      * 获取网络数据并缓存到数据库
      */
     public String[] getData() {
-        JSONObject jb = HttpUtil.getDataFromInternet(path);
+        JSONObject jb = HttpUtil.getDataFromInternet(PATH);
         if (jb != null) {
             try {
                 JSONArray ja = jb.getJSONArray("listCType");

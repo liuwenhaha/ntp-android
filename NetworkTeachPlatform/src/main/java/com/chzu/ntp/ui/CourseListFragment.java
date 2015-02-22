@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.chzu.ntp.adapter.CardView;
 import com.chzu.ntp.adapter.CardViewAdapter;
 import com.chzu.ntp.dao.CourseDao;
+import com.chzu.ntp.dao.CourseTypeDao;
 import com.chzu.ntp.model.Course;
 import com.chzu.ntp.util.HttpUtil;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -44,12 +45,13 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
     private static CourseListFragment courseListFragment;
     private static CardViewAdapter adapter;//课程适配器
     private CourseDao courseDao;
+    private CourseTypeDao courseTypeDao;
     private LinearLayout load;
     /**
      * 请求课程网络地址
      */
-    private static final String path = "http://10.0.2.2/ntp/phone/courseList";
-    private static final String TAG = "json";
+    public  static final String PATH = "http://10.0.2.2/ntp/phone/courseList";
+    public  static final String TAG = "json";
 
 
     /**
@@ -83,7 +85,8 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             }
 
         });
-        courseDao = new CourseDao(getActivity().getApplication());
+        courseDao = new CourseDao(getActivity().getApplicationContext());
+        courseTypeDao=new CourseTypeDao(getActivity().getApplicationContext());
         List<Course> courseList = courseDao.getAllCourse();
         if (courseList.size() > 0) {//如果本地有缓存,隐藏"提示正在加载课程中"视图
             Log.i(TAG, "本地有缓存。。。");
@@ -91,8 +94,8 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             adapter = new CardViewAdapter(getItems(courseList), getActivity());
             pullToRefreshView.setAdapter(adapter);
         } else {//本地没有缓存，请求网络数据
-            load.setVisibility(View.GONE);
             adapter = new CardViewAdapter(getItems(getData()), getActivity());
+            load.setVisibility(View.GONE);
             pullToRefreshView.setAdapter(adapter);
         }
         pullToRefreshView.setOnItemClickListener(this);
@@ -103,7 +106,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
      * 获取网络数据并缓存到数据库
      */
     private List<Course> getData() {
-        JSONObject jb = HttpUtil.getDataFromInternet(path);
+        JSONObject jb = HttpUtil.getDataFromInternet(PATH);
         List<Course> list = new ArrayList<Course>();
         if (jb != null) {//请求成功
             try {
@@ -144,7 +147,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
         protected String[] doInBackground(Void... params) {
             try {
                 //Thread.sleep(4000);
-                JSONObject jb = HttpUtil.getDataFromInternet(new URL(path));
+                JSONObject jb = HttpUtil.getDataFromInternet(new URL(PATH));
                 if (jb != null) {
                     JSONArray ja = jb.getJSONArray("list");
                     courseDao.delete();//先清空缓存
@@ -163,6 +166,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            updateData();//下拉更新首页时同时更新所有的课程类型，保存到数据库
             return null;
         }
 
@@ -176,6 +180,29 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 Toast.makeText(getActivity().getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
             }
             super.onPostExecute(result);
+        }
+
+        /**
+         * 更新课程类型，保存到数据库
+         */
+        public void updateData() {
+            try {
+                JSONObject jb = HttpUtil.getDataFromInternet(new URL(CourseTypeSelectActivity.PATH));
+                if (jb != null) {
+                    courseTypeDao.delete();//先清空
+                    JSONArray ja = jb.getJSONArray("listCType");
+                    for (int i = 0; i < ja.length(); i++) {
+                        JSONObject j = ja.getJSONObject(i);
+                        courseTypeDao.save(j.getString("type"));
+                    }
+                } else {
+                    Log.i(TAG, "没有取到后台数据");
+                }
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 
