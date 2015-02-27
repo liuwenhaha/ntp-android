@@ -37,7 +37,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/MyEditStyle" />
         <activity
-            android:name=".CourseTypeSelectActivity"
+            android:name=".CoursetypeSelectActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MyDialogStyleTop" />
         <activity

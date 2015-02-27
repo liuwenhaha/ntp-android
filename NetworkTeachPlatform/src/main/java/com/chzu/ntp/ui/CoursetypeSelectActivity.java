@@ -20,19 +20,23 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 /**
  * 点击标题栏所有课程，弹出所有课程类型对话框，包含所有课程类型
  *
  * @author yanxing
  */
-public class CourseTypeSelectActivity extends Activity implements View.OnClickListener {
+public class CoursetypeSelectActivity extends Activity implements View.OnClickListener {
     private TextView coursetypeTitle;//课程类型标题
     private GridView courseTypeName;//课程类型名称
     private CourseTypeDao courseTypeDao;
     /**
      * 请求课程类型网络地址
      */
-    public  static final String PATH = "http://10.0.2.2/ntp/phone/courseType";
+    /*public  static final String PATH = "http://10.0.2.2/ntp/phone/courseType";*/
+    public  static final String PATH = "http://192.168.43.42/ntp/phone/courseType";
     public  static final String TAG="json_courseType";
 
     @Override
@@ -56,9 +60,9 @@ public class CourseTypeSelectActivity extends Activity implements View.OnClickLi
      * 获取网络数据并缓存到数据库
      */
     public String[] getData() {
-        JSONObject jb = HttpUtil.getDataFromInternet(PATH);
-        if (jb != null) {
-            try {
+        try {
+            JSONObject jb = HttpUtil.getDataFromInternet(new URL(PATH));
+            if (jb != null) {
                 JSONArray ja = jb.getJSONArray("listCType");
                 String name[] = new String[ja.length()];
                 for (int i = 0; i < ja.length(); i++) {
@@ -67,13 +71,15 @@ public class CourseTypeSelectActivity extends Activity implements View.OnClickLi
                     courseTypeDao.save(name[i]);
                 }
                 return name;
-            } catch (JSONException e) {
-                e.printStackTrace();
+            } else {
+                Log.i(TAG, "没有取到后台数据");
             }
-        } else {
-            Log.i(TAG, "没有取到后台数据");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
         }
-        return null;
+        return new String[]{};
     }
 
     /**
@@ -120,12 +126,6 @@ public class CourseTypeSelectActivity extends Activity implements View.OnClickLi
     protected void onPause() {
         finish();
         super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        courseTypeDao.close();
-        super.onDestroy();
     }
 
     @Override

@@ -1,13 +1,9 @@
 package com.chzu.ntp.ui;
 
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
@@ -126,7 +122,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 viewPager.setCurrentItem(2);
                 break;
             case R.id.navigateMore:
-                Intent intent = new Intent(this, CourseTypeSelectActivity.class);
+                Intent intent = new Intent(this, CoursetypeSelectActivity.class);
                 startActivity(intent);
                 break;
             case R.id.search:

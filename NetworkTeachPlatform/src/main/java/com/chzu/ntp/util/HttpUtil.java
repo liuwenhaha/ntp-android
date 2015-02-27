@@ -80,7 +80,7 @@ public class HttpUtil {
         try {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
-            conn.setConnectTimeout(8 * 1000);//设置超时时间为8s
+            conn.setConnectTimeout(6 * 1000);//设置超时时间为6s
             conn.setRequestProperty("Charset", "UTF-8");
             if (conn.getResponseCode() == 200) {
                 InputStream json = conn.getInputStream();

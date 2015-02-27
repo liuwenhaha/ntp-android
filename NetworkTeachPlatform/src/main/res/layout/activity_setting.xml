@@ -75,6 +75,40 @@
             android:layout_marginRight="10dp"
             android:background="@color/layout_bg_pressed" />
 
+        <RelativeLayout
+            android:id="@+id/cache"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:textColor="@color/course_name"
+                android:paddingLeft="13dp"
+                android:gravity="center_vertical"
+                android:background="@drawable/layout_selector_bg"
+                android:text="@string/cache" />
+
+            <TextView
+                android:id="@+id/cache_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:layout_centerVertical="true"
+                android:text="@string/cache_size" />
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/layout_bg_pressed" />
 
         <TextView
             android:id="@+id/about"
