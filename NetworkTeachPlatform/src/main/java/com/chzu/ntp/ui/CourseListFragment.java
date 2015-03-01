@@ -3,6 +3,8 @@ package com.chzu.ntp.ui;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -51,8 +53,25 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
      * 请求课程网络地址
      */
    /* public static final String PATH = "http://10.0.2.2/ntp/phone/courseList";*/
-    public static final String PATH = "http://192.168.43.42/ntp/phone/courseList";
+    public static final String PATH = "http://192.168.1.105/ntp/phone/courseList";
     public static final String TAG = "json";
+    /**
+     * 发送消息成功标识
+     */
+    private static final int RESULT = 1;
+
+    //加载课程成功后更新界面
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == RESULT) {
+                ArrayList<Course> list = (ArrayList<Course>) msg.getData().getSerializable("list");
+                adapter = new CardViewAdapter(getItems(list), getActivity());
+                pullToRefreshView.setAdapter(adapter);
+                Toast.makeText(getActivity().getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
 
     /**
@@ -95,38 +114,10 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             adapter = new CardViewAdapter(getItems(courseList), getActivity());
             pullToRefreshView.setAdapter(adapter);
         } else {//本地没有缓存，请求网络数据
-            adapter = new CardViewAdapter(getItems(getData()), getActivity());
-            pullToRefreshView.setAdapter(adapter);
+            new LoadCourseThread().start();
         }
         pullToRefreshView.setOnItemClickListener(this);
         return view;
-    }
-
-    /**
-     * 获取网络数据并缓存到数据库
-     */
-    private List<Course> getData() {
-        JSONObject jb = HttpUtil.getDataFromInternet(PATH);
-        List<Course> list = new ArrayList<Course>();
-        if (jb != null) {//请求成功
-            try {
-                JSONArray ja = jb.getJSONArray("list");
-                for (int i = 0; i < ja.length(); i++) {
-                    JSONObject j = ja.getJSONObject(i);
-                    Course course = new Course(j.getString("code"), j.getString("name"), j.getJSONObject("coursetype").getString("type"), j.getJSONObject("user").getString("name"));
-                    list.add(course);
-                    courseDao.save(course);//缓存到数据库
-                    Log.i(TAG, course.toString());
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            load.setVisibility(View.GONE);
-        } else {
-            Toast.makeText(getActivity().getApplicationContext(), "没有取到数据", Toast.LENGTH_SHORT).show();
-            Log.i(TAG, "没有获取到后台数据");
-        }
-        return list;
     }
 
     //ListView点击事件响应
@@ -139,6 +130,40 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
         bundle.putString("name", name);
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    /**
+     * 加载课程线程
+     */
+    private class LoadCourseThread extends Thread {
+        @Override
+        public void run() {
+            Message msg = new Message();
+            List<Course> list = new ArrayList<Course>();
+            try {
+                JSONObject jb = null;
+                while (jb == null) {//直到获取数据
+                    jb = HttpUtil.getDataFromInternet(new URL(PATH));
+                }
+                JSONArray ja = jb.getJSONArray("list");
+                for (int i = 0; i < ja.length(); i++) {
+                    JSONObject j = ja.getJSONObject(i);
+                    Course course = new Course(j.getString("code"), j.getString("name"), j.getJSONObject("coursetype").getString("type"), j.getJSONObject("user").getString("name"));
+                    list.add(course);
+                    courseDao.save(course);//缓存到数据库
+                    Log.i(TAG, course.toString());
+                }
+                msg.what = RESULT;
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("list", (java.io.Serializable) list);
+                msg.setData(bundle);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            handler.sendMessage(msg);
+        }
     }
 
     //下拉刷新线程

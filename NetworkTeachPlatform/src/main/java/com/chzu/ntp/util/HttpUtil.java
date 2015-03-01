@@ -1,10 +1,13 @@
 package com.chzu.ntp.util;
 
+import android.util.Log;
+
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.apache.http.Header;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -24,6 +27,7 @@ import java.util.Map;
 public class HttpUtil {
 
     private static JSONObject msg;
+    private static AsyncHttpClient client=new AsyncHttpClient();
 
     /**
      * 异步访问服务器端，获取json对象
@@ -34,7 +38,6 @@ public class HttpUtil {
      */
     public static JSONObject getDataFromInternet(String path, Map<String, String> maps) {
 
-        AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         for (Map.Entry<String, String> entry : maps.entrySet()) {
             params.put(entry.getKey(), entry.getValue());
@@ -59,7 +62,6 @@ public class HttpUtil {
      */
     public static JSONObject getDataFromInternet(String path) {
 
-        AsyncHttpClient client = new AsyncHttpClient();
         client.post(path, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers,
