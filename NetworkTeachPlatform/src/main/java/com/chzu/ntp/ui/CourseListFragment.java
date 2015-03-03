@@ -53,7 +53,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
      * 请求课程网络地址
      */
    /* public static final String PATH = "http://10.0.2.2/ntp/phone/courseList";*/
-    public static final String PATH = "http://192.168.1.105/ntp/phone/courseList";
+    public static final String PATH = "http://192.168.1.107/ntp/phone/courseList";
     public static final String TAG = "json";
     /**
      * 发送消息成功标识

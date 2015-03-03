@@ -15,4 +15,5 @@
     <color name="translucent_l">#23000000</color>
     <color name="rounded_text_bg">#e5e3e3</color>
     <color name="rounded_text_wrap">#2c7f49</color>
+    <color name="nav_bg">#fcfafa</color>
 </resources>

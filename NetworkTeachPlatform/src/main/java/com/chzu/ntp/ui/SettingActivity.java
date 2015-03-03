@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.chzu.ntp.dao.CourseDao;
 import com.chzu.ntp.dao.CourseTypeDao;
 import com.chzu.ntp.util.ExitListApplication;
+import com.chzu.ntp.util.MyTitleView;
 import com.chzu.ntp.util.PreferenceUtil;
 
 import java.io.File;
@@ -28,6 +29,7 @@ public class SettingActivity extends Activity implements View.OnClickListener {
     private TextView cacheText;
     private CourseTypeDao courseTypeDao;
     private CourseDao courseDao;
+    private MyTitleView myTitleView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,8 @@ public class SettingActivity extends Activity implements View.OnClickListener {
         exit = (TextView) findViewById(R.id.exit);
         cache= (RelativeLayout) findViewById(R.id.cache);
         cacheText= (TextView) findViewById(R.id.cache_text);
+        myTitleView= (MyTitleView) findViewById(R.id.myTitleView);
+        myTitleView.setTitle("设置");
         back.setOnClickListener(this);
         switchImg.setOnClickListener(this);
         about.setOnClickListener(this);
