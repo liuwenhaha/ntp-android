@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.chzu.ntp.ui.R;
 
 /**
- * 工具栏
+ * 工具类
  * 标题栏：返回图片、标题
  * Created by yanxing on 2015/3/3.
  */
@@ -47,10 +47,6 @@ public class MyTitleView extends FrameLayout {
      */
     public void setTitle(String text) {
         title.setText(text);
-    }
-
-    public void setOnClickListener(OnClickListener on){
-        back.setOnClickListener(on);
     }
 
 }
