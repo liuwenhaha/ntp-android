@@ -248,6 +248,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
     @Override
     public void onDestroy() {
         courseDao.close();
+        courseTypeDao.close();
         super.onDestroy();
     }
 }

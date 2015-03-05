@@ -12,9 +12,8 @@ import android.widget.TextView;
 import com.chzu.ntp.ui.R;
 
 /**
- * 工具类
- * 标题栏：返回图片、标题
- * Created by yanxing on 2015/3/3.
+ * 标题栏控件：返回图片、标题
+ * @author  yanxing
  */
 public class MyTitleView extends FrameLayout {
     private ImageView back;

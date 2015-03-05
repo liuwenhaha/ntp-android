@@ -100,10 +100,15 @@ public class SettingActivity extends Activity implements View.OnClickListener {
         for (int i=0;i<files.length;i++){
             sizeInit+=files[i].length();
         }
-        double size=sizeInit;
+        double size=sizeInit/1024;//以kb为单位
         String st=String.valueOf(size).substring(0,String.valueOf(size).indexOf("."));
         return st;
     }
 
-
+    @Override
+    protected void onDestroy() {
+        courseDao.close();
+        courseTypeDao.close();
+        super.onDestroy();
+    }
 }
