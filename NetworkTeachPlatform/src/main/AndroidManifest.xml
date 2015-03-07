@@ -60,6 +60,7 @@
         </activity>
         <activity
             android:name="com.chzu.ntp.util.MyDialog"
+            android:theme="@style/MyDialogStyle"
             android:label="@string/title_activity_my_dialog" >
         </activity>
     </application>

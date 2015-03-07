@@ -35,6 +35,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/course_name"
                 android:paddingLeft="17dp"
+                android:textSize="15sp"
                 android:layout_marginTop="4dp"
                 android:text="@string/use234G" />
 
@@ -67,6 +68,7 @@
                 android:layout_height="50dp"
                 android:textColor="@color/course_name"
                 android:paddingLeft="17dp"
+                android:textSize="15sp"
                 android:gravity="center_vertical"
                 android:background="@drawable/layout_selector_bg"
                 android:text="@string/cache" />
@@ -77,6 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="14dp"
+                android:textSize="15sp"
                 android:layout_centerVertical="true"
                 android:text="@string/cache_size" />
 
@@ -97,6 +100,7 @@
             android:textColor="@color/course_name"
             android:clickable="true"
             android:paddingLeft="17dp"
+            android:textSize="15sp"
             android:gravity="center_vertical"
             android:background="@drawable/layout_selector_bg"
             android:text="@string/about" />
@@ -117,6 +121,7 @@
             android:textColor="@color/course_name"
             android:paddingLeft="17dp"
             android:clickable="true"
+            android:textSize="15sp"
             android:background="@drawable/layout_selector_bg"
             android:text="@string/exit" />
     </LinearLayout>

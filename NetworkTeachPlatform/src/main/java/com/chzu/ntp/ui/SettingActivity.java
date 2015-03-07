@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.chzu.ntp.dao.CourseDao;
 import com.chzu.ntp.dao.CourseTypeDao;
 import com.chzu.ntp.util.ExitListApplication;
+import com.chzu.ntp.util.MyDialog;
 import com.chzu.ntp.util.MyTitleView;
 import com.chzu.ntp.util.PreferenceUtil;
 
@@ -30,6 +31,11 @@ public class SettingActivity extends Activity implements View.OnClickListener {
     private CourseTypeDao courseTypeDao;
     private CourseDao courseDao;
     private MyTitleView myTitleView;
+    private final static String  TIP="将删除所有缓存的课程信息";
+    /**
+     * 清除缓存对话框请求码
+     */
+    private final static int REQUEST=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,14 +80,15 @@ public class SettingActivity extends Activity implements View.OnClickListener {
                 }
                 break;
             case R.id.cache://清除缓存
-                courseDao.delete();
-                courseTypeDao.delete();
-                cacheText.setText("0");
-                Toast.makeText(getApplicationContext(),"点击了",Toast.LENGTH_LONG).show();
+                Intent intent=new Intent(getApplicationContext(), MyDialog.class);
+                Bundle bundle=new Bundle();
+                bundle.putString("tip",TIP);
+                intent.putExtras(bundle);
+                startActivityForResult(intent,REQUEST);
                 break;
             case R.id.about://关于
-                Intent intent = new Intent(this, AboutActivity.class);
-                startActivity(intent);
+                Intent intent1 = new Intent(this, AboutActivity.class);
+                startActivity(intent1);
                 break;
             case R.id.exit://退出
                 ExitListApplication.getInstance().exit();
@@ -110,5 +117,16 @@ public class SettingActivity extends Activity implements View.OnClickListener {
         courseDao.close();
         courseTypeDao.close();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==REQUEST&&resultCode==RESULT_OK){//用户选择确定时
+            courseDao.delete();
+            courseTypeDao.delete();
+            cacheText.setText("0KB");
+            Toast.makeText(getApplicationContext(),"点击了",Toast.LENGTH_LONG).show();
+        }
     }
 }
