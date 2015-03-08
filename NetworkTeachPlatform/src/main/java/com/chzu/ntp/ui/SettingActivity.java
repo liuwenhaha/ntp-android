@@ -101,14 +101,19 @@ public class SettingActivity extends Activity implements View.OnClickListener {
      */
     public String getCache(){
         String path="/data/data/"+getApplicationContext().getPackageName()+"/databases";
-        File file=new File(path);
-        File[] files=file.listFiles();
-        double sizeInit=0;
-        for (int i=0;i<files.length;i++){
-            sizeInit+=files[i].length();
+        String st="0";
+        //如果数据库有数据
+        if(courseDao.getAllCourse().size()>0){
+            File file=new File(path);
+            File[] files=file.listFiles();
+            double sizeInit=0;
+            for (int i=0;i<files.length;i++){
+                sizeInit+=files[i].length();
+            }
+            double size=sizeInit/1024;//以kb为单位
+            st=String.valueOf(size).substring(0,String.valueOf(size).indexOf("."));
         }
-        double size=sizeInit/1024;//以kb为单位
-        String st=String.valueOf(size).substring(0,String.valueOf(size).indexOf("."));
+
         return st;
     }
 
@@ -126,7 +131,7 @@ public class SettingActivity extends Activity implements View.OnClickListener {
             courseDao.delete();
             courseTypeDao.delete();
             cacheText.setText("0KB");
-            Toast.makeText(getApplicationContext(),"点击了",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"清除成功",Toast.LENGTH_LONG).show();
         }
     }
 }

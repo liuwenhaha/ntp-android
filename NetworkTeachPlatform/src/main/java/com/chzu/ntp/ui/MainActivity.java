@@ -35,25 +35,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private TextView courseType;
     private LinearLayout navigateMore, search;
 
- /*   //加载课程成功后更新界面
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            if (msg.what == ACTION_DESTORY) {
-                try {
-                    Thread.sleep(1000);
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.loadCourse, CourseListFragment.getInstance());//替换提示加载课程LoadCourseFragment
-                    fragmentTransaction.commitAllowingStateLoss();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    };*/
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,25 +70,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         viewPager.setAdapter(fragAdapter);
         viewPager.setCurrentItem(0);//设置默认显示CourseListFragment界面
         viewPager.setOnPageChangeListener(new MyViewPagerChangeListener());
-        //new LoadCourseThread().start();
     }
-
-   /* *//**
-     * 加载课程线程，在此模拟3s加载成功
-     *//*
-    private class LoadCourseThread extends Thread {
-        @Override
-        public void run() {
-            Message msg = new Message();
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            msg.what = ACTION_DESTORY;
-            handler.sendMessage(msg);
-        }
-    }*/
 
     @Override
     public void onClick(View v) {

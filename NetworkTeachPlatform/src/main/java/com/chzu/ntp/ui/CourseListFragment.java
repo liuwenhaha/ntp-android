@@ -53,7 +53,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
      * 请求课程网络地址
      */
    /* public static final String PATH = "http://10.0.2.2/ntp/phone/courseList";*/
-    public static final String PATH = "http://192.168.1.107/ntp/phone/courseList";
+    public static final String PATH = "http://10.255.92.152/ntp/phone/courseList";
     public static final String TAG = "json";
     /**
      * 发送消息成功标识
@@ -68,6 +68,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 ArrayList<Course> list = (ArrayList<Course>) msg.getData().getSerializable("list");
                 adapter = new CardViewAdapter(getItems(list), getActivity());
                 pullToRefreshView.setAdapter(adapter);
+                load.setVisibility(View.GONE);
                 Toast.makeText(getActivity().getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
             }
         }
