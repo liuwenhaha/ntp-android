@@ -11,6 +11,7 @@ public class CardView {
     private String teacher;
 
     public CardView(String code,String name, String type, String teacher) {
+        this.code=code;
         this.name = name;
         this.type = type;
         this.teacher = teacher;

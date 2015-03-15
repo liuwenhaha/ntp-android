@@ -52,8 +52,8 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
     /**
      * 请求课程网络地址
      */
-   /* public static final String PATH = "http://10.0.2.2/ntp/phone/courseList";*/
-    public static final String PATH = "http://10.255.92.152/ntp/phone/courseList";
+    /*public static final String PATH = "http://10.0.2.2/ntp/phone/courseList";*/
+    public static final String PATH = "http://192.168.1.101/ntp/phone/courseList";
     public static final String TAG = "json";
     /**
      * 发送消息成功标识
@@ -125,10 +125,13 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), CourseDetailActivity.class);
-        TextView text = (TextView) view.findViewById(R.id.courseName);
-        String name = (String) text.getText();
+        TextView text = (TextView) view.findViewById(R.id.code);
+        TextView textView= (TextView) view.findViewById(R.id.courseName);
+        String code = (String) text.getText();
+        String name= (String) textView.getText();
         Bundle bundle = new Bundle();
-        bundle.putString("name", name);
+        bundle.putString("code", code);
+        bundle.putString("name",name);
         intent.putExtras(bundle);
         startActivity(intent);
     }
@@ -159,8 +162,10 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 bundle.putSerializable("list", (java.io.Serializable) list);
                 msg.setData(bundle);
             } catch (MalformedURLException e) {
+                Log.i(TAG,e.toString());
                 e.printStackTrace();
             } catch (JSONException e) {
+                Log.i(TAG,e.toString());
                 e.printStackTrace();
             }
             handler.sendMessage(msg);

@@ -28,7 +28,7 @@ public class CourseDetailActivity extends FragmentActivity implements View.OnCli
     private TextView mOverview, mCourseWare, mCourseVideo, mCourseForum;
     //tab选项卡下划线
     private ImageView mOverviewIndicator, mCourseWareIndicator, mCourseVideoIndicator, mCourseForumIndicator;
-
+    private String code;//课程代码
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,13 +50,14 @@ public class CourseDetailActivity extends FragmentActivity implements View.OnCli
         mCourseForumIndicator = (ImageView) findViewById(R.id.courseForumIndicator);
         String name = getIntent().getExtras().getString("name");
         courseName.setText(name);//设置课程名称
+        code=getIntent().getExtras().getString("code");
         mOverview.setOnClickListener(this);
         mCourseWare.setOnClickListener(this);
         mCourseVideo.setOnClickListener(this);
         mCourseForum.setOnClickListener(this);
         back = (ImageView) findViewById(R.id.back);
         back.setOnClickListener(this);
-        fragments.add(CourseOverviewFragment.getInstance());
+        fragments.add(CourseOverviewFragment.getInstance(code));
         fragments.add(CourseWareFragment.getInstance());
         fragments.add(CourseVideoFragment.getInstance());
         fragments.add(CourseForumFragment.getInstance());
