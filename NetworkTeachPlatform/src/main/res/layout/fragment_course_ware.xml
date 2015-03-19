@@ -2,12 +2,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/layout_bg_pressed"
-    tools:context="com.chzu.ntp.ui.CourseWareFragment">
+    android:background="@color/layout_bg_normal"
+    tools:context="com.chzu.ntp.ui.CoursewareFragment">
 
-    <TextView
+    <ListView
+        android:id="@+id/courseWareList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment2" />
+        android:divider="@color/divider_line"
+        android:dividerHeight="@dimen/divider_line"
+        android:scrollbarStyle="outsideOverlay"
+        android:listSelector="@android:color/transparent"
+        android:cacheColorHint="#0000"
+        android:background="@null">
+    </ListView>
 
 </LinearLayout>

@@ -27,7 +27,8 @@ import java.util.Map;
 public class HttpUtil {
 
     private static JSONObject msg;
-    private static AsyncHttpClient client=new AsyncHttpClient();
+    private static AsyncHttpClient client = new AsyncHttpClient();
+    private static final String TAG = "TAG";
 
     /**
      * 异步访问服务器端，获取json对象
@@ -50,6 +51,13 @@ public class HttpUtil {
                 super.onSuccess(statusCode, headers, response);
 
             }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                Log.w(TAG, responseString);
+                Log.w(TAG, throwable.toString());
+            }
         });
         return msg;
     }
@@ -68,7 +76,13 @@ public class HttpUtil {
                                   JSONObject response) {
                 msg = response;
                 super.onSuccess(statusCode, headers, response);
+            }
 
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                Log.w(TAG, responseString);
+                Log.w(TAG, throwable.toString());
             }
         });
         return msg;

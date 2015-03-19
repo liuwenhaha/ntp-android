@@ -1,26 +1,26 @@
 package com.chzu.ntp.model;
 
 /**
- * 课程实体,接受后台json数据，封装成对象
+ * 课程实体
  */
 public class Course {
     private String code;//课程代码
     private String name;//名称
     private String type;//课程类型
-    private String username;//代课老师
+    private String teacher;//代课老师
 
     public Course() {
     }
 
     /**
-     * @param code     课程代码
-     * @param name     课程名称
-     * @param type     课程类型
-     * @param username 老师姓名
+     * @param code    课程代码
+     * @param name    课程名称
+     * @param type    课程类型
+     * @param teacher 老师姓名
      */
-    public Course(String code, String name, String type, String username) {
+    public Course(String code, String name, String type, String teacher) {
         this.code = code;
-        this.username = username;
+        this.teacher = teacher;
         this.type = type;
         this.name = name;
     }
@@ -33,12 +33,12 @@ public class Course {
         this.code = code;
     }
 
-    public String getUsername() {
-        return username;
+    public String getTeacher() {
+        return teacher;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setTeacher(String teacher) {
+        this.teacher = teacher;
     }
 
     public String getType() {
@@ -63,7 +63,7 @@ public class Course {
                 "code='" + code + '\'' +
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
-                ", username='" + username + '\'' +
+                ", teacher='" + teacher + '\'' +
                 '}';
     }
 }

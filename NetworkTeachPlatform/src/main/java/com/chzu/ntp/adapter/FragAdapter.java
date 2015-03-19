@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * @author yanxing
- *         ViewPager适配器,把Fragment视图装载到ViewPager中
+ * Fragment适配器
  */
 public class FragAdapter extends FragmentStatePagerAdapter {
 

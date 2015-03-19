@@ -11,18 +11,18 @@ import android.view.ViewGroup;
 /**
  * 课程教学视频
  */
-public class CourseVideoFragment extends Fragment {
+public class CoursevideoFragment extends Fragment {
 
-    private static CourseVideoFragment mCourseVideoFragment;
+    private static CoursevideoFragment mCoursevideoFragment;
 
     /**
      * 创建单例对象
      */
-    public static CourseVideoFragment getInstance() {
-        if (mCourseVideoFragment == null) {
-            mCourseVideoFragment = new CourseVideoFragment();
+    public static CoursevideoFragment getInstance() {
+        if (mCoursevideoFragment == null) {
+            mCoursevideoFragment = new CoursevideoFragment();
         }
-        return mCourseVideoFragment;
+        return mCoursevideoFragment;
     }
 
     @Override

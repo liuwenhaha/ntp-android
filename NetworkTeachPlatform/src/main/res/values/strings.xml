@@ -47,5 +47,7 @@
     <string name="cache">清除缓存</string>
     <string name="cache_size">MB</string>
     <string name="title_activity_my_dialog">MyDialog</string>
+    <string name="coursewareName">课件名称</string>
+    <string name="size">课件大小</string>
 
 </resources>

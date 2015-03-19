@@ -17,8 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.chzu.ntp.adapter.CardView;
-import com.chzu.ntp.adapter.CardViewAdapter;
+import com.chzu.ntp.adapter.CourseAdapter;
 import com.chzu.ntp.dao.CourseDao;
 import com.chzu.ntp.dao.CourseTypeDao;
 import com.chzu.ntp.model.Course;
@@ -45,7 +44,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
      */
     PullToRefreshListView pullToRefreshView;
     private static CourseListFragment courseListFragment;
-    private static CardViewAdapter adapter;//课程适配器
+    private static CourseAdapter adapter;//课程适配器
     private CourseDao courseDao;
     private CourseTypeDao courseTypeDao;
     private LinearLayout load;
@@ -66,7 +65,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
         public void handleMessage(Message msg) {
             if (msg.what == RESULT) {
                 ArrayList<Course> list = (ArrayList<Course>) msg.getData().getSerializable("list");
-                adapter = new CardViewAdapter(getItems(list), getActivity());
+                adapter = new CourseAdapter(list, getActivity());
                 pullToRefreshView.setAdapter(adapter);
                 load.setVisibility(View.GONE);
                 Toast.makeText(getActivity().getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
@@ -112,7 +111,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
         if (courseList.size() > 0) {//如果本地有缓存,隐藏"提示正在加载课程中"视图
             Log.i(TAG, "本地有缓存。。。");
             load.setVisibility(View.GONE);
-            adapter = new CardViewAdapter(getItems(courseList), getActivity());
+            adapter = new CourseAdapter(courseList, getActivity());
             pullToRefreshView.setAdapter(adapter);
         } else {//本地没有缓存，请求网络数据
             new LoadCourseThread().start();
@@ -206,7 +205,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             pullToRefreshView.onRefreshComplete();
             if (list.size() > 0) {//获取到数据，更新UI
                 load.setVisibility(View.GONE);
-                adapter = new CardViewAdapter(getItems(list), getActivity());
+                adapter = new CourseAdapter(list, getActivity());
                 pullToRefreshView.setAdapter(adapter);
                 Toast.makeText(getActivity().getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
             } else {
@@ -237,18 +236,6 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 e1.printStackTrace();
             }
         }
-    }
-
-    /**
-     * listView item数据
-     */
-    private List<CardView> getItems(List<Course> list) {
-        List<CardView> cards = new ArrayList<CardView>();
-        for (Course course : list) {
-            CardView card = new CardView(course.getCode(), course.getName(), course.getType(), course.getUsername());
-            cards.add(card);
-        }
-        return cards;
     }
 
     @Override
