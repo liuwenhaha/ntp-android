@@ -39,7 +39,7 @@ public class CoursevideoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_course_video, container, false);
-        mCoursevideoList= (ListView) view.findViewById(R.id.coursevideList);
+        mCoursevideoList= (ListView) view.findViewById(R.id.coursevideoList);
         mCoursevideoAdapter=new CoursevideoAdapter(getData(),getActivity().getApplicationContext());
         mCoursevideoList.setAdapter(mCoursevideoAdapter);
         return view;

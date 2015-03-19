@@ -6,7 +6,7 @@
     tools:context="com.chzu.ntp.ui.CoursevideoFragment">
 
     <ListView
-        android:id="@+id/coursevideList"
+        android:id="@+id/coursevideoList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@color/divider_line"
