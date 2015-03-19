@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.chzu.ntp.adapter.CoursevideoAdapter;
 import com.chzu.ntp.adapter.CoursewareAdapter;
 import com.chzu.ntp.model.Courseware;
 
@@ -17,7 +19,7 @@ import java.util.List;
 /**
  * 课程课件
  */
-public class CoursewareFragment extends Fragment {
+public class CoursewareFragment extends Fragment implements CoursewareAdapter.Callback{
     private static CoursewareFragment mCoursewareFragment;
     private ListView mCourseWareList;
     private CoursewareAdapter mCoursewareAdapter;
@@ -37,7 +39,7 @@ public class CoursewareFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_course_ware, container, false);
         mCourseWareList= (ListView) view.findViewById(R.id.courseWareList);
-        mCoursewareAdapter=new CoursewareAdapter(getData(),getActivity().getApplicationContext());
+        mCoursewareAdapter=new CoursewareAdapter(getData(),getActivity().getApplicationContext(),this);
         mCourseWareList.setAdapter(mCoursewareAdapter);
         return view;
     }
@@ -56,4 +58,15 @@ public class CoursewareFragment extends Fragment {
     }
 
 
+    /**
+     * 回调接口
+     */
+    @Override
+    public void click(View v) {
+        switch (v.getId()){
+            case  R.id.myDownload:
+                Toast.makeText(getActivity().getApplicationContext(),"你点击图片了",Toast.LENGTH_LONG).show();
+                break;
+        }
+    }
 }

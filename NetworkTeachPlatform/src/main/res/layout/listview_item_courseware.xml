@@ -1,38 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:background="@drawable/layout_selector_bg"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:paddingLeft="@dimen/my_margin_left_right"
+    android:paddingLeft="@dimen/my_margin_left"
     android:paddingTop="10dp">
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_weight="7"
         android:orientation="horizontal">
         <!-- 课件id-->
         <TextView
             android:id="@+id/coursewareId"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:visibility="gone" />
 
         <!-- 课件名称-->
         <TextView
             android:id="@+id/coursewareName"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:text="@string/coursewareName"
-            android:textColor="@color/course_name"
-            android:textSize="15sp" />
+            android:textColor="@color/course_name" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_weight="1"
         android:orientation="horizontal">
 
@@ -40,14 +39,15 @@
         <TextView
             android:id="@+id/size"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:text="@string/size" />
         <!-- 课件下载-->
         <ImageView
             android:id="@+id/myDownload"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:clickable="true"
             android:layout_marginLeft="@dimen/my_margin_left"
             android:src="@drawable/download" />

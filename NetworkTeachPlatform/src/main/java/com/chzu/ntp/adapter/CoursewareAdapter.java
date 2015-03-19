@@ -18,13 +18,22 @@ import java.util.List;
  * @author yanxing
  * 课程课件适配器
  */
-public class CoursewareAdapter extends BaseAdapter {
+public class CoursewareAdapter extends BaseAdapter implements View.OnClickListener{
     private List<Courseware> mCoursewareList;
     private Context context;
+    private Callback callback;
 
-    public CoursewareAdapter(List<Courseware> mCoursewareList, Context context) {
+    /**
+     * 回调接口，内部控件事件响应不在适配器内部响应，使用者来响应
+     */
+    public interface Callback {
+        public void click(View v);
+    }
+
+    public CoursewareAdapter(List<Courseware> mCoursewareList, Context context,Callback callback) {
         this.mCoursewareList = mCoursewareList;
         this.context = context;
+        this.callback=callback;
     }
 
     @Override
@@ -56,6 +65,12 @@ public class CoursewareAdapter extends BaseAdapter {
         name.setText(mCoursewareList.get(position).getName());
         size = (TextView) convertView.findViewById(R.id.size);
         size.setText(mCoursewareList.get(position).getSize());
+        imageView.setOnClickListener(this);
         return convertView;
+    }
+
+    @Override
+    public void onClick(View v) {
+        callback.click(v);
     }
 }

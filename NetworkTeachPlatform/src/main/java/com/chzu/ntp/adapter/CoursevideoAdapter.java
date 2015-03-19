@@ -18,13 +18,22 @@ import java.util.List;
  * @author yanxing
  * 课程课件适配器
  */
-public class CoursevideoAdapter extends BaseAdapter {
+public class CoursevideoAdapter extends BaseAdapter implements View.OnClickListener {
     private List<Coursevideo> mCoursevideoList;
     private Context context;
+    private Callback callback;
 
-    public CoursevideoAdapter(List<Coursevideo> mCoursevideoList, Context context) {
+    /**
+     * 回调接口，内部控件事件响应不在适配器内部响应，使用者来响应
+     */
+    public interface Callback {
+        public void click(View v);
+    }
+
+    public CoursevideoAdapter(List<Coursevideo> mCoursevideoList, Context context,Callback callback) {
         this.mCoursevideoList = mCoursevideoList;
         this.context = context;
+        this.callback=callback;
     }
 
     @Override
@@ -50,10 +59,17 @@ public class CoursevideoAdapter extends BaseAdapter {
         imageView = (ImageView) convertView.findViewById(R.id.watch);
 //        imageView.setBackgroundResource(cardViewList.get(position).getId());//拉伸图片，充满ImageView控件
 //        imageView.setImageResource(cardViewList.get(position).getId());
-        id= (TextView) convertView.findViewById(R.id.coursewareId);
+        id= (TextView) convertView.findViewById(R.id.coursevideoId);
         id.setText(mCoursevideoList.get(position).getId());
         name = (TextView) convertView.findViewById(R.id.coursevideoName);
         name.setText(mCoursevideoList.get(position).getName());
+        imageView.setOnClickListener(this);
         return convertView;
     }
+
+    @Override
+    public void onClick(View v) {
+           callback.click(v);
+    }
+
 }
