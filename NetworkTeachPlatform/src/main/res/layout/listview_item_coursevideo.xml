@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@drawable/layout_selector_bg"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingLeft="@dimen/my_margin_left_right"
+    android:paddingTop="10dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="7"
+        android:orientation="horizontal">
+        <!-- 视频id-->
+        <TextView
+            android:id="@+id/coursevideoId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <!-- 视频名称-->
+        <TextView
+            android:id="@+id/coursevideoName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/coursevideoName"
+            android:textColor="@color/course_name"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <!-- 视频观看-->
+        <ImageView
+            android:id="@+id/watch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/my_margin_left"
+            android:src="@drawable/download" />
+    </LinearLayout>
+
+</LinearLayout>

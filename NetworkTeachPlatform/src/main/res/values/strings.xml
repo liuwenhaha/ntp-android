@@ -49,5 +49,6 @@
     <string name="title_activity_my_dialog">MyDialog</string>
     <string name="coursewareName">课件名称</string>
     <string name="size">课件大小</string>
+    <string name="coursevideoName">课程视频名称</string>
 
 </resources>

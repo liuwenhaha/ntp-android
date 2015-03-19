@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.chzu.ntp.model.Courseware;
+import com.chzu.ntp.model.Coursevideo;
 import com.chzu.ntp.ui.R;
 
 import java.util.List;
@@ -18,23 +18,23 @@ import java.util.List;
  * @author yanxing
  * 课程课件适配器
  */
-public class CoursewareAdapter extends BaseAdapter {
-    private List<Courseware> mCoursewareList;
+public class CoursevideoAdapter extends BaseAdapter {
+    private List<Coursevideo> mCoursevideoList;
     private Context context;
 
-    public CoursewareAdapter(List<Courseware> mCoursewareList, Context context) {
-        this.mCoursewareList = mCoursewareList;
+    public CoursevideoAdapter(List<Coursevideo> mCoursevideoList, Context context) {
+        this.mCoursevideoList = mCoursevideoList;
         this.context = context;
     }
 
     @Override
     public int getCount() {
-        return mCoursewareList.size();
+        return mCoursevideoList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mCoursewareList.get(position);
+        return mCoursevideoList.get(position);
     }
 
     @Override
@@ -44,18 +44,16 @@ public class CoursewareAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        TextView id,name, size;
+        TextView id,name;
         ImageView imageView;
-        convertView = LayoutInflater.from(context).inflate(R.layout.listview_item_courseware, null);
-        imageView = (ImageView) convertView.findViewById(R.id.myDownload);
+        convertView = LayoutInflater.from(context).inflate(R.layout.listview_item_coursevideo, null);
+        imageView = (ImageView) convertView.findViewById(R.id.watch);
 //        imageView.setBackgroundResource(cardViewList.get(position).getId());//拉伸图片，充满ImageView控件
 //        imageView.setImageResource(cardViewList.get(position).getId());
         id= (TextView) convertView.findViewById(R.id.coursewareId);
-        id.setText(mCoursewareList.get(position).getId());
-        name = (TextView) convertView.findViewById(R.id.coursewareName);
-        name.setText(mCoursewareList.get(position).getName());
-        size = (TextView) convertView.findViewById(R.id.size);
-        size.setText(mCoursewareList.get(position).getSize());
+        id.setText(mCoursevideoList.get(position).getId());
+        name = (TextView) convertView.findViewById(R.id.coursevideoName);
+        name.setText(mCoursevideoList.get(position).getName());
         return convertView;
     }
 }
