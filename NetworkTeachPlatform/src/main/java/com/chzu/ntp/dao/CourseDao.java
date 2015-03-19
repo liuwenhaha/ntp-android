@@ -34,13 +34,6 @@ public class CourseDao {
             list.add(course);
         }
         cursor.close();
-        //无法连接后台，模拟数据
-        Course course=new Course();
-        course.setCode("100");
-        course.setName("Java");
-        course.setType("软件方向");
-        course.setTeacher("yanxing");
-        list.add(course);
         return  list;
     }
 
