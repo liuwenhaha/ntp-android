@@ -5,9 +5,16 @@
     android:background="@color/layout_bg_pressed"
     tools:context="com.chzu.ntp.ui.CoursevideoFragment">
 
-    <TextView
+    <ListView
+        android:id="@+id/coursevideList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment3" />
+        android:divider="@color/divider_line"
+        android:dividerHeight="@dimen/divider_line"
+        android:scrollbarStyle="outsideOverlay"
+        android:listSelector="@android:color/transparent"
+        android:cacheColorHint="#0000"
+        android:background="@null">
+    </ListView>
 
 </LinearLayout>

@@ -48,6 +48,7 @@
             android:id="@+id/myDownload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:clickable="true"
             android:layout_marginLeft="@dimen/my_margin_left"
             android:src="@drawable/download" />
     </LinearLayout>
