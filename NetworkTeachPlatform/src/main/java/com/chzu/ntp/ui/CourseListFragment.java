@@ -22,6 +22,7 @@ import com.chzu.ntp.dao.CourseDao;
 import com.chzu.ntp.dao.CourseTypeDao;
 import com.chzu.ntp.model.Course;
 import com.chzu.ntp.util.HttpUtil;
+import com.chzu.ntp.util.NetworkState;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
@@ -40,7 +41,7 @@ import java.util.List;
 public class CourseListFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     /**
-     * Android-PullToRefresh中的ListView控件，具有下拉刷新特征
+     * Android-PullToRefresh中的ListView控件，具有下拉刷新、上拉刷新特征
      */
     PullToRefreshListView pullToRefreshView;
     private static CourseListFragment courseListFragment;
@@ -95,7 +96,8 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
         View view = inflater.inflate(R.layout.fragment_course_list, container, false);
         load = (LinearLayout) view.findViewById(R.id.load);
         pullToRefreshView = (PullToRefreshListView) view.findViewById(R.id.pull_to_refresh_listview);
-        pullToRefreshView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
+        pullToRefreshView.setMode(PullToRefreshBase.Mode.BOTH);//同时可以下拉和上拉刷新
+       /* pullToRefreshView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
                 String label = DateUtils.formatDateTime(getActivity().getApplicationContext(), System.currentTimeMillis(),
@@ -104,7 +106,37 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 new GetDataTask().execute();
             }
 
+        });*/
+
+        pullToRefreshView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+
+            @Override //下拉刷新
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                String label = DateUtils.formatDateTime(getActivity().getApplicationContext(), System.currentTimeMillis(),
+                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+                refreshView.getLoadingLayoutProxy(true,false).setLastUpdatedLabel("更新于:" + label);
+                if(NetworkState.isNetworkConnected(getActivity().getApplicationContext())){//网络可用
+                    new GetDataTask().execute();
+                }else{
+                    Toast.makeText(getActivity().getApplicationContext(),"网络不可用",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override  //下拉刷新
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                String label="正在加载...";
+                refreshView.getLoadingLayoutProxy(false,true).setPullLabel(label);
+                refreshView.getLoadingLayoutProxy(false,true).setReleaseLabel(label);
+                refreshView.getLoadingLayoutProxy(false,true).setRefreshingLabel(label);
+                if(NetworkState.isNetworkConnected(getActivity().getApplicationContext())){//网络可用
+                    new pullUpTask().execute();
+                }else{
+                    Toast.makeText(getActivity().getApplicationContext(),"网络不可用",Toast.LENGTH_SHORT).show();
+                }
+
+            }
         });
+
         courseDao = new CourseDao(getActivity().getApplicationContext());
         courseTypeDao = new CourseTypeDao(getActivity().getApplicationContext());
         List<Course> courseList = courseDao.getAllCourse();
@@ -114,7 +146,12 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             adapter = new CourseAdapter(courseList, getActivity());
             pullToRefreshView.setAdapter(adapter);
         } else {//本地没有缓存，请求网络数据
-            new LoadCourseThread().start();
+            if(NetworkState.isNetworkConnected(getActivity().getApplicationContext())){//网络可用
+                new LoadCourseThread().start();
+            }else{
+                Toast.makeText(getActivity().getApplicationContext(),"网络不可用",Toast.LENGTH_SHORT).show();
+                load.setVisibility(View.GONE);
+            }
         }
         pullToRefreshView.setOnItemClickListener(this);
         return view;
@@ -235,6 +272,29 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             } catch (JSONException e1) {
                 e1.printStackTrace();
             }
+        }
+    }
+
+
+
+    //上拉刷新线程
+    private class pullUpTask extends AsyncTask<Void,Void,String[]>{
+
+        //后台耗时操作
+        @Override
+        protected String[] doInBackground(Void... params) {
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return new String[0];
+        }
+
+        @Override //操作UI
+        protected void onPostExecute(String[] strings) {
+            super.onPostExecute(strings);
+            pullToRefreshView.onRefreshComplete();
         }
     }
 

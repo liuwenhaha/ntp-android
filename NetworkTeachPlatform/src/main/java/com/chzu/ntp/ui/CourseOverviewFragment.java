@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.chzu.ntp.util.NetworkState;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -58,26 +59,29 @@ public class CourseOverviewFragment extends Fragment {
         AsyncHttpClient client=new AsyncHttpClient();
         RequestParams params=new RequestParams();
         params.put("code",code);
-        client.post(PATH, params, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers,
-                                  JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                try {
-                    String overview=response.getJSONObject("course").getString("overview");
-                    Log.i(TAG,overview);
-                } catch (JSONException e) {
-                    Log.i(TAG,e.toString());
-                    e.printStackTrace();
+        if(NetworkState.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
+            client.post(PATH, params, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers,
+                                      JSONObject response) {
+                    super.onSuccess(statusCode, headers, response);
+                    try {
+                        String overview = response.getJSONObject("course").getString("overview");
+                        Log.i(TAG, overview);
+                    } catch (JSONException e) {
+                        Log.i(TAG, e.toString());
+                        e.printStackTrace();
+                    }
                 }
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-                Log.i(TAG,responseString);
-                Log.i(TAG,throwable.toString());
-            }
-        });
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    super.onFailure(statusCode, headers, responseString, throwable);
+                    Log.i(TAG, responseString);
+                    Log.i(TAG, throwable.toString());
+                }
+            });
+        }
         return view;
     }
 

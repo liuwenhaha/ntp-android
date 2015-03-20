@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.chzu.ntp.dao.CourseTypeDao;
 import com.chzu.ntp.util.HttpUtil;
+import com.chzu.ntp.util.NetworkState;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,22 +61,24 @@ public class CoursetypeSelectActivity extends Activity implements View.OnClickLi
      * 获取网络数据并缓存到数据库
      */
     public String[] getData() {
-        try {
-            JSONObject jb = HttpUtil.getDataFromInternet(PATH);
-            if (jb != null) {
-                JSONArray ja = jb.getJSONArray("listCType");
-                String name[] = new String[ja.length()];
-                for (int i = 0; i < ja.length(); i++) {
-                    JSONObject j = ja.getJSONObject(i);
-                    name[i] = j.getString("type");
-                    courseTypeDao.save(name[i]);
+        if(NetworkState.isNetworkConnected(getApplicationContext())){//网络可用
+            try {
+                JSONObject jb = HttpUtil.getDataFromInternet(PATH);
+                if (jb != null) {
+                    JSONArray ja = jb.getJSONArray("listCType");
+                    String name[] = new String[ja.length()];
+                    for (int i = 0; i < ja.length(); i++) {
+                        JSONObject j = ja.getJSONObject(i);
+                        name[i] = j.getString("type");
+                        courseTypeDao.save(name[i]);
+                    }
+                    return name;
+                } else {
+                    Log.i(TAG, "没有取到后台数据");
                 }
-                return name;
-            } else {
-                Log.i(TAG, "没有取到后台数据");
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
         return new String[]{};
     }
