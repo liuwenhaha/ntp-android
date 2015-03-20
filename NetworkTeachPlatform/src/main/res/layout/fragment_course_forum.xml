@@ -2,12 +2,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/layout_bg_pressed"
+    android:background="@color/layout_bg_normal"
     tools:context="com.chzu.ntp.ui.CourseForumFragment">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment4" />
+    <!-- 自定义样式，PullToRefresh样式属性文件attrs.xml,加入命名空间
+         xmlns:ptr="http://schemas.android.com/apk/res-auto" ，ptr:加上
+         attrs.xml文件中的属性-->
+    <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/pull_to_refresh_listview"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:divider="@color/divider_line"
+        ptr:ptrHeaderTextColor="@color/menu_text_reserve"
+        android:dividerHeight="@dimen/divider_line"
+        android:scrollbarStyle="outsideOverlay"
+        android:listSelector="@android:color/transparent"
+        android:cacheColorHint="#0000"
+        android:background="@null"
+        android:scrollbars="horizontal" />
 
 </LinearLayout>

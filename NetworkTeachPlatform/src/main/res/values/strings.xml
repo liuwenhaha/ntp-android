@@ -39,6 +39,7 @@
     <string name="title_activity_course_detail">CourseDetail</string>
     <string name="java">Java程序设计</string>
     <string name="overview">简介</string>
+    <string name="overview1">简介：</string>
     <string name="courseWare">课件</string>
     <string name="courseVideo">视频</string>
     <string name="courseForum">讨论</string>
@@ -50,5 +51,9 @@
     <string name="coursewareName">课件名称</string>
     <string name="size">课件大小</string>
     <string name="coursevideoName">课程视频名称</string>
+    <string name="test">创业团队做手机客户端，应该先做 Android 还是 iOS？为什么？</string>
+    <string name="testName">yanxing</string>
+    <string name="testTime">2015-02-02</string>
+    <string name="testReply">回复数</string>
 
 </resources>
