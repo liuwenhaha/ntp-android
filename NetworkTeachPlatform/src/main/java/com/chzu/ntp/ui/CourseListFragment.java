@@ -1,6 +1,8 @@
 package com.chzu.ntp.ui;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +27,8 @@ import com.chzu.ntp.util.HttpUtil;
 import com.chzu.ntp.util.NetworkState;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -146,12 +150,41 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             adapter = new CourseAdapter(courseList, getActivity());
             pullToRefreshView.setAdapter(adapter);
         } else {//本地没有缓存，请求网络数据
-            if(NetworkState.isNetworkConnected(getActivity().getApplicationContext())){//网络可用
+            /*if(NetworkState.isNetworkConnected(getActivity().getApplicationContext())){//网络可用
                 new LoadCourseThread().start();
             }else{
                 Toast.makeText(getActivity().getApplicationContext(),"网络不可用",Toast.LENGTH_SHORT).show();
                 load.setVisibility(View.GONE);
+            }*/
+            //无法连接后台，模拟数据
+            final List<Course> list=new ArrayList<Course>();
+            for (int i=0;i<10;i++){
+                Course course=new Course();
+                Bitmap bitmap=BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+                course.setCode("100");
+                course.setName("Java");
+                course.setType("软件方向");
+                course.setTeacher("yanxing");
+                list.add(course);
             }
+            ImageLoader imageLoader=ImageLoader.getInstance();
+            String imageUri="http://img3.imgtn.bdimg.com/it/u=568867752,3099839373&fm=21&gp=0.jpg";
+            // Load image, decode it to Bitmap and return Bitmap to callback
+            imageLoader.loadImageSync(imageUri);//同步获取
+           /* imageLoader.loadImageSync(imageUri, new SimpleImageLoadingListener() {
+                @Override
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    // Do whatever you want with Bitmap
+                    int i=0;
+                    for (Course course:list){
+                        list.get(i).setBitmap(loadedImage);
+                    }
+                }
+            });*/
+            load.setVisibility(View.GONE);
+            adapter = new CourseAdapter(list, getActivity());
+            pullToRefreshView.setAdapter(adapter);
+
         }
         pullToRefreshView.setOnItemClickListener(this);
         return view;

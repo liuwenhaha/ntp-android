@@ -1,10 +1,12 @@
 package com.chzu.ntp.adapter;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chzu.ntp.model.Course;
@@ -44,11 +46,11 @@ public class CourseAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         TextView code,courseName, courseType, teacher;
-//        ImageView imageView;
+        ImageView imageView;
         convertView = LayoutInflater.from(context).inflate(R.layout.listview_item_course, null);
-//        imageView = (ImageView) convertView.findViewById(R.id.img);
+        imageView = (ImageView) convertView.findViewById(R.id.img);
 //        imageView.setBackgroundResource(cardViewList.get(position).getId());//拉伸图片，充满ImageView控件
-//        imageView.setImageResource(cardViewList.get(position).getId());
+        imageView.setImageBitmap(mCourseList.get(position).getBitmap());
         code= (TextView) convertView.findViewById(R.id.code);
         code.setText(mCourseList.get(position).getCode());
         courseName = (TextView) convertView.findViewById(R.id.courseName);

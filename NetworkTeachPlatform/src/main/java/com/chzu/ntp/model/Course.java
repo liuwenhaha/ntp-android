@@ -1,9 +1,12 @@
 package com.chzu.ntp.model;
 
+import android.graphics.Bitmap;
+
 /**
  * 课程实体
  */
 public class Course {
+    private Bitmap bitmap;//课程图片
     private String code;//课程代码
     private String name;//名称
     private String type;//课程类型
@@ -13,6 +16,7 @@ public class Course {
     }
 
     /**
+     * 不包括课程图片
      * @param code    课程代码
      * @param name    课程名称
      * @param type    课程类型
@@ -23,6 +27,30 @@ public class Course {
         this.teacher = teacher;
         this.type = type;
         this.name = name;
+    }
+
+
+    /**
+     * @param bitmap  课程图片，
+     * @param code    课程代码
+     * @param name    课程名称
+     * @param type    课程类型
+     * @param teacher 老师姓名
+     */
+    public Course(Bitmap bitmap, String code, String name, String type, String teacher) {
+        this.bitmap = bitmap;
+        this.code = code;
+        this.name = name;
+        this.type = type;
+        this.teacher = teacher;
+    }
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
     }
 
     public String getCode() {

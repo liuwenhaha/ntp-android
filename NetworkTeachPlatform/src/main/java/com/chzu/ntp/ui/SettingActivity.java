@@ -12,8 +12,8 @@ import android.widget.Toast;
 import com.chzu.ntp.dao.CourseDao;
 import com.chzu.ntp.dao.CourseTypeDao;
 import com.chzu.ntp.util.ExitListApplication;
-import com.chzu.ntp.util.MyDialog;
-import com.chzu.ntp.util.MyTitleView;
+import com.chzu.ntp.widget.MyDialog;
+import com.chzu.ntp.widget.MyTitleView;
 import com.chzu.ntp.util.PreferenceUtil;
 
 import java.io.File;

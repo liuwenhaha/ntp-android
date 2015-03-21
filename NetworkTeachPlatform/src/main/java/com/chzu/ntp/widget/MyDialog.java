@@ -1,4 +1,4 @@
-package com.chzu.ntp.util;
+package com.chzu.ntp.widget;
 
 import android.app.Activity;
 import android.content.Intent;
