@@ -7,8 +7,9 @@
     <!-- 课程图片-->
     <ImageView
          android:id="@+id/img"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
+         android:layout_width="120dp"
+         android:layout_height="76dp"
+         android:background="@drawable/course_default"
          android:layout_margin="7dp" />
 
     <LinearLayout
@@ -28,7 +29,7 @@
             android:id="@+id/courseName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="11dp"
+            android:layout_marginTop="13dp"
             android:textColor="@color/course_name"
             android:textSize="15sp" />
         <!-- 课程类型-->
@@ -36,7 +37,7 @@
             android:id="@+id/courseType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             android:textColor="@color/menu_text_reserve" />
         <!-- 课程老师-->
         <TextView

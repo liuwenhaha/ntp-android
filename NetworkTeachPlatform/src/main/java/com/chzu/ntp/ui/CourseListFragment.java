@@ -3,6 +3,7 @@ package com.chzu.ntp.ui;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,17 +24,22 @@ import com.chzu.ntp.adapter.CourseAdapter;
 import com.chzu.ntp.dao.CourseDao;
 import com.chzu.ntp.dao.CourseTypeDao;
 import com.chzu.ntp.model.Course;
+import com.chzu.ntp.util.BitmapZoomHttp;
 import com.chzu.ntp.util.HttpUtil;
 import com.chzu.ntp.util.NetworkState;
+import com.chzu.ntp.util.SDCardUtil;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -71,7 +77,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             if (msg.what == RESULT) {
                 ArrayList<Course> list = (ArrayList<Course>) msg.getData().getSerializable("list");
                 adapter = new CourseAdapter(list, getActivity());
-                pullToRefreshView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
                 load.setVisibility(View.GONE);
                 Toast.makeText(getActivity().getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
             }
@@ -101,17 +107,6 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
         load = (LinearLayout) view.findViewById(R.id.load);
         pullToRefreshView = (PullToRefreshListView) view.findViewById(R.id.pull_to_refresh_listview);
         pullToRefreshView.setMode(PullToRefreshBase.Mode.BOTH);//同时可以下拉和上拉刷新
-       /* pullToRefreshView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
-            @Override
-            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-                String label = DateUtils.formatDateTime(getActivity().getApplicationContext(), System.currentTimeMillis(),
-                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
-                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel("更新于:" + label);
-                new GetDataTask().execute();
-            }
-
-        });*/
-
         pullToRefreshView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
 
             @Override //下拉刷新
@@ -161,26 +156,36 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             for (int i=0;i<10;i++){
                 Course course=new Course();
                 Bitmap bitmap=BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+//                course.setBitmap(bitmap);
                 course.setCode("100");
                 course.setName("Java");
                 course.setType("软件方向");
                 course.setTeacher("yanxing");
                 list.add(course);
             }
+            File file=SDCardUtil.creatSDDir(SDCardUtil.getSDPATH()+"ntp");
+            Log.i("TAG",file.toString()+"     "+file.getName());
+            Toast.makeText(getActivity(),file.getPath(),Toast.LENGTH_SHORT).show();
+            ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity().getApplicationContext())
+                    .diskCache(new UnlimitedDiscCache(file)) // default
+                    .diskCacheSize(50 * 1024 * 1024)
+                    .diskCacheFileCount(100)
+                    .build();
             ImageLoader imageLoader=ImageLoader.getInstance();
-            String imageUri="http://img3.imgtn.bdimg.com/it/u=568867752,3099839373&fm=21&gp=0.jpg";
-            // Load image, decode it to Bitmap and return Bitmap to callback
-            imageLoader.loadImageSync(imageUri);//同步获取
-           /* imageLoader.loadImageSync(imageUri, new SimpleImageLoadingListener() {
+            imageLoader.init(config);
+            String imageUri="http://h.hiphotos.baidu.com/image/w%3D230/sign=1ea5b9ff34d3d539c13d08c00a87e927/2e2eb9389b504fc2022d2904e7dde71190ef6d45.jpg";
+            String j="drawable://" + "R.drawable.course_test";
+            imageLoader.loadImage(imageUri, new SimpleImageLoadingListener() {
                 @Override
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    // Do whatever you want with Bitmap
                     int i=0;
                     for (Course course:list){
-                        list.get(i).setBitmap(loadedImage);
+                        list.get(i).setBitmap(BitmapZoomHttp.createBitmapZoop(loadedImage,120,76));
+                        i++;
                     }
+                    adapter.notifyDataSetChanged();
                 }
-            });*/
+            });
             load.setVisibility(View.GONE);
             adapter = new CourseAdapter(list, getActivity());
             pullToRefreshView.setAdapter(adapter);

@@ -21,7 +21,7 @@ public class SDCardUtil {
      *
      * @return
      */
-    public String getSDPATH() {
+    public static String getSDPATH() {
         return SDPATH;
     }
 
@@ -30,7 +30,7 @@ public class SDCardUtil {
      *
      * @return
      */
-    private boolean checkSDCard() {
+    private static boolean checkSDCard() {
         return android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
     }
 
@@ -39,7 +39,7 @@ public class SDCardUtil {
      *
      * @throws IOException
      */
-    public File creatSDFile(String fileName) throws IOException {
+    public static File creatSDFile(String fileName) throws IOException {
         File file = new File(SDPATH + fileName);
         if (checkSDCard()) {//SD存在
             file.createNewFile();
@@ -54,7 +54,7 @@ public class SDCardUtil {
      *
      * @param dirName
      */
-    public File creatSDDir(String dirName) {
+    public static File creatSDDir(String dirName) {
         File dir = new File(SDPATH + dirName);
         if (checkSDCard()) {//SD存在
             if (!dir.exists()) {
@@ -72,7 +72,7 @@ public class SDCardUtil {
      * @param path     路径名
      * @param fileName 文件名
      */
-    public File writeSDInput(String path, String fileName, InputStream input) {
+    public static File writeSDInput(String path, String fileName, InputStream input) {
         File file = null;
         OutputStream output = null;
         try {
