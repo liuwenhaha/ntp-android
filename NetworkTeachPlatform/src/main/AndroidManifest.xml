@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.write_external_storage" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE" />
 
@@ -44,7 +44,7 @@
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Anim_style2" />
+            android:theme="@style/AnimLogin" />
         <activity
             android:name=".SettingActivity"
             android:screenOrientation="portrait"
@@ -64,5 +64,6 @@
             android:label="@string/title_activity_my_dialog" >
         </activity>
     </application>
+
 
 </manifest>

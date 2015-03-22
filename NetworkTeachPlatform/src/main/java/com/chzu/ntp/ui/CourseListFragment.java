@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -31,6 +32,8 @@ import com.chzu.ntp.util.SDCardUtil;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
+import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
@@ -40,6 +43,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -63,7 +67,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
      * 请求课程网络地址
      */
     /*public static final String PATH = "http://10.0.2.2/ntp/phone/courseList";*/
-    public static final String PATH = "http://192.168.1.101/ntp/phone/courseList";
+    public static final String PATH = "http://192.168.1.112/ntp/phone/courseList";
     public static final String TAG = "json";
     /**
      * 发送消息成功标识
@@ -77,7 +81,8 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             if (msg.what == RESULT) {
                 ArrayList<Course> list = (ArrayList<Course>) msg.getData().getSerializable("list");
                 adapter = new CourseAdapter(list, getActivity());
-                adapter.notifyDataSetChanged();
+                //图片显示不了，需要此句
+                pullToRefreshView.setAdapter(adapter);
                 load.setVisibility(View.GONE);
                 Toast.makeText(getActivity().getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
             }
@@ -145,51 +150,12 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             adapter = new CourseAdapter(courseList, getActivity());
             pullToRefreshView.setAdapter(adapter);
         } else {//本地没有缓存，请求网络数据
-            /*if(NetworkState.isNetworkConnected(getActivity().getApplicationContext())){//网络可用
+            if(NetworkState.isNetworkConnected(getActivity().getApplicationContext())){//网络可用
                 new LoadCourseThread().start();
             }else{
                 Toast.makeText(getActivity().getApplicationContext(),"网络不可用",Toast.LENGTH_SHORT).show();
                 load.setVisibility(View.GONE);
-            }*/
-            //无法连接后台，模拟数据
-            final List<Course> list=new ArrayList<Course>();
-            for (int i=0;i<10;i++){
-                Course course=new Course();
-                Bitmap bitmap=BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
-//                course.setBitmap(bitmap);
-                course.setCode("100");
-                course.setName("Java");
-                course.setType("软件方向");
-                course.setTeacher("yanxing");
-                list.add(course);
             }
-            File file=SDCardUtil.creatSDDir(SDCardUtil.getSDPATH()+"ntp");
-            Log.i("TAG",file.toString()+"     "+file.getName());
-            Toast.makeText(getActivity(),file.getPath(),Toast.LENGTH_SHORT).show();
-            ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity().getApplicationContext())
-                    .diskCache(new UnlimitedDiscCache(file)) // default
-                    .diskCacheSize(50 * 1024 * 1024)
-                    .diskCacheFileCount(100)
-                    .build();
-            ImageLoader imageLoader=ImageLoader.getInstance();
-            imageLoader.init(config);
-            String imageUri="http://h.hiphotos.baidu.com/image/w%3D230/sign=1ea5b9ff34d3d539c13d08c00a87e927/2e2eb9389b504fc2022d2904e7dde71190ef6d45.jpg";
-            String j="drawable://" + "R.drawable.course_test";
-            imageLoader.loadImage(imageUri, new SimpleImageLoadingListener() {
-                @Override
-                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    int i=0;
-                    for (Course course:list){
-                        list.get(i).setBitmap(BitmapZoomHttp.createBitmapZoop(loadedImage,120,76));
-                        i++;
-                    }
-                    adapter.notifyDataSetChanged();
-                }
-            });
-            load.setVisibility(View.GONE);
-            adapter = new CourseAdapter(list, getActivity());
-            pullToRefreshView.setAdapter(adapter);
-
         }
         pullToRefreshView.setOnItemClickListener(this);
         return view;
@@ -214,10 +180,10 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
      * 加载课程线程
      */
     private class LoadCourseThread extends Thread {
+        Message msg = new Message();
+        List<Course> list = new ArrayList<Course>();
         @Override
         public void run() {
-            Message msg = new Message();
-            List<Course> list = new ArrayList<Course>();
             try {
                 JSONObject jb = null;
                 while (jb == null) {//直到获取数据
@@ -226,11 +192,12 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 JSONArray ja = jb.getJSONArray("list");
                 for (int i = 0; i < ja.length(); i++) {
                     JSONObject j = ja.getJSONObject(i);
-                    Course course = new Course(j.getString("code"), j.getString("name"), j.getJSONObject("coursetype").getString("type"), j.getJSONObject("user").getString("name"));
+                    Course course = new Course(null,j.getString("code"), j.getString("name"), j.getJSONObject("coursetype").getString("type"), j.getJSONObject("user").getString("name"));
                     list.add(course);
                     courseDao.save(course);//缓存到数据库
                     Log.i(TAG, course.toString());
                 }
+                loadImage();
                 msg.what = RESULT;
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("list", (java.io.Serializable) list);
@@ -243,6 +210,29 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 e.printStackTrace();
             }
             handler.sendMessage(msg);
+        }
+
+        /**
+         * 加载课程图片
+         */
+        private void loadImage() {
+            //模拟图片
+            String imageUri="http://h.hiphotos.baidu.com/image/w%3D230/sign=1ea5b9ff34d3d539c13d08c00a87e927/2e2eb9389b504fc2022d2904e7dde71190ef6d45.jpg";
+            File file= SDCardUtil.creatSDDir("ntp");
+            ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity().getApplicationContext())
+                    .diskCache(new UnlimitedDiscCache(file)) // 缓存到SD卡
+                    .diskCacheFileNameGenerator(new HashCodeFileNameGenerator())
+                    .build();
+            final ImageLoader imageLoader=ImageLoader.getInstance();
+            imageLoader.init(config);
+            //显示图片的配置
+            DisplayImageOptions options = new DisplayImageOptions.Builder()
+                    .cacheOnDisk(true)
+                    .build();
+            Bitmap bitmap=imageLoader.loadImageSync(imageUri,options);
+            for (int i=0;i<list.size();i++){
+                list.get(i).setBitmap(BitmapZoomHttp.createBitmapZoop(bitmap, 120, 76));
+            }
         }
     }
 
@@ -342,6 +332,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
         courseTypeDao.close();
         super.onDestroy();
     }
+
 }
 
 

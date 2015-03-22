@@ -22,6 +22,7 @@ import java.util.List;
 public class CourseAdapter extends BaseAdapter {
     private List<Course> mCourseList;
     private Context context;
+    public ImageView imageView;
 
     public CourseAdapter(List<Course> mCourseList, Context context) {
         this.mCourseList = mCourseList;
@@ -46,7 +47,6 @@ public class CourseAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         TextView code,courseName, courseType, teacher;
-        ImageView imageView;
         convertView = LayoutInflater.from(context).inflate(R.layout.listview_item_course, null);
         imageView = (ImageView) convertView.findViewById(R.id.img);
 //        imageView.setBackgroundResource(cardViewList.get(position).getId());//拉伸图片，充满ImageView控件

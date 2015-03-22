@@ -58,7 +58,8 @@ public class SDCardUtil {
         File dir = new File(SDPATH + dirName);
         if (checkSDCard()) {//SD存在
             if (!dir.exists()) {
-                dir.mkdir();
+                Boolean bo=dir.mkdir();
+                Log.i(TAG, bo.toString());
             }
         } else {
             Log.i(TAG, "SD卡不存在");
