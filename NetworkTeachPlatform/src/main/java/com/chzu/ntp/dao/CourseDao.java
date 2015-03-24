@@ -30,7 +30,7 @@ public class CourseDao {
         Cursor cursor = SQLiteDB.rawQuery("select * from course_table", null);
         List<Course> list = new ArrayList<Course>();
         while (cursor.moveToNext()) {
-            Course course = new Course(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
+            Course course = new Course(null,cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
             list.add(course);
         }
         cursor.close();

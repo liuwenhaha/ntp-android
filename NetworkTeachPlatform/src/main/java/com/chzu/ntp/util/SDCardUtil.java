@@ -30,7 +30,7 @@ public class SDCardUtil {
      *
      * @return
      */
-    private static boolean checkSDCard() {
+    public static boolean checkSDCard() {
         return android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
     }
 
@@ -47,6 +47,21 @@ public class SDCardUtil {
             Log.i(TAG, "SD卡不存在");
         }
         return file;
+    }
+
+    /**
+     * 在SD卡是否有文件
+     * @param filePath 文件路径 ,不需要加mnt/sdcard
+     * @return 存在 返回true 否则false
+     */
+    public static Boolean isExistSDFile(String filePath){
+        File file = new File(SDPATH + filePath);
+        if (checkSDCard()) {//SD存在
+             return file.exists();
+        } else {
+            Log.i(TAG, "SD卡不存在");
+        }
+        return false;
     }
 
     /**

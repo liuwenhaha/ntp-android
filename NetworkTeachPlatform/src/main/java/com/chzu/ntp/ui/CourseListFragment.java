@@ -27,16 +27,19 @@ import com.chzu.ntp.dao.CourseTypeDao;
 import com.chzu.ntp.model.Course;
 import com.chzu.ntp.util.BitmapZoomHttp;
 import com.chzu.ntp.util.HttpUtil;
+import com.chzu.ntp.util.ImageNameGenerator;
 import com.chzu.ntp.util.NetworkState;
 import com.chzu.ntp.util.SDCardUtil;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
+import com.nostra13.universalimageloader.cache.disc.naming.FileNameGenerator;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,6 +61,10 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
      * Android-PullToRefresh中的ListView控件，具有下拉刷新、上拉刷新特征
      */
     PullToRefreshListView pullToRefreshView;
+    /**
+     * Universal Image Loader加载图片类
+     */
+    ImageLoader imageLoader;
     private static CourseListFragment courseListFragment;
     private static CourseAdapter adapter;//课程适配器
     private CourseDao courseDao;
@@ -74,6 +81,16 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
      */
     private static final int RESULT = 1;
 
+    /**
+     * 创建单例对象
+     */
+    public static CourseListFragment getInstance() {
+        if (courseListFragment == null) {
+            courseListFragment = new CourseListFragment();
+        }
+        return courseListFragment;
+    }
+
     //加载课程成功后更新界面
     Handler handler = new Handler() {
         @Override
@@ -89,17 +106,6 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
         }
     };
 
-
-    /**
-     * 创建单例对象
-     */
-    public static CourseListFragment getInstance() {
-        if (courseListFragment == null) {
-            courseListFragment = new CourseListFragment();
-        }
-        return courseListFragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,47 +119,42 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
         pullToRefreshView = (PullToRefreshListView) view.findViewById(R.id.pull_to_refresh_listview);
         pullToRefreshView.setMode(PullToRefreshBase.Mode.BOTH);//同时可以下拉和上拉刷新
         pullToRefreshView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
-
             @Override //下拉刷新
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 String label = DateUtils.formatDateTime(getActivity().getApplicationContext(), System.currentTimeMillis(),
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
-                refreshView.getLoadingLayoutProxy(true,false).setLastUpdatedLabel("更新于:" + label);
-                if(NetworkState.isNetworkConnected(getActivity().getApplicationContext())){//网络可用
+                refreshView.getLoadingLayoutProxy(true, false).setLastUpdatedLabel("更新于:" + label);
+                if (NetworkState.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
                     new GetDataTask().execute();
-                }else{
-                    Toast.makeText(getActivity().getApplicationContext(),"网络不可用",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override  //下拉刷新
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                String label="正在加载...";
-                refreshView.getLoadingLayoutProxy(false,true).setPullLabel(label);
-                refreshView.getLoadingLayoutProxy(false,true).setReleaseLabel(label);
-                refreshView.getLoadingLayoutProxy(false,true).setRefreshingLabel(label);
-                if(NetworkState.isNetworkConnected(getActivity().getApplicationContext())){//网络可用
+                String label = "正在加载...";
+                refreshView.getLoadingLayoutProxy(false, true).setPullLabel(label);
+                refreshView.getLoadingLayoutProxy(false, true).setReleaseLabel(label);
+                refreshView.getLoadingLayoutProxy(false, true).setRefreshingLabel(label);
+                if (NetworkState.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
                     new pullUpTask().execute();
-                }else{
-                    Toast.makeText(getActivity().getApplicationContext(),"网络不可用",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
-
         courseDao = new CourseDao(getActivity().getApplicationContext());
         courseTypeDao = new CourseTypeDao(getActivity().getApplicationContext());
+        imageLoader=ImageLoader.getInstance();
         List<Course> courseList = courseDao.getAllCourse();
         if (courseList.size() > 0) {//如果本地有缓存,隐藏"提示正在加载课程中"视图
-            Log.i(TAG, "本地有缓存。。。");
-            load.setVisibility(View.GONE);
-            adapter = new CourseAdapter(courseList, getActivity());
-            pullToRefreshView.setAdapter(adapter);
+            loadImage(courseList);
+
         } else {//本地没有缓存，请求网络数据
-            if(NetworkState.isNetworkConnected(getActivity().getApplicationContext())){//网络可用
+            if (NetworkState.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
                 new LoadCourseThread().start();
-            }else{
-                Toast.makeText(getActivity().getApplicationContext(),"网络不可用",Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
                 load.setVisibility(View.GONE);
             }
         }
@@ -161,17 +162,44 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
         return view;
     }
 
+    //加载本地课程缓存信息
+    private void loadImage(final List<Course> courseList) {
+        Log.i(TAG, "本地有缓存。。。");
+        load.setVisibility(View.GONE);
+        if (!SDCardUtil.checkSDCard()) {
+            Toast.makeText(getActivity().getApplicationContext(), "请插入SD卡", Toast.LENGTH_SHORT).show();
+        }
+
+        String imageUri = "file:///mnt/sdcard/ntp/1.png";//缓存图片路径
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity().getApplicationContext())
+                .build();
+        imageLoader.init(config);
+        //显示图片的配置
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .cacheOnDisk(true)
+                .showImageOnFail(R.drawable.course_default)//不存在默认显示图片
+                .build();
+        if (SDCardUtil.isExistSDFile("ntp/1.png")){//如果文件存在
+            Bitmap bitmap = imageLoader.loadImageSync(imageUri,options);
+            for (int i = 0; i < courseList.size(); i++) {
+                courseList.get(i).setBitmap(BitmapZoomHttp.createBitmapZoop(bitmap, 120, 76));
+            }
+        }
+        adapter = new CourseAdapter(courseList, getActivity());
+        pullToRefreshView.setAdapter(adapter);
+    }
+
     //ListView点击事件响应
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), CourseDetailActivity.class);
         TextView text = (TextView) view.findViewById(R.id.code);
-        TextView textView= (TextView) view.findViewById(R.id.courseName);
+        TextView textView = (TextView) view.findViewById(R.id.courseName);
         String code = (String) text.getText();
-        String name= (String) textView.getText();
+        String name = (String) textView.getText();
         Bundle bundle = new Bundle();
         bundle.putString("code", code);
-        bundle.putString("name",name);
+        bundle.putString("name", name);
         intent.putExtras(bundle);
         startActivity(intent);
     }
@@ -182,6 +210,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
     private class LoadCourseThread extends Thread {
         Message msg = new Message();
         List<Course> list = new ArrayList<Course>();
+
         @Override
         public void run() {
             try {
@@ -192,7 +221,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 JSONArray ja = jb.getJSONArray("list");
                 for (int i = 0; i < ja.length(); i++) {
                     JSONObject j = ja.getJSONObject(i);
-                    Course course = new Course(null,j.getString("code"), j.getString("name"), j.getJSONObject("coursetype").getString("type"), j.getJSONObject("user").getString("name"));
+                    Course course = new Course(null, j.getString("code"), j.getString("name"), j.getJSONObject("coursetype").getString("type"), j.getJSONObject("user").getString("name"));
                     list.add(course);
                     courseDao.save(course);//缓存到数据库
                     Log.i(TAG, course.toString());
@@ -203,10 +232,10 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 bundle.putSerializable("list", (java.io.Serializable) list);
                 msg.setData(bundle);
             } catch (MalformedURLException e) {
-                Log.i(TAG,e.toString());
+                Log.i(TAG, e.toString());
                 e.printStackTrace();
             } catch (JSONException e) {
-                Log.i(TAG,e.toString());
+                Log.i(TAG, e.toString());
                 e.printStackTrace();
             }
             handler.sendMessage(msg);
@@ -217,26 +246,26 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
          */
         private void loadImage() {
             //模拟图片
-            String imageUri="http://h.hiphotos.baidu.com/image/w%3D230/sign=1ea5b9ff34d3d539c13d08c00a87e927/2e2eb9389b504fc2022d2904e7dde71190ef6d45.jpg";
-            File file= SDCardUtil.creatSDDir("ntp");
+            String imageUri = "http://h.hiphotos.baidu.com/image/w%3D230/sign=1ea5b9ff34d3d539c13d08c00a87e927/2e2eb9389b504fc2022d2904e7dde71190ef6d45.jpg";
+            File file = SDCardUtil.creatSDDir("ntp");
             ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity().getApplicationContext())
-                    .diskCache(new UnlimitedDiscCache(file)) // 缓存到SD卡
-                    .diskCacheFileNameGenerator(new HashCodeFileNameGenerator())
+                    .diskCache(new UnlimitedDiscCache(file,null,new ImageNameGenerator("1.png"))) // 缓存到SD卡
                     .build();
-            final ImageLoader imageLoader=ImageLoader.getInstance();
             imageLoader.init(config);
             //显示图片的配置
             DisplayImageOptions options = new DisplayImageOptions.Builder()
                     .cacheOnDisk(true)
                     .build();
-            Bitmap bitmap=imageLoader.loadImageSync(imageUri,options);
-            for (int i=0;i<list.size();i++){
+            Bitmap bitmap = imageLoader.loadImageSync(imageUri, options);
+            for (int i = 0; i < list.size(); i++) {
                 list.get(i).setBitmap(BitmapZoomHttp.createBitmapZoop(bitmap, 120, 76));
             }
         }
     }
 
-    //下拉刷新线程
+    /**
+     * 下拉刷新线程
+     */
     private class GetDataTask extends AsyncTask<Void, Void, String[]> {
         List<Course> list = new ArrayList<Course>();
 
@@ -304,9 +333,10 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
     }
 
 
-
-    //上拉刷新线程
-    private class pullUpTask extends AsyncTask<Void,Void,String[]>{
+    /**
+     * 上拉刷新线程
+     */
+    private class pullUpTask extends AsyncTask<Void, Void, String[]> {
 
         //后台耗时操作
         @Override
