@@ -1,6 +1,7 @@
 package com.chzu.ntp.ui;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -66,7 +67,9 @@ public class CoursevideoFragment extends Fragment implements CoursevideoAdapter.
     public void click(View v) {
           switch (v.getId()){
               case R.id.watch://观看视频
-                  Toast.makeText(getActivity().getApplicationContext(),"你点击图片了",Toast.LENGTH_SHORT).show();
+                  Toast.makeText(getActivity().getApplicationContext(),"视频加载中",Toast.LENGTH_SHORT).show();
+                  Intent intent=new Intent(getActivity(),VideoPlayActivity.class);
+                  startActivity(intent);
                   break;
           }
     }

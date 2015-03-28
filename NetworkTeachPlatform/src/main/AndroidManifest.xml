@@ -63,6 +63,12 @@
             android:theme="@style/MyDialogStyle"
             android:label="@string/title_activity_my_dialog" >
         </activity>
+        <activity android:name="com.chzu.ntp.ui.VideoPlayActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
     </application>
 
 
