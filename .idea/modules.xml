@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/NetworkTeachPlatform/NetworkTeachPlatform.iml" filepath="$PROJECT_DIR$/NetworkTeachPlatform/NetworkTeachPlatform.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
       <module fileurl="file://$PROJECT_DIR$/ntp-android.iml" filepath="$PROJECT_DIR$/ntp-android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/vitamio/vitamio.iml" filepath="$PROJECT_DIR$/vitamio/vitamio.iml" />
     </modules>
   </component>
 </project>

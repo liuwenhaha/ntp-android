@@ -5,12 +5,13 @@
       <GradleProjectSettings>
         <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="C:\My-Develop-Tools\android-studio\gradle\gradle-2.2.1" />
+        <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/NetworkTeachPlatform" />
             <option value="$PROJECT_DIR$/library" />
+            <option value="$PROJECT_DIR$/vitamio" />
           </set>
         </option>
       </GradleProjectSettings>

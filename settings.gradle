@@ -1,2 +1,2 @@
-include ':NetworkTeachPlatform', ':'
+include ':NetworkTeachPlatform', ':', ':vitamio'
 include ':library'
