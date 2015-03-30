@@ -27,7 +27,7 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="password">密码</string>
     <string name="login">登录</string>
-    <string name="loginInterface">登录界面</string>
+    <string name="loginInterface">登录</string>
     <string name="title_activity_setting">Setting</string>
     <string name="use234G">用移动网络播放视频和下载课件</string>
     <string name="about">关于</string>
@@ -55,5 +55,7 @@
     <string name="testName">yanxing</string>
     <string name="testTime">2015-02-02</string>
     <string name="testReply">回复数</string>
+    <string name="register">注册</string>
+    <string name="newRegister">注册新用户</string>
 
 </resources>

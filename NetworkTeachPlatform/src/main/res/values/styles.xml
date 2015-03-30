@@ -86,4 +86,8 @@
         <item name="android:background">@drawable/search_edit_text_selected</item>
     </style>
 
+    <style name="MyEditStyle2" parent="@android:style/Widget.EditText">
+        <item name="android:background">@drawable/edit_text</item>
+    </style>
+
 </resources>

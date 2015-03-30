@@ -26,7 +26,10 @@
             android:layout_width="match_parent"
             android:layout_height="43dp"
             android:hint="@string/username"
+            android:textColorHint="@color/rounded_text_bg"
             android:paddingLeft="8dp"
+            android:cursorVisible="true"
+            android:textColor="@color/menu_text_normal"
             android:background="@color/layout_bg_normal"
             android:inputType="text" />
 
@@ -40,7 +43,9 @@
             android:layout_width="match_parent"
             android:layout_height="43dp"
             android:hint="@string/password"
+            android:textColorHint="@color/rounded_text_bg"
             android:paddingLeft="8dp"
+            android:textColor="@color/menu_text_normal"
             android:background="@color/layout_bg_normal"
             android:inputType="textPassword" />
 
@@ -56,5 +61,19 @@
             android:background="@drawable/rounded_login_btn"
             android:text="@string/login" />
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:textColor="@color/menu_text_pressed"
+            android:text="@string/newRegister"/>
+        </LinearLayout>
 
 </LinearLayout>

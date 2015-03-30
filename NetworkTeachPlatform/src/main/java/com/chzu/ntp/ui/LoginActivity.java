@@ -1,6 +1,7 @@
 package com.chzu.ntp.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +18,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private ImageView back;//返回
     private Button login;//登录
     private EditText username, password;
+    private EditText register;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         login = (Button) findViewById(R.id.login);
         username = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
+        register= (EditText) findViewById(R.id.register);
+        register.setOnClickListener(this);
         back.setOnClickListener(this);
         login.setOnClickListener(this);
     }
@@ -46,6 +50,12 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     //检查网络是否连接
 
                 }
+                break;
+            case R.id.register://注册
+                Intent intent=new Intent(this,RegisterActivity.class);
+                startActivity(intent);
+                break;
+
         }
     }
 }
