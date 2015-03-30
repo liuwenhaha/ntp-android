@@ -29,6 +29,7 @@ import com.chzu.ntp.util.BitmapZoomHttp;
 import com.chzu.ntp.util.HttpUtil;
 import com.chzu.ntp.util.ImageNameGenerator;
 import com.chzu.ntp.util.NetworkState;
+import com.chzu.ntp.util.PreferenceUtil;
 import com.chzu.ntp.util.SDCardUtil;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -58,6 +59,16 @@ import java.util.List;
 public class CourseListFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     /**
+     * 请求课程网络地址
+     */
+    /*public static final String PATH = "http://10.0.2.2/ntp/phone/courseList";*/
+    public static final String PATH = "http://192.168.1.112/ntp/phone/courseList";
+    public static final String TAG = "json";
+    /**
+     * 发送消息成功标识
+     */
+    private static final int RESULT = 1;
+    /**
      * Android-PullToRefresh中的ListView控件，具有下拉刷新、上拉刷新特征
      */
     PullToRefreshListView pullToRefreshView;
@@ -70,16 +81,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
     private CourseDao courseDao;
     private CourseTypeDao courseTypeDao;
     private LinearLayout load;
-    /**
-     * 请求课程网络地址
-     */
-    /*public static final String PATH = "http://10.0.2.2/ntp/phone/courseList";*/
-    public static final String PATH = "http://192.168.1.112/ntp/phone/courseList";
-    public static final String TAG = "json";
-    /**
-     * 发送消息成功标识
-     */
-    private static final int RESULT = 1;
+    List<Course> list = new ArrayList<Course>();//全局list对象，方便listView分页显示课程
 
     /**
      * 创建单例对象
@@ -130,6 +132,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                     Toast.makeText(getActivity().getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override  //下拉刷新
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 String label = "正在加载...";
@@ -145,7 +148,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
         });
         courseDao = new CourseDao(getActivity().getApplicationContext());
         courseTypeDao = new CourseTypeDao(getActivity().getApplicationContext());
-        imageLoader=ImageLoader.getInstance();
+        imageLoader = ImageLoader.getInstance();
         List<Course> courseList = courseDao.getAllCourse();
         if (courseList.size() > 0) {//如果本地有缓存,隐藏"提示正在加载课程中"视图
             loadImage(courseList);
@@ -179,8 +182,8 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 .cacheOnDisk(true)
                 .showImageOnFail(R.drawable.course_default)//不存在默认显示图片
                 .build();
-        if (SDCardUtil.isExistSDFile("ntp/1.png")){//如果文件存在
-            Bitmap bitmap = imageLoader.loadImageSync(imageUri,options);
+        if (SDCardUtil.isExistSDFile("ntp/1.png")) {//如果文件存在
+            Bitmap bitmap = imageLoader.loadImageSync(imageUri, options);
             for (int i = 0; i < courseList.size(); i++) {
                 courseList.get(i).setBitmap(BitmapZoomHttp.createBitmapZoop(bitmap, 120, 76));
             }
@@ -216,8 +219,10 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             try {
                 JSONObject jb = null;
                 while (jb == null) {//直到获取数据
-                    jb = HttpUtil.getDataFromInternet(new URL(PATH));
+                    jb = HttpUtil.getDataFromInternet(new URL(PATH), "POST");
                 }
+                int currentPage = jb.getInt("currentPage");
+                PreferenceUtil.saveCurrentPage(getActivity().getApplicationContext(), currentPage);//保存当前页数
                 JSONArray ja = jb.getJSONArray("list");
                 for (int i = 0; i < ja.length(); i++) {
                     JSONObject j = ja.getJSONObject(i);
@@ -226,7 +231,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                     courseDao.save(course);//缓存到数据库
                     Log.i(TAG, course.toString());
                 }
-                loadImage();
+                loadImage(list);
                 msg.what = RESULT;
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("list", (java.io.Serializable) list);
@@ -244,12 +249,12 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
         /**
          * 加载课程图片
          */
-        private void loadImage() {
+        private void loadImage(List<Course> list) {
             //模拟图片
             String imageUri = "http://h.hiphotos.baidu.com/image/w%3D230/sign=1ea5b9ff34d3d539c13d08c00a87e927/2e2eb9389b504fc2022d2904e7dde71190ef6d45.jpg";
             File file = SDCardUtil.creatSDDir("ntp");
             ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity().getApplicationContext())
-                    .diskCache(new UnlimitedDiscCache(file,null,new ImageNameGenerator("1.png"))) // 缓存到SD卡
+                    .diskCache(new UnlimitedDiscCache(file, null, new ImageNameGenerator("1.png"))) // 缓存到SD卡
                     .build();
             imageLoader.init(config);
             //显示图片的配置
@@ -267,14 +272,15 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
      * 下拉刷新线程
      */
     private class GetDataTask extends AsyncTask<Void, Void, String[]> {
-        List<Course> list = new ArrayList<Course>();
 
         @Override //后台耗时操作
         protected String[] doInBackground(Void... params) {
             try {
-                //Thread.sleep(4000);
-                JSONObject jb = HttpUtil.getDataFromInternet(new URL(PATH));
+
+                JSONObject jb = HttpUtil.getDataFromInternet(new URL(PATH), "POST");
                 if (jb != null) {
+                    int currentPage = jb.getInt("currentPage");
+                    PreferenceUtil.saveCurrentPage(getActivity().getApplicationContext(), currentPage);//保存当前页数
                     JSONArray ja = jb.getJSONArray("list");
                     courseDao.delete();//先清空缓存
                     for (int i = 0; i < ja.length(); i++) {
@@ -313,7 +319,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
          */
         public void updateData() {
             try {
-                JSONObject jb = HttpUtil.getDataFromInternet(new URL(CoursetypeSelectActivity.PATH));
+                JSONObject jb = HttpUtil.getDataFromInternet(new URL(CoursetypeSelectActivity.PATH), "POST");
                 if (jb != null) {
                     courseTypeDao.delete();//先清空
                     JSONArray ja = jb.getJSONArray("listCType");
@@ -342,8 +348,24 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
         @Override
         protected String[] doInBackground(Void... params) {
             try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
+                int currentPage = PreferenceUtil.getCurrentPage(getActivity().getApplicationContext());
+                JSONObject jb = HttpUtil.getDataFromInternet(new URL(PATH + "?page=" + currentPage), "POST");
+                if (jb != null) {
+                    int page = jb.getInt("currentPage");
+                    PreferenceUtil.saveCurrentPage(getActivity().getApplicationContext(), page);//保存当前页数
+                    JSONArray ja = jb.getJSONArray("list");
+                    courseDao.delete();//先清空缓存
+                    for (int i = 0; i < ja.length(); i++) {
+                        JSONObject j = ja.getJSONObject(i);
+                        Course course = new Course(j.getString("code"), j.getString("name"), j.getJSONObject("coursetype").getString("type"), j.getJSONObject("user").getString("name"));
+                        list.add(course);
+                        courseDao.save(course);//缓存到数据库
+                        Log.i(TAG, course.toString());
+                    }
+                }
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
             return new String[0];
@@ -353,6 +375,14 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
         protected void onPostExecute(String[] strings) {
             super.onPostExecute(strings);
             pullToRefreshView.onRefreshComplete();
+            if (list.size() > 0) {//获取到数据，更新UI
+                load.setVisibility(View.GONE);
+                adapter = new CourseAdapter(list, getActivity());
+                pullToRefreshView.setAdapter(adapter);
+                Toast.makeText(getActivity().getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(), "没有更新到数据，请检查网络，稍后再试", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
