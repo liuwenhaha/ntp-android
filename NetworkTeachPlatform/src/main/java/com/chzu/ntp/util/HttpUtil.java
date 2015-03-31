@@ -91,11 +91,11 @@ public class HttpUtil {
     /**
      * 获取json数据，使用HttpURLConnection，内部没有使用线程，
      */
-    public static JSONObject getDataFromInternet(URL url) {
+    public static JSONObject getDataFromInternet(URL url,String requestMethod) {
         JSONObject jb = null;
         try {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
+            conn.setRequestMethod(requestMethod);
             conn.setConnectTimeout(6 * 1000);//设置超时时间为6s
             conn.setRequestProperty("Charset", "UTF-8");
             if (conn.getResponseCode() == 200) {
