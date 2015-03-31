@@ -18,8 +18,8 @@ public class CourseDao {
     private static DBOpenHelper dbOpenHelper;
     private static SQLiteDatabase SQLiteDB;
 
-    public CourseDao(Context content) {
-        dbOpenHelper = new DBOpenHelper(content);
+    public CourseDao(Context context) {
+        dbOpenHelper = new DBOpenHelper(context);
         SQLiteDB = dbOpenHelper.getWritableDatabase();
     }
 
@@ -30,11 +30,11 @@ public class CourseDao {
         Cursor cursor = SQLiteDB.rawQuery("select * from course_table", null);
         List<Course> list = new ArrayList<Course>();
         while (cursor.moveToNext()) {
-            Course course = new Course(null,cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
+            Course course = new Course(null, cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
             list.add(course);
         }
         cursor.close();
-        return  list;
+        return list;
     }
 
     /**
@@ -42,18 +42,18 @@ public class CourseDao {
      */
     public void save(Course course) {
         ContentValues values = new ContentValues();
-        values.put("name",course.getName());
-        values.put("code",course.getCode());
-        values.put("type",course.getType());
-        values.put("username",course.getTeacher());
-        SQLiteDB.insert("course_table",null,values);
+        values.put("name", course.getName());
+        values.put("code", course.getCode());
+        values.put("type", course.getType());
+        values.put("username", course.getTeacher());
+        SQLiteDB.insert("course_table", null, values);
     }
 
     /**
      * 清空course_table
      */
-    public void delete(){
-        SQLiteDB.delete("course_table",null,null);
+    public void delete() {
+        SQLiteDB.delete("course_table", null, null);
     }
 
     /**

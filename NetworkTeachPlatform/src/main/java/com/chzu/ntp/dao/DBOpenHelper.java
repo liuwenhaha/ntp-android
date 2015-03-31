@@ -22,9 +22,12 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         //课程表
         String sql = "create table course_table(_id integer primary key,code varchar(20),name varchar(20),type varchar(20),username varchar(20))";
         //课程类型表
-        String sqlType="create table coursetype_table(_id integer primary key,type varchar(20))";
+        String sqlType = "create table coursetype_table(_id integer primary key,type varchar(20))";
+        //搜索历史
+        String sqlSearch = "create table search_history(_id integer primary key,content varchar(20))";
         db.execSQL(sql);
         db.execSQL(sqlType);
+        db.execSQL(sqlSearch);
     }
 
     // 更新数据库，当版本变化时系统会调用该回调方法

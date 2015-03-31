@@ -19,8 +19,8 @@ public class CourseTypeDao {
     private static DBOpenHelper dbOpenHelper;
     private static SQLiteDatabase SQLiteDB;
 
-    public CourseTypeDao(Context content) {
-        dbOpenHelper = new DBOpenHelper(content);
+    public CourseTypeDao(Context context) {
+        dbOpenHelper = new DBOpenHelper(context);
         SQLiteDB = dbOpenHelper.getWritableDatabase();
     }
 
@@ -34,12 +34,12 @@ public class CourseTypeDao {
         while (cursor.moveToNext()) {
             list.add(cursor.getString(1));
         }
-        String st[]=new String[list.size()];
-        for (int i=0;i<list.size();i++){
-            st[i]=list.get(i);
+        String st[] = new String[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            st[i] = list.get(i);
         }
         cursor.close();
-        return  st;
+        return st;
     }
 
     /**
@@ -47,15 +47,15 @@ public class CourseTypeDao {
      */
     public void save(String type) {
         ContentValues values = new ContentValues();
-        values.put("type",type);
-        SQLiteDB.insert("coursetype_table",null,values);
+        values.put("type", type);
+        SQLiteDB.insert("coursetype_table", null, values);
     }
 
     /**
      * 清空coursetype_table
      */
-    public void delete(){
-        SQLiteDB.delete("coursetype_table",null,null);
+    public void delete() {
+        SQLiteDB.delete("coursetype_table", null, null);
     }
 
     /**

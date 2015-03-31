@@ -20,6 +20,7 @@
             android:background="@drawable/title_back_img" />
 
         <EditText
+            android:id="@+id/search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="6dp"
@@ -28,10 +29,12 @@
             android:hint="@string/searchCourse"
             android:drawableLeft="@drawable/search_icon"
             android:layout_marginTop="12dp"
+            android:textCursorDrawable="@null"
             android:imeOptions="actionSearch"
             android:cursorVisible="true"
             android:inputType="text"
             style="@style/MyEditStyle1"
+            android:textSize="16sp"
             android:textColor="@color/menu_text_normal"
             android:layout_toRightOf="@id/back" />
 
@@ -48,12 +51,25 @@
         android:gravity="center_horizontal">
 
         <TextView
+            android:id="@+id/no_search_tip"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:text="@string/no_record"
             android:textColor="@color/menu_text_normal"
             android:textSize="18sp" />
+
+        <ListView
+            android:id="@+id/history"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/divider_line"
+            android:dividerHeight="@dimen/divider_line"
+            android:scrollbarStyle="outsideOverlay"
+            android:listSelector="@android:color/transparent"
+            android:visibility="gone"
+            android:cacheColorHint="#0000"
+            android:background="@null"></ListView>
     </RelativeLayout>
 
 
