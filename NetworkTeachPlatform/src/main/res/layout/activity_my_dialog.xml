@@ -61,7 +61,7 @@
                 android:gravity="center"
                 android:clickable="true"
                 android:textSize="15sp"
-                android:textColor="@color/course_name"
+                android:textColor="@color/blue_1"
                 android:background="@drawable/layout_selector_bg"
                 android:text="确定" />
         </LinearLayout>

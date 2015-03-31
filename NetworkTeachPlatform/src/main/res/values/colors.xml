@@ -17,4 +17,10 @@
     <color name="rounded_text_bg">#e5e3e3</color>
     <color name="rounded_text_wrap">#2c7f49</color>
     <color name="nav_bg">#fcfafa</color>
+    <color name="blue">#337ab7</color>
+    <color name="blue_light">#ff33b5e5</color>
+    <color name="blue_1">#1c87d9</color>
+    <color name="blue_2">#4c9ada</color>
+    <color name="blue_3">#3197d4</color>
+    <color name="blue_4">#35a4e6</color>
 </resources>

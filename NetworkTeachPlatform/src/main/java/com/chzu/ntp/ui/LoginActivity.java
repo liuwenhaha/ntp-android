@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -18,7 +19,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private ImageView back;//返回
     private Button login;//登录
     private EditText username, password;
-    private EditText register;
+    private TextView register;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +29,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         login = (Button) findViewById(R.id.login);
         username = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
-        register= (EditText) findViewById(R.id.register);
+        register= (TextView) findViewById(R.id.register);
         register.setOnClickListener(this);
         back.setOnClickListener(this);
         login.setOnClickListener(this);

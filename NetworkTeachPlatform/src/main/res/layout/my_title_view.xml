@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="46dp"
-    android:gravity="center_vertical"
     android:background="@color/layout_bg_normal"
-    android:orientation="horizontal">
-
-    <ImageView
-        android:id="@+id/back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:layout_marginLeft="8dp"
-        android:background="@drawable/title_back_img" />
+    android:gravity="center">
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
+        android:gravity="center"
+        android:text="@string/loginInterface"
         android:textColor="@color/course_name"
-        android:textSize="17sp"
-        android:layout_marginLeft="5dp"
-        android:text="@string/loginInterface" />
+        android:textSize="18sp" />
 
-</LinearLayout>
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/title_back_img"
+            android:clickable="true" />
+    </FrameLayout>
+</FrameLayout>

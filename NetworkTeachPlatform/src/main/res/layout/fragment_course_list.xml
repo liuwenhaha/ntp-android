@@ -36,5 +36,5 @@
         android:dividerHeight="@dimen/divider_line"
         android:scrollbarStyle="outsideOverlay"
         android:listSelector="@color/layout_bg_pressed"
-        android:scrollbars="horizontal" />
+        android:scrollbars="vertical" />
 </FrameLayout>

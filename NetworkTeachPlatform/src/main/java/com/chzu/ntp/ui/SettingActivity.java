@@ -131,6 +131,7 @@ public class SettingActivity extends Activity implements View.OnClickListener {
             courseDao.delete();
             courseTypeDao.delete();
             cacheText.setText("0KB");
+            PreferenceUtil.saveCurrentPage(getApplicationContext(),1);//重置课程列表当前页数
             Toast.makeText(getApplicationContext(),"清除成功",Toast.LENGTH_LONG).show();
         }
     }
