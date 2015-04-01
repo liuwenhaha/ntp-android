@@ -61,8 +61,8 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
     /**
      * 请求课程网络地址
      */
-    /*public static final String PATH = "http://10.0.2.2/ntp/phone/courseList";*/
-    public static final String PATH = "http://192.168.1.2/ntp/phone/courseList";
+    /*public static final String PATH = "http://10.0.2.2/ntp/phone/course-list";*/
+    public static final String PATH = "http://192.168.1.102/ntp/phone/course-list";
     public static final String TAG = "down_json";
     public static final String TAG1 = "up_json";
     /**

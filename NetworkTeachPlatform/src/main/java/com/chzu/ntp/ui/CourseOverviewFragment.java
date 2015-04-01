@@ -27,8 +27,8 @@ public class CourseOverviewFragment extends Fragment {
     /**
      * 根据课程代码获取该课程详细信息网络地址
      */
-    public static final String PATH = "http://192.168.1.112/ntp/phone/courseDetail";
-   /* public static final String PATH = "http://10.0.2.2/ntp/phone/courseDetail";*/
+    public static final String PATH = "http://192.168.1.112/ntp/phone/course-detail";
+   /* public static final String PATH = "http://10.0.2.2/ntp/phone/course-detail";*/
     private static final String TAG="json";
 
 

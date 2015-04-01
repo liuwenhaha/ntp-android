@@ -36,8 +36,8 @@ public class CoursetypeSelectActivity extends Activity implements View.OnClickLi
     /**
      * 请求课程类型网络地址
      */
-    /*public  static final String PATH = "http://10.0.2.2/ntp/phone/courseType";*/
-    public  static final String PATH = "http://192.168.1.112/ntp/phone/courseType";
+    /*public  static final String PATH = "http://10.0.2.2/ntp/phone/course-type";*/
+    public  static final String PATH = "http://192.168.1.112/ntp/phone/course-type";
     public  static final String TAG="json_courseType";
 
     @Override
