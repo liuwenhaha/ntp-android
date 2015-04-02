@@ -4,9 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-
-import com.chzu.ntp.model.SearchHistory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,18 +53,14 @@ public class SearchHistoryDao {
     /**
      * 获取搜索历史
      */
-    public String[] findAll() {
+    public List<String> findAll() {
         Cursor cursor = sqLiteDatabase.rawQuery("select * from search_history", null);
         List<String> list = new ArrayList<String>();
         while (cursor.moveToNext()) {
             list.add(cursor.getString(1));
         }
-        String st[] = new String[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            st[i] = list.get(i);
-        }
         cursor.close();
-        return st;
+        return list;
     }
 
     /**
@@ -75,6 +68,13 @@ public class SearchHistoryDao {
      */
     public void delete() {
         sqLiteDatabase.delete("search_history", null, null);
+    }
+
+    /**
+     * 删除搜索历史
+     */
+    public void deleteByName(String name) {
+        sqLiteDatabase.delete("search_history as s where s=? ",name, null);
     }
 
     /**

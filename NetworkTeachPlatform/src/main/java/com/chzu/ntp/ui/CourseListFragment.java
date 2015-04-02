@@ -61,8 +61,8 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
     /**
      * 请求课程网络地址
      */
-    /*public static final String PATH = "http://10.0.2.2/ntp/phone/course-list";*/
-    public static final String PATH = "http://192.168.1.102/ntp/phone/course-list";
+    public static final String PATH = "http://10.0.2.2/ntp/phone/course-list";
+//    public static final String PATH = "http://192.168.1.102/ntp/phone/course-list";
     public static final String TAG = "down_json";
     public static final String TAG1 = "up_json";
     /**
@@ -186,7 +186,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
         if (SDCardUtil.isExistSDFile("ntp/1.png")) {//如果文件存在
             Bitmap bitmap = imageLoader.loadImageSync(imageUri, options);
             for (int i = 0; i < courseList.size(); i++) {
-                courseList.get(i).setBitmap(BitmapZoomHttp.createBitmapZoop(bitmap, 120, 76));
+                courseList.get(i).setBitmap(BitmapZoomHttp.createBitmapZoop(bitmap, 120, 70));
             }
         }
         GlobalVariable globalVariable= (GlobalVariable) getActivity().getApplication();

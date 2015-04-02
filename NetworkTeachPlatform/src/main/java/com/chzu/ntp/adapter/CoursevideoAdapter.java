@@ -57,12 +57,15 @@ public class CoursevideoAdapter extends BaseAdapter implements View.OnClickListe
         ImageView imageView;
         convertView = LayoutInflater.from(context).inflate(R.layout.listview_item_coursevideo, null);
         imageView = (ImageView) convertView.findViewById(R.id.watch);
-//        imageView.setBackgroundResource(cardViewList.get(position).getId());//拉伸图片，充满ImageView控件
-//        imageView.setImageResource(cardViewList.get(position).getId());
+//        imageView.setBackgroundResource(mCoursevideoList.get(position).getImageId());//拉伸图片，充满ImageView控件
+        imageView.setImageResource(mCoursevideoList.get(position).getImageId());
+        imageView.setTag(position);
         id= (TextView) convertView.findViewById(R.id.coursevideoId);
         id.setText(mCoursevideoList.get(position).getId());
         name = (TextView) convertView.findViewById(R.id.coursevideoName);
         name.setText(mCoursevideoList.get(position).getName());
+        name.setTag(position);
+        name.setOnClickListener(this);
         imageView.setOnClickListener(this);
         return convertView;
     }

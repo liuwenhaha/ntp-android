@@ -7,6 +7,7 @@ package com.chzu.ntp.model;
 public class Coursevideo {
     private String id;
     private String name;
+    private int imageId;//图片资源id
 
     public String getName() {
         return name;
@@ -31,6 +32,25 @@ public class Coursevideo {
     public Coursevideo(String id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    /**
+     * @param id 视频id
+     * @param name 视频名称
+     * @param imageId 播放图片
+     */
+    public Coursevideo(String id, String name, int imageId) {
+        this.id = id;
+        this.name = name;
+        this.imageId = imageId;
+    }
+
+    public int getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(int imageId) {
+        this.imageId = imageId;
     }
 
     @Override

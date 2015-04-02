@@ -72,7 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:textColor="@color/blue_2"
+            android:textColor="@color/blue_1"
             android:text="@string/newRegister"/>
         </LinearLayout>
 

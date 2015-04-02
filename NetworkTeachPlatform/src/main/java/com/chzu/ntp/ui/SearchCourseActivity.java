@@ -5,19 +5,47 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chzu.ntp.adapter.CourseAdapter;
+import com.chzu.ntp.dao.SearchHistoryDao;
+import com.chzu.ntp.model.Course;
+import com.chzu.ntp.util.HttpUtil;
 import com.chzu.ntp.widget.MyProgress;
+import com.loopj.android.http.AsyncHttpClient;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 搜索课程
  */
-public class SearchCourseActivity extends Activity implements View.OnClickListener {
+public class SearchCourseActivity extends Activity implements View.OnClickListener,View.OnKeyListener,AdapterView.OnItemClickListener {
 
+    /**
+     * 搜索课程路径
+     */
+    private static  final String PATH="http://10.0.2.2/ntp/phone/course-search";
     private ImageView back;//返回
     private EditText search;
+    private SearchHistoryDao searchHistoryDao;
+    private CourseAdapter courseAdapter;
+    private ListView listView;
+    private TextView tip;
+    List<Course> list;
+    private static final int REQUEST=1;//请求码
+    private static final int REQUEST_PROGRESS=2;//请求码
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,16 +54,14 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
         back = (ImageView) findViewById(R.id.back);
         search = (EditText) findViewById(R.id.search);
         back.setOnClickListener(this);
-        search.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                    Intent intent = new Intent(getApplicationContext(), MyProgress.class);
-                    startActivity(intent);
-                }
-                return false;
-            }
-        });
+        search.setOnKeyListener(this);
+        listView= (ListView) findViewById(R.id.history);
+        tip= (TextView) findViewById(R.id.no_search_tip);
+        list = new ArrayList<Course>();
+        searchHistoryDao=new SearchHistoryDao(getApplicationContext());
+        courseAdapter=new CourseAdapter(list,getApplicationContext());
+        listView.setAdapter(courseAdapter);
+
 
     }
 
@@ -49,4 +75,75 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
     }
 
 
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (search.getText().toString().equals("")){//没有输入
+                return false;
+            }
+            Intent intent = new Intent(getApplicationContext(), MyProgress.class);
+            startActivityForResult(intent, REQUEST_PROGRESS);
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("name", search.getText().toString());//键和后台参数接受字段一直
+            JSONObject jb = HttpUtil.getDataFromInternet(PATH, map);
+            try {
+                if (jb != null) {
+                    list.clear();
+                    JSONArray ja = jb.getJSONArray("list");
+                    for (int i = 0; i < ja.length(); i++) {
+                        JSONObject j = ja.getJSONObject(i);
+                        Course course = new Course(null, j.getString("code"), j.getString("name"), j.getJSONObject("coursetype").getString("type"), j.getJSONObject("user").getString("name"));
+                        list.add(course);
+                    }
+                    searchHistoryDao.save(search.getText().toString());//保存搜索历史
+                    courseAdapter = new CourseAdapter(list, getApplicationContext());
+                    listView.setVisibility(View.VISIBLE);//设置listView可见
+                    tip.setVisibility(View.GONE);
+                    courseAdapter.notifyDataSetChanged();
+                    finishActivity(REQUEST_PROGRESS);
+                }else {
+                    Toast.makeText(getApplicationContext(),"没有搜索到相关课程",Toast.LENGTH_SHORT).show();
+                    finishActivity(REQUEST_PROGRESS);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    //启动的子activity结果处理
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==REQUEST){
+            if (resultCode==RESULT_OK){//如果用户利用搜索历史搜索课程，如果搜索成功
+                list= (List<Course>) data.getExtras().getSerializable("list");
+                courseAdapter = new CourseAdapter(list, getApplicationContext());
+                listView.setAdapter(courseAdapter);
+            }else if(resultCode==RESULT_CANCELED){
+                Toast.makeText(getApplicationContext(),"没有搜索到相关课程",Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        searchHistoryDao.close();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(getApplicationContext(), CourseDetailActivity.class);
+        TextView text = (TextView) view.findViewById(R.id.code);
+        TextView textView = (TextView) view.findViewById(R.id.courseName);
+        String code = (String) text.getText();
+        String name = (String) textView.getText();
+        Bundle bundle = new Bundle();
+        bundle.putString("code", code);
+        bundle.putString("name", name);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
 }

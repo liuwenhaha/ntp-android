@@ -36,7 +36,9 @@
         </activity>
         <activity
             android:name=".SearchCourseActivity"
+            android:configChanges="orientation|keyboardHidden|locale"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustPan"
             android:theme="@style/MyEditStyle" />
         <activity
             android:name=".CoursetypeSelectActivity"
@@ -62,6 +64,7 @@
         <activity
             android:name="com.chzu.ntp.widget.MyDialog"
             android:label="@string/title_activity_my_dialog"
+            android:screenOrientation="portrait"
             android:theme="@style/MyDialogStyle" >
         </activity>
         <activity
@@ -74,13 +77,18 @@
         <activity
             android:name=".RegisterActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Anim_style2">
+            android:theme="@style/Anim_style2" >
         </activity>
         <activity
             android:name="com.chzu.ntp.widget.MyProgress"
-            android:configChanges="orientation|keyboardHidden|locale"
-            android:windowSoftInputMode="stateVisible|adjustPan"
+            android:screenOrientation="portrait"
             android:theme="@style/MyProgressStyle" />
+        <activity
+            android:name=".SearchHistoryActivity"
+            android:theme="@style/MyDialogStyleTop"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_search_history" >
+        </activity>
     </application>
 
 </manifest>

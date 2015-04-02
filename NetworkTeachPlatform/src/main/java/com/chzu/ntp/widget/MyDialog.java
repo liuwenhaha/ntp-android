@@ -21,7 +21,8 @@ public class MyDialog extends Activity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_dialog);
+//        setContentView(R.layout.activity_my_dialog);
+        setContentView(R.layout.my_dialog_view);
         Intent intent=getIntent();
         String tipStr=intent.getExtras().getString("tip");
         tip= (TextView) findViewById(R.id.tip);

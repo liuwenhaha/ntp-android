@@ -57,5 +57,8 @@
     <string name="testReply">回复数</string>
     <string name="register">注册</string>
     <string name="newRegister">注册新用户</string>
+    <string name="title_activity_search_history">SearchHistoryActivity</string>
+    <string name="searchName">搜索的课程历史</string>
+    <string name="placeholder">占位符</string>
 
 </resources>
