@@ -28,12 +28,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private List<Fragment> fragments;
     private Fragment loadCourse;//加载课程Fragemnt
 
-    //顶部功能导航图片和文字课程,消息（作业），我
+    //底部功能导航图片和文字课程,消息（作业），我
     private ImageView allCourse, homework, me;
     private TextView courseTxt, homeworkTxt, meTxt;
     //所有课程及其背景
-    private TextView courseType;
+    private TextView courseType, tip;
     private LinearLayout navigateMore, search;
+    private static final String COURSE = "课程";
+    private static final String NOTICE = "消息";
+    private static final String ME = "我";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +57,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         courseTxt = (TextView) findViewById(R.id.courseTxt);
         homeworkTxt = (TextView) findViewById(R.id.homeworkTxt);
         meTxt = (TextView) findViewById(R.id.meTxt);
-        navigateMore = (LinearLayout) findViewById(R.id.navigateMore);
+//        navigateMore = (LinearLayout) findViewById(R.id.navigateMore);
         courseType = (TextView) findViewById(R.id.courseType);
         search = (LinearLayout) findViewById(R.id.search);
+        tip = (TextView) findViewById(R.id.tip);
         allCourse.setOnClickListener(this);
         homework.setOnClickListener(this);
         me.setOnClickListener(this);
         search.setOnClickListener(this);
-        navigateMore.setOnClickListener(this);
+//        navigateMore.setOnClickListener(this);
         fragments = new ArrayList<Fragment>();
         fragments.add(CourseListFragment.getInstance());
         fragments.add(NoticeFragment.getInstance());
@@ -84,10 +88,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             case R.id.me:
                 viewPager.setCurrentItem(2);
                 break;
-            case R.id.navigateMore:
-                Intent intent = new Intent(this, CoursetypeSelectActivity.class);
-                startActivity(intent);
-                break;
+//            case R.id.navigateMore:
+//                Intent intent = new Intent(this, CoursetypeSelectActivity.class);
+//                startActivity(intent);
+//                break;
             case R.id.search:
                 Intent searchIntent = new Intent(this, SearchCourseActivity.class);
                 startActivity(searchIntent);
@@ -110,12 +114,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             switch (position) {
                 case 0://CourseListFragment被选中
                     setTextColor(0);
+                    tip.setText(COURSE);
+                    search.setVisibility(View.VISIBLE);
                     break;
                 case 1://NoticeFragment被选择
                     setTextColor(1);
+                    tip.setText(NOTICE);
+                    search.setVisibility(View.INVISIBLE);
                     break;
                 case 2://MeFragment被选择
                     setTextColor(2);
+                    tip.setText(ME);
+                    search.setVisibility(View.INVISIBLE);
             }
         }
 
@@ -137,14 +147,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             homeworkTxt.setTextColor(getResources().getColor(R.color.menu_text_reserve));
             meTxt.setTextColor(getResources().getColor(R.color.menu_text_reserve));
             if (position == 0) {//CourseListFragment被选中
-                allCourse.setImageDrawable(getResources().getDrawable(R.drawable.homepage_pressed));
-                courseTxt.setTextColor(getResources().getColor(R.color.menu_text_pressed));
+                allCourse.setImageDrawable(getResources().getDrawable(R.drawable.homepage_pressed_d));
+                courseTxt.setTextColor(getResources().getColor(R.color.blue_3));
             } else if (position == 1) {//NoticeFragment被选择
-                homework.setImageDrawable(getResources().getDrawable(R.drawable.homework_pressed));
-                homeworkTxt.setTextColor(getResources().getColor(R.color.menu_text_pressed));
+                homework.setImageDrawable(getResources().getDrawable(R.drawable.homework_pressed_d));
+                homeworkTxt.setTextColor(getResources().getColor(R.color.blue_3));
             } else if (position == 2) {//MeFragment被选择
-                me.setImageDrawable(getResources().getDrawable(R.drawable.me_pressed));
-                meTxt.setTextColor(getResources().getColor(R.color.menu_text_pressed));
+                me.setImageDrawable(getResources().getDrawable(R.drawable.me_pressed_d));
+                meTxt.setTextColor(getResources().getColor(R.color.blue_3));
             }
         }
     }
