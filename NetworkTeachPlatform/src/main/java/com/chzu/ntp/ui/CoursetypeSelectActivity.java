@@ -38,7 +38,7 @@ public class CoursetypeSelectActivity extends Activity implements View.OnClickLi
      */
     /*public  static final String PATH = "http://10.0.2.2/ntp/phone/course-type";*/
     public  static final String PATH = "http://192.168.1.112/ntp/phone/course-type";
-    public  static final String TAG="json_courseType";
+    public static final String TAG = "CoursetypeSelectActivit";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +63,7 @@ public class CoursetypeSelectActivity extends Activity implements View.OnClickLi
     public String[] getData() {
         if(NetworkState.isNetworkConnected(getApplicationContext())){//网络可用
             try {
-                JSONObject jb = HttpUtil.getDataFromInternet(PATH);
+                JSONObject jb = HttpUtil.getDataFromInternet(new URL(PATH), null);
                 if (jb != null) {
                     JSONArray ja = jb.getJSONArray("listCType");
                     String name[] = new String[ja.length()];
@@ -77,6 +77,8 @@ public class CoursetypeSelectActivity extends Activity implements View.OnClickLi
                     Log.i(TAG, "没有取到后台数据");
                 }
             } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
         }

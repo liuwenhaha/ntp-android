@@ -29,7 +29,8 @@ public class CourseOverviewFragment extends Fragment {
      */
     public static final String PATH = "http://192.168.1.112/ntp/phone/course-detail";
    /* public static final String PATH = "http://10.0.2.2/ntp/phone/course-detail";*/
-    private static final String TAG="json";
+   private static final String TAG = "CourseOverviewFragment";
+    private static AsyncHttpClient client = new AsyncHttpClient();
 
 
     /**
@@ -56,7 +57,6 @@ public class CourseOverviewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_course_overview, container, false);
-        AsyncHttpClient client=new AsyncHttpClient();
         RequestParams params=new RequestParams();
         params.put("code",code);
         if(NetworkState.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用

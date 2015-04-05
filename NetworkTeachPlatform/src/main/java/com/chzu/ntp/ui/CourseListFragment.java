@@ -61,8 +61,8 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
     /**
      * 请求课程网络地址
      */
-    public static final String PATH = "http://10.0.2.2/ntp/phone/course-list";
-//    public static final String PATH = "http://192.168.1.102/ntp/phone/course-list";
+//    public static final String PATH = "http://10.0.2.2/ntp/phone/course-list";
+    public static final String PATH = "http://192.168.1.105/ntp/phone/course-list";
     public static final String TAG = "down_json";
     public static final String TAG1 = "up_json";
     /**
@@ -222,7 +222,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             try {
                 JSONObject jb = null;
                 while (jb == null) {//直到获取数据
-                    jb = HttpUtil.getDataFromInternet(new URL(PATH), "POST");
+                    jb = HttpUtil.getDataFromInternet(new URL(PATH), null);
                 }
                 int currentPage = jb.getInt("currentPage");
                 PreferenceUtil.saveCurrentPage(getActivity().getApplicationContext(), currentPage);//保存当前页数
@@ -282,7 +282,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
         protected String[] doInBackground(Void... params) {
             try {
 
-                JSONObject jb = HttpUtil.getDataFromInternet(new URL(PATH), "POST");
+                JSONObject jb = HttpUtil.getDataFromInternet(new URL(PATH), null);
                 if (jb != null) {
                     int currentPage = jb.getInt("currentPage");
                     PreferenceUtil.saveCurrentPage(getActivity().getApplicationContext(), currentPage);//保存当前页数
@@ -327,7 +327,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
          */
         public void updateData() {
             try {
-                JSONObject jb = HttpUtil.getDataFromInternet(new URL(CoursetypeSelectActivity.PATH), "POST");
+                JSONObject jb = HttpUtil.getDataFromInternet(new URL(CoursetypeSelectActivity.PATH), null);
                 if (jb != null) {
                     courseTypeDao.delete();//先清空
                     JSONArray ja = jb.getJSONArray("listCType");

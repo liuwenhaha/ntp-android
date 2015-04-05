@@ -3,6 +3,7 @@ package com.chzu.ntp.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,9 +17,13 @@ import com.chzu.ntp.adapter.CourseAdapter;
 import com.chzu.ntp.dao.SearchHistoryDao;
 import com.chzu.ntp.model.Course;
 import com.chzu.ntp.util.HttpUtil;
+import com.chzu.ntp.util.NetworkState;
 import com.chzu.ntp.widget.MyProgress;
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
+import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +41,8 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
     /**
      * 搜索课程路径
      */
-    private static  final String PATH="http://10.0.2.2/ntp/phone/course-search";
+//    private static  final String PATH="http://10.0.2.2/ntp/phone/course-search";
+    private static final String PATH = "http://192.168.1.105/ntp/phone/course-search";
     private ImageView back;//返回
     private EditText search;
     private SearchHistoryDao searchHistoryDao;
@@ -46,6 +52,8 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
     List<Course> list;
     private static final int REQUEST=1;//请求码
     private static final int REQUEST_PROGRESS=2;//请求码
+    private static AsyncHttpClient client = new AsyncHttpClient();
+    private static final String TAG = "SearchCourseActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,36 +86,55 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_ENTER) {
-            if (search.getText().toString().equals("")){//没有输入
+            if (search.getText().toString().equals("")) {//没有输入
+                Toast.makeText(getApplicationContext(), "请输入课程名称", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            if (!NetworkState.isNetworkConnected(getApplicationContext())) {
+                Toast.makeText(getApplicationContext(), "当前网络不可用", Toast.LENGTH_SHORT).show();
                 return false;
             }
             Intent intent = new Intent(getApplicationContext(), MyProgress.class);
             startActivityForResult(intent, REQUEST_PROGRESS);
             Map<String, String> map = new HashMap<String, String>();
-            map.put("name", search.getText().toString());//键和后台参数接受字段一直
-            JSONObject jb = HttpUtil.getDataFromInternet(PATH, map);
-            try {
-                if (jb != null) {
-                    list.clear();
-                    JSONArray ja = jb.getJSONArray("list");
-                    for (int i = 0; i < ja.length(); i++) {
-                        JSONObject j = ja.getJSONObject(i);
-                        Course course = new Course(null, j.getString("code"), j.getString("name"), j.getJSONObject("coursetype").getString("type"), j.getJSONObject("user").getString("name"));
-                        list.add(course);
+            RequestParams params = new RequestParams();
+            params.put("name", search.getText().toString());//键和后台参数接受字段一直
+            client.post(PATH, params, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers,
+                                      JSONObject response) {
+                    super.onSuccess(statusCode, headers, response);
+                    try {
+                        if (response != null) {
+                            list.clear();
+                            JSONArray ja = response.getJSONArray("list");
+                            for (int i = 0; i < ja.length(); i++) {
+                                JSONObject j = ja.getJSONObject(i);
+                                Course course = new Course(null, j.getString("code"), j.getString("name"), j.getJSONObject("coursetype").getString("type"), j.getJSONObject("user").getString("name"));
+                                list.add(course);
+                            }
+                            searchHistoryDao.save(search.getText().toString());//保存搜索历史
+                            courseAdapter = new CourseAdapter(list, getApplicationContext());
+                            listView.setVisibility(View.VISIBLE);//设置listView可见
+                            tip.setVisibility(View.GONE);
+                            courseAdapter.notifyDataSetChanged();
+                            finishActivity(REQUEST_PROGRESS);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "没有搜索到相关课程", Toast.LENGTH_SHORT).show();
+                            finishActivity(REQUEST_PROGRESS);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    searchHistoryDao.save(search.getText().toString());//保存搜索历史
-                    courseAdapter = new CourseAdapter(list, getApplicationContext());
-                    listView.setVisibility(View.VISIBLE);//设置listView可见
-                    tip.setVisibility(View.GONE);
-                    courseAdapter.notifyDataSetChanged();
-                    finishActivity(REQUEST_PROGRESS);
-                }else {
-                    Toast.makeText(getApplicationContext(),"没有搜索到相关课程",Toast.LENGTH_SHORT).show();
-                    finishActivity(REQUEST_PROGRESS);
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    super.onFailure(statusCode, headers, responseString, throwable);
+                    Log.i(TAG, responseString);
+                    Log.i(TAG, throwable.toString());
+                }
+            });
         }
         return false;
     }

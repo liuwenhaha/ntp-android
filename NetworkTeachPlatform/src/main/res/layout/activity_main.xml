@@ -86,7 +86,7 @@
         <!--课程功能-->
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center_horizontal"
             android:layout_weight="1"
             android:orientation="vertical">
@@ -109,7 +109,7 @@
         <!--作业功能-->
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center_horizontal"
             android:layout_weight="1"
             android:orientation="vertical">
@@ -131,7 +131,7 @@
         <!--个人中心功能-->
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center_horizontal"
             android:layout_weight="1"
             android:orientation="vertical">
