@@ -13,7 +13,7 @@
     <string name="hello_blank_fragment3">Hello blank fragment3</string>
     <string name="hello_blank_fragment4">Hello blank fragment4</string>
     <string name="title_activity_search_course">SearchCourseActivity</string>
-    <string name="searchCourse">搜索您感兴趣的课程</string>
+    <string name="searchCourse">课程名称</string>
     <string name="load">玩命加载中...</string>
     <string name="courseType">课程类型</string>
     <string name="type">类型</string>

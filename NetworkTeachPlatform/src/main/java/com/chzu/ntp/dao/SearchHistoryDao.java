@@ -74,7 +74,7 @@ public class SearchHistoryDao {
      * 删除搜索历史
      */
     public void deleteByName(String name) {
-        sqLiteDatabase.delete("search_history as s where s=? ",name, null);
+        sqLiteDatabase.delete("search_history", "content=?", new String[]{name});
     }
 
     /**

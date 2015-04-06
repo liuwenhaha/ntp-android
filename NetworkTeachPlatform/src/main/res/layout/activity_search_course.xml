@@ -8,9 +8,9 @@
         android:id="@+id/title"
         android:layout_width="fill_parent"
         android:background="@color/layout_bg_normal"
-        android:layout_height="48dip">
+        android:layout_height="48dp">
 
-        <ImageView
+    <ImageView
             android:id="@+id/back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,7 +47,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/layout_bg_pressed"
         android:gravity="center_horizontal">
 
         <TextView
@@ -56,6 +57,7 @@
             android:layout_height="200dp"
             android:gravity="center"
             android:text="@string/no_record"
+            android:visibility="invisible"
             android:textColor="@color/menu_text_normal"
             android:textSize="18sp" />
 

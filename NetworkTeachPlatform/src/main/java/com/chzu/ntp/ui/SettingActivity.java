@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.chzu.ntp.dao.CourseDao;
 import com.chzu.ntp.dao.CourseTypeDao;
+import com.chzu.ntp.dao.SearchHistoryDao;
 import com.chzu.ntp.util.ExitListApplication;
 import com.chzu.ntp.widget.MyDialog;
 import com.chzu.ntp.widget.MyTitleView;
@@ -30,6 +31,7 @@ public class SettingActivity extends Activity implements View.OnClickListener {
     private TextView cacheText;
     private CourseTypeDao courseTypeDao;
     private CourseDao courseDao;
+    private SearchHistoryDao searchHistoryDao;
     private MyTitleView myTitleView;
     private final static String  TIP="将删除所有缓存的课程信息";
     /**
@@ -56,6 +58,7 @@ public class SettingActivity extends Activity implements View.OnClickListener {
         cache.setOnClickListener(this);
         courseTypeDao=new CourseTypeDao(getApplicationContext());
         courseDao=new CourseDao(getApplicationContext());
+        searchHistoryDao = new SearchHistoryDao(getApplicationContext());
         if (PreferenceUtil.getConfig(getApplicationContext())) {//可以使用移动网络播放视频、下载课件
             switchImg.setImageDrawable(getResources().getDrawable(R.drawable.switch_on));
         } else {
@@ -121,6 +124,7 @@ public class SettingActivity extends Activity implements View.OnClickListener {
     protected void onDestroy() {
         courseDao.close();
         courseTypeDao.close();
+        searchHistoryDao.close();
         super.onDestroy();
     }
 
@@ -130,6 +134,7 @@ public class SettingActivity extends Activity implements View.OnClickListener {
         if (requestCode==REQUEST&&resultCode==RESULT_OK){//用户选择确定时
             courseDao.delete();
             courseTypeDao.delete();
+            searchHistoryDao.delete();
             cacheText.setText("0KB");
             PreferenceUtil.saveCurrentPage(getApplicationContext(),1);//重置课程列表当前页数
             Toast.makeText(getApplicationContext(),"清除成功",Toast.LENGTH_LONG).show();

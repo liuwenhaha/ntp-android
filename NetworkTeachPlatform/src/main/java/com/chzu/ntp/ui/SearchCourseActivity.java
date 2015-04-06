@@ -69,8 +69,9 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
         searchHistoryDao=new SearchHistoryDao(getApplicationContext());
         courseAdapter=new CourseAdapter(list,getApplicationContext());
         listView.setAdapter(courseAdapter);
-
-
+        listView.setOnItemClickListener(this);
+//        Intent intent=new Intent(getApplicationContext(),SearchHistoryActivity.class);
+//        startActivity(intent);
     }
 
     @Override
@@ -96,7 +97,6 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
             }
             Intent intent = new Intent(getApplicationContext(), MyProgress.class);
             startActivityForResult(intent, REQUEST_PROGRESS);
-            Map<String, String> map = new HashMap<String, String>();
             RequestParams params = new RequestParams();
             params.put("name", search.getText().toString());//键和后台参数接受字段一直
             client.post(PATH, params, new JsonHttpResponseHandler() {
@@ -104,10 +104,17 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
                 public void onSuccess(int statusCode, Header[] headers,
                                       JSONObject response) {
                     super.onSuccess(statusCode, headers, response);
+                    Log.i(TAG, "adfadjlsadf" + response.toString());
+//                    response.
                     try {
                         if (response != null) {
                             list.clear();
                             JSONArray ja = response.getJSONArray("list");
+                            if (ja.length() == 0) {
+                                Toast.makeText(getApplicationContext(), "没有搜索到相关课程", Toast.LENGTH_SHORT).show();
+                                finishActivity(REQUEST_PROGRESS);
+                                return;
+                            }
                             for (int i = 0; i < ja.length(); i++) {
                                 JSONObject j = ja.getJSONObject(i);
                                 Course course = new Course(null, j.getString("code"), j.getString("name"), j.getJSONObject("coursetype").getString("type"), j.getJSONObject("user").getString("name"));
@@ -119,7 +126,7 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
                             tip.setVisibility(View.GONE);
                             courseAdapter.notifyDataSetChanged();
                             finishActivity(REQUEST_PROGRESS);
-                        } else {
+                        } else {//服务器没有开启
                             Toast.makeText(getApplicationContext(), "没有搜索到相关课程", Toast.LENGTH_SHORT).show();
                             finishActivity(REQUEST_PROGRESS);
                         }
