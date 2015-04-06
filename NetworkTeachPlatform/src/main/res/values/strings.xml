@@ -62,5 +62,10 @@
     <string name="placeholder">占位符</string>
     <string name="exitLogin">退出当前账号</string>
     <string name="exitApp">退出应用</string>
+    <string name="email">邮箱</string>
+    <string name="emailTest">lyxtime@163.com</string>
+    <string name="sex">性别</string>
+    <string name="sexTest">男</string>
+    <string name="modPwd">修改密码</string>
 
 </resources>

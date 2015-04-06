@@ -60,13 +60,13 @@ public class PreferenceUtil {
 
     /**
      * 检查用户配置，是否可以用2G3G4G网络播放视频或下载课件。
-     * <br>默认不可使用
+     * <br>默认可以使用
      *
      * @return true 可以使用，false 不可使用
      */
     public static Boolean getConfig(Context context) {
         preferences = context.getSharedPreferences(CONFIG, Context.MODE_APPEND);
-        return preferences.getBoolean(USE_MOBILE_DATA, false);
+        return preferences.getBoolean(USE_MOBILE_DATA, true);
     }
 
     /**

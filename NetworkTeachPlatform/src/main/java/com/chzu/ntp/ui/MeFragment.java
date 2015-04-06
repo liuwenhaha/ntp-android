@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chzu.ntp.util.ImageNameGenerator;
 import com.chzu.ntp.util.PreferenceUtil;
@@ -87,7 +88,6 @@ public class MeFragment extends Fragment implements View.OnClickListener {
         setting.setOnClickListener(this);
         if (!PreferenceUtil.getLoadName(getActivity()).equals("")) {//已有用户登陆
             displayHead();
-            login.setClickable(false);
         }
         return view;
     }
@@ -115,15 +115,23 @@ public class MeFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login://登录
+                String name = PreferenceUtil.getLoadName(getActivity());
                 //检查是否有登录
-                if (!PreferenceUtil.getLoadName(getActivity()).equals("")) {//已登录
+                if (!name.equals("")) {//已登录
+                    Intent intent = new Intent(getActivity(), MeInformationActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("username", name);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
                 } else {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivityForResult(intent, REQUEST_CODE);
                 }
                 break;
             case R.id.myCourse://我的课程
-
+                if (PreferenceUtil.getLoadName(getActivity()).equals("")) {
+                    Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.myDownload://我的下载
 
