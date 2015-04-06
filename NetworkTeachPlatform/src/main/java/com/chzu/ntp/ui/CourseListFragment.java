@@ -62,7 +62,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
      * 请求课程网络地址
      */
 //    public static final String PATH = "http://10.0.2.2/ntp/phone/course-list";
-    public static final String PATH = "http://192.168.1.105/ntp/phone/course-list";
+    public static final String PATH = "http://192.168.1.102/ntp/phone/course-list";
     public static final String TAG = "down_json";
     public static final String TAG1 = "up_json";
     /**
@@ -175,7 +175,9 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
         }
 
         String imageUri = "file:///mnt/sdcard/ntp/1.png";//缓存图片路径
+        File file = SDCardUtil.creatSDDir("ntp");
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity().getApplicationContext())
+                .diskCache(new UnlimitedDiscCache(file, null, new ImageNameGenerator("1.png"))) // 缓存到SD卡
                 .build();
         imageLoader.init(config);
         //显示图片的配置
@@ -183,8 +185,8 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 .cacheOnDisk(true)
                 .showImageOnFail(R.drawable.course_default)//不存在默认显示图片
                 .build();
+        Bitmap bitmap = imageLoader.loadImageSync(imageUri, options);
         if (SDCardUtil.isExistSDFile("ntp/1.png")) {//如果文件存在
-            Bitmap bitmap = imageLoader.loadImageSync(imageUri, options);
             for (int i = 0; i < courseList.size(); i++) {
                 courseList.get(i).setBitmap(BitmapZoomHttp.createBitmapZoop(bitmap, 120, 70));
             }

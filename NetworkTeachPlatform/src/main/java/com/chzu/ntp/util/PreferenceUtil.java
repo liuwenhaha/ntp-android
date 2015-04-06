@@ -19,15 +19,15 @@ public class PreferenceUtil {
     private static final String USE_MOBILE_DATA = "use_mobile_data";
 
     //ListView当前显示页数
-    private static final String CURRENT_PAGE="current_page";
-    private static final String PAGE="page";
+    private static final String CURRENT_PAGE = "current_page";
+    private static final String PAGE = "page";
 
     /**
      * 以私有操作方式保存用户登录信息，此种方式只能保存一个用户信息
      *
      * @param name 登录成功名
      */
-    public void saveLoadName(Context context, String name) {
+    public static void saveLoadName(Context context, String name) {
         preferences = context.getSharedPreferences(LOAD, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(NAME, name);
@@ -71,24 +71,26 @@ public class PreferenceUtil {
 
     /**
      * 保存listView显示的当前页数
+     *
      * @param context
      * @param currentPage 当前页数
      */
-    public static void saveCurrentPage(Context context,int currentPage){
+    public static void saveCurrentPage(Context context, int currentPage) {
         preferences = context.getSharedPreferences(CURRENT_PAGE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(PAGE,currentPage);
+        editor.putInt(PAGE, currentPage);
         editor.commit();
     }
 
     /**
      * 获取ListView显示的当前页数
+     *
      * @param context
      * @return 当前页数，默认1
      */
-    public static int getCurrentPage(Context context){
+    public static int getCurrentPage(Context context) {
         preferences = context.getSharedPreferences(CURRENT_PAGE, Context.MODE_PRIVATE);
-        return preferences.getInt(PAGE,1);
+        return preferences.getInt(PAGE, 1);
     }
 
 

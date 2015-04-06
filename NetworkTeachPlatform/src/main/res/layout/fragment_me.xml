@@ -10,14 +10,23 @@
         android:paddingLeft="12dp"
         android:gravity="center_vertical">
 
-        <TextView
+        <ImageView
             android:id="@+id/login"
             android:layout_width="62dp"
             android:layout_height="62dp"
             android:gravity="center"
+            android:clickable="true"
             android:textColor="@color/menu_text_reserve"
-            android:background="@drawable/rounded_login_text"
+            android:src="@drawable/default_head"
             android:text="@string/noLogin" />
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textSize="18sp"
+            android:textColor="@color/course_name1" />
     </LinearLayout>
 
     <LinearLayout

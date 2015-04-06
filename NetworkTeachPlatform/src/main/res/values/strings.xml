@@ -60,5 +60,7 @@
     <string name="title_activity_search_history">SearchHistoryActivity</string>
     <string name="searchName">搜索的课程历史</string>
     <string name="placeholder">占位符</string>
+    <string name="exitLogin">退出当前账号</string>
+    <string name="exitApp">退出应用</string>
 
 </resources>

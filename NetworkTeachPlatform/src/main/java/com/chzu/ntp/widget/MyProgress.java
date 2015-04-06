@@ -12,12 +12,9 @@ import com.chzu.ntp.ui.R;
  */
 public class MyProgress extends Activity {
 
-    public static MyProgress instance = null;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_progress);
-        instance=this;
     }
 }
