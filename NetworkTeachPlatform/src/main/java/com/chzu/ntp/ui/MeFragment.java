@@ -62,7 +62,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public void onResume() {
+    public void onResume() {//用户退出，返回此Activity，清除登录状态
         super.onResume();
         if (PreferenceUtil.getLoadName(getActivity()).equals("")) {
             username.setText("");
@@ -105,7 +105,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
         //显示图片的配置
         options = new DisplayImageOptions.Builder()
                 .cacheOnDisk(true)
-                .displayer(new RoundedBitmapDisplayer(60))
+                .displayer(new RoundedBitmapDisplayer(60))//设置圆角，弧度60
                 .showImageOnFail(R.drawable.head)//不存在默认显示图片
                 .build();
         imageLoader.displayImage(imageUri, login, options);
