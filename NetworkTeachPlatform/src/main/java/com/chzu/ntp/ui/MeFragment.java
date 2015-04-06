@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.chzu.ntp.util.ImageNameGenerator;
 import com.chzu.ntp.util.PreferenceUtil;
 import com.chzu.ntp.util.SDCardUtil;
+import com.chzu.ntp.widget.MyExitDialog;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -32,13 +33,14 @@ public class MeFragment extends Fragment implements View.OnClickListener {
      * Universal Image Loader加载图片类
      */
     private ImageLoader imageLoader;
-    ImageLoaderConfiguration config;
-    DisplayImageOptions options;
+    private static ImageLoaderConfiguration config;
+    private static DisplayImageOptions options;
     private static MeFragment meFragment;
     private TextView myCourse, myDownload, setting;//我的课程、我的下载、设置
     private ImageView login;
     private TextView username;
     private static final int REQUEST_CODE = 3;//请求码
+    private static final String TAG = "MeFragment";
 
 
     /**
@@ -55,6 +57,17 @@ public class MeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(TAG, "onCreate");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (PreferenceUtil.getLoadName(getActivity()).equals("")) {
+            username.setText("");
+            login.setImageBitmap(null);
+        }
+        Log.i(TAG, "onResume");
     }
 
     @Override
@@ -103,15 +116,11 @@ public class MeFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.login://登录
                 //检查是否有登录
-               /* if (!PreferenceUtil.getLoadName(getActivity()).equals("")) {
-                    //login.setText(PreferenceUtil.getLoadName(getActivity()));
+                if (!PreferenceUtil.getLoadName(getActivity()).equals("")) {//已登录
                 } else {
-                    //login.setText(getString(R.string.noLogin));
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivityForResult(intent, REQUEST_CODE);
-                }*/
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivityForResult(intent, REQUEST_CODE);
+                }
                 break;
             case R.id.myCourse://我的课程
 
@@ -132,9 +141,21 @@ public class MeFragment extends Fragment implements View.OnClickListener {
             if (resultCode == LoginActivity.RESULT_CODE) {
                 String name = data.getExtras().getString("username");
                 username.setText(name);
-                //login.setText("头像");
-                //模拟图片
-                String imageUri = "http://h.hiphotos.baidu.com/image/w%3D230/sign=1ea5b9ff34d3d539c13d08c00a87e927/2e2eb9389b504fc2022d2904e7dde71190ef6d45.jpg";
+                /** 下面的Universal Image Loader配置、选项和onCreate重复，因为跳到登录界面登录成功返回，
+                 * Activity生命周期从OnResume开始，没有对UIL配置、选项初始化，导致显示图片无效。这些配置、
+                 * 选项代码可以放到OnResume方法中**/
+                File file = SDCardUtil.creatSDDir("ntp");
+                config = new ImageLoaderConfiguration.Builder(getActivity().getApplicationContext())
+                        .diskCache(new UnlimitedDiscCache(file, null, new ImageNameGenerator("head.png"))) // 缓存到SD卡
+                        .build();
+                imageLoader.init(config);
+                //显示图片的配置
+                options = new DisplayImageOptions.Builder()
+                        .cacheOnDisk(true)
+                        .displayer(new RoundedBitmapDisplayer(60))
+                        .showImageOnFail(R.drawable.head)//不存在默认显示图片
+                        .build();
+                String imageUri = "file:///mnt/sdcard/ntp/head.png";
                 imageLoader.displayImage(imageUri, login, options);
             }
         }

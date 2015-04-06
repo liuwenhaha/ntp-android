@@ -45,7 +45,7 @@
     <string name="courseForum">讨论</string>
     <string name="home">首页</string>
     <string name="code">课程代码</string>
-    <string name="cache">清除缓存</string>
+    <string name="cache">清除缓存(Debug用)</string>
     <string name="cache_size">MB</string>
     <string name="title_activity_my_dialog">MyDialog</string>
     <string name="coursewareName">课件名称</string>

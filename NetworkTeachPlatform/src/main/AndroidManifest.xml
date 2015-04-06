@@ -60,12 +60,12 @@
         <activity
             android:name=".CourseDetailActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Anim_style2"></activity>
+            android:theme="@style/Anim_style2" />
         <activity
             android:name="com.chzu.ntp.widget.MyDialog"
             android:label="@string/title_activity_my_dialog"
             android:screenOrientation="portrait"
-            android:theme="@style/MyDialogStyle"></activity>
+            android:theme="@style/MyDialogStyle" />
         <activity
             android:name=".VideoPlayActivity"
             android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden"
@@ -76,7 +76,7 @@
         <activity
             android:name=".RegisterActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Anim_style2"></activity>
+            android:theme="@style/Anim_style2" />
         <activity
             android:name="com.chzu.ntp.widget.MyProgress"
             android:screenOrientation="portrait"
@@ -84,7 +84,11 @@
         <activity
             android:name=".SearchHistoryActivity"
             android:theme="@style/MyDialogStyleTop"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chzu.ntp.widget.MyExitDialog"
+            android:theme="@style/MyDialogStyle"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

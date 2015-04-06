@@ -14,6 +14,7 @@ import com.chzu.ntp.dao.CourseTypeDao;
 import com.chzu.ntp.dao.SearchHistoryDao;
 import com.chzu.ntp.util.ExitListApplication;
 import com.chzu.ntp.widget.MyDialog;
+import com.chzu.ntp.widget.MyExitDialog;
 import com.chzu.ntp.widget.MyTitleView;
 import com.chzu.ntp.util.PreferenceUtil;
 
@@ -24,6 +25,14 @@ import java.io.File;
  */
 public class SettingActivity extends Activity implements View.OnClickListener {
 
+    /**
+     * 清除缓存对话框请求码
+     */
+    private final static int REQUEST = 1;
+    /**
+     * 退出请求码
+     */
+    public static final int REQUEST_EXIT = 2;
     private ImageView back;//退出
     private ImageView switchImg;//用2G3G4G网络播放视频和下载课件开关图片
     private TextView about, exit;//关于、退出
@@ -34,10 +43,6 @@ public class SettingActivity extends Activity implements View.OnClickListener {
     private SearchHistoryDao searchHistoryDao;
     private MyTitleView myTitleView;
     private final static String  TIP="将删除所有缓存的课程信息";
-    /**
-     * 清除缓存对话框请求码
-     */
-    private final static int REQUEST=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +99,7 @@ public class SettingActivity extends Activity implements View.OnClickListener {
                 startActivity(intent1);
                 break;
             case R.id.exit://退出
-                ExitListApplication.getInstance().exit();
+                startActivityForResult(new Intent(getApplicationContext(), MyExitDialog.class), REQUEST_EXIT);
                 break;
         }
     }
@@ -138,6 +143,12 @@ public class SettingActivity extends Activity implements View.OnClickListener {
             cacheText.setText("0KB");
             PreferenceUtil.saveCurrentPage(getApplicationContext(),1);//重置课程列表当前页数
             Toast.makeText(getApplicationContext(),"清除成功",Toast.LENGTH_LONG).show();
+        } else if (requestCode == REQUEST_EXIT) {
+            if (resultCode == MyExitDialog.RESULT_EXIT_LOGIN) {//退出登录
+                PreferenceUtil.saveLoadName(getApplicationContext(), "");//清除登录信息
+            } else if (resultCode == MyExitDialog.RESULT_EXIT_APP) {//退出应用
+                ExitListApplication.getInstance().exit();
+            }
         }
     }
 }
