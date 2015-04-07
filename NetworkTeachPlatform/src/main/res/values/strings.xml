@@ -67,5 +67,7 @@
     <string name="sex">性别</string>
     <string name="sexTest">男</string>
     <string name="modPwd">修改密码</string>
+    <string name="confirm">保存</string>
+    <string name="emailOrPwd">邮箱或密码</string>
 
 </resources>
