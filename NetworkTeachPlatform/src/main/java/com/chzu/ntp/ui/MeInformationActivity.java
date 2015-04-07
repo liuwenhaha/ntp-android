@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.chzu.ntp.util.NetworkState;
 import com.chzu.ntp.widget.MyTitleView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -27,6 +29,14 @@ public class MeInformationActivity extends Activity {
      * 获取用户详细地址
      */
     private static final String PATH="http://192.168.1.102/ntp/phone/user-info";
+    /**
+     * 修改邮箱
+     */
+    private static final String PATH_EMAIL="http://192.168.1.102/ntp/phone/user-info";
+    /**
+     * 修改密码
+     */
+    private static final String PATH_PWD="http://192.168.1.102/ntp/phone/user-info";
     private MyTitleView myTitleView;
     private TextView username;
     private AsyncHttpClient asyncHttpClient=new AsyncHttpClient();
@@ -39,6 +49,10 @@ public class MeInformationActivity extends Activity {
      * 修改邮箱请求码
      */
     private static final int REQUEST_MODIFY_EMAIL=4;
+    /**
+     * 修改密码请求码
+     */
+    private static final int REQUEST_MODIFY_PWD=5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +65,7 @@ public class MeInformationActivity extends Activity {
         username = (TextView) findViewById(R.id.username);
         String name = getIntent().getExtras().getString("username");
         username.setText(name);
+        getUser();
     }
 
     /**
@@ -59,6 +74,10 @@ public class MeInformationActivity extends Activity {
     private void getUser(){
         RequestParams params=new RequestParams();
         params.put("username", username.getText());
+        if (!NetworkState.isNetworkConnected(getApplicationContext())){
+            Toast.makeText(getApplicationContext(),"请连接网络再试",Toast.LENGTH_SHORT).show();
+            return;
+        }
         asyncHttpClient.post(PATH, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -89,7 +108,7 @@ public class MeInformationActivity extends Activity {
     public void modifyEmail(View view) {
         switch (view.getId()){
             case R.id.email:
-                Intent intent=new Intent();
+                Intent intent=new Intent(getApplicationContext(),ModifyUserInfoActivity.class);
                 Bundle bundle=new Bundle();
                 bundle.putString(MODIFY_TYPE,MODIFY_EMAIL);
                 bundle.putString("email",email.getText().toString());
@@ -110,8 +129,80 @@ public class MeInformationActivity extends Activity {
      * 修改密码
      */
     public void modifyPwd(View view) {
-
+        if (view.getId()==R.id.pwd){
+            Intent intent=new Intent(getApplicationContext(),ModifyUserInfoActivity.class);
+            Bundle bundle=new Bundle();
+            bundle.putString(MODIFY_TYPE, MODIFY_PWD);
+            intent.putExtras(bundle);
+            startActivityForResult(intent,REQUEST_MODIFY_PWD);
+        }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode==RESULT_OK){
+            if (requestCode==REQUEST_MODIFY_EMAIL){//邮箱修改
+                final String emailStr=data.getExtras().getString("email");
+                RequestParams params=new RequestParams();
+                params.put("username",username.getText());
+                params.put("email", emailStr);
+                if (!NetworkState.isNetworkConnected(getApplicationContext())){
+                    Toast.makeText(getApplicationContext(),"请连接网络再试",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                asyncHttpClient.post(PATH_EMAIL, params, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        super.onSuccess(statusCode, headers, response);
+                        if (response != null) {
+                            try {
+                                String result = response.getString("result");
+                                if (result.equals("success")){
+                                    email.setText(emailStr);
+                                }else {
+                                    Toast.makeText(getApplicationContext(),"修改失败",Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        super.onFailure(statusCode, headers, responseString, throwable);
+                        Log.e(TAG, throwable.toString());
+                    }
+                });
 
+            }else if (requestCode==REQUEST_MODIFY_PWD){//密码修改
+                String password=data.getExtras().getString("pwd");
+                RequestParams params=new RequestParams();
+                params.put("password",password);
+                if (!NetworkState.isNetworkConnected(getApplicationContext())){
+                    Toast.makeText(getApplicationContext(),"请连接网络再试",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                asyncHttpClient.post(PATH_PWD,params,new JsonHttpResponseHandler(){
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        super.onSuccess(statusCode, headers, response);
+                        if (response != null) {
+                            try {
+                                String result = response.getString("result");
+                                if (result.equals("success")){
+                                    Toast.makeText(getApplicationContext(),"修改成功",Toast.LENGTH_SHORT).show();
+                                }else {
+                                    Toast.makeText(getApplicationContext(),"修改失败",Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+
+            }
+        }
+    }
 }

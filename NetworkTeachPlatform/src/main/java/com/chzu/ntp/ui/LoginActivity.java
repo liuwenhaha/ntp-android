@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chzu.ntp.util.MD5Util;
 import com.chzu.ntp.util.PreferenceUtil;
 import com.chzu.ntp.widget.MyProgress;
 import com.loopj.android.http.AsyncHttpClient;
@@ -72,7 +73,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     startActivityForResult(new Intent(getApplicationContext(), MyProgress.class), REQUEST_CODE);
                     RequestParams requestParams = new RequestParams();
                     requestParams.put("username", nameString);
-                    requestParams.put("password", passwordString);
+                    requestParams.put("password", MD5Util.generatePassword(passwordString));
                     asyncHttpClient.post(PATH, requestParams, new JsonHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

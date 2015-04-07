@@ -3,8 +3,10 @@ package com.chzu.ntp.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chzu.ntp.model.User;
@@ -29,8 +31,13 @@ public class ModifyUserInfoActivity extends Activity{
         bundle=getIntent().getExtras();
         type=bundle.getString(MeInformationActivity.MODIFY_TYPE);
         if (type.equals(MeInformationActivity.MODIFY_EMAIL)){//修改邮箱
+            myTitleView.setTitle("邮箱修改");
             String email=bundle.getString("email");
             editText.setText(email);
+        }else if (type.equals(MeInformationActivity.MODIFY_PWD)){//密码修改
+            editText.setHint("新密码");
+            myTitleView.setTitle("密码修改");
+            editText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
         }
     }
 
