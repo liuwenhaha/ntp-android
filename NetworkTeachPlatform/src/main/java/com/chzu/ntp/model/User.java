@@ -13,6 +13,10 @@ public class User {
     private String sex;
     private byte[] head;// 头像
 
+    public User() {
+
+    }
+
     public String getUsername() {
         return username;
     }
@@ -46,10 +50,10 @@ public class User {
     }
 
     /**
-     * @param username  用户名
-     * @param head  头像，没有可为空
-     * @param sex   性别
-     * @param email 邮箱
+     * @param username 用户名
+     * @param head     头像，没有可为空
+     * @param sex      性别
+     * @param email    邮箱
      */
     public User(String username, byte[] head, String sex, String email) {
         this.username = username;
@@ -61,11 +65,10 @@ public class User {
     /**
      * 判断邮箱是否合法
      *
-     * @param email
-     *            邮箱
+     * @param email 邮箱
      * @return 邮箱格式输入正确返回true，错误返回false
      */
-    public  static Boolean isEmail(String email) {
+    public static Boolean isEmail(String email) {
         // 匹配邮箱的正则表达时，在java需要进行转义^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$
         // ^ ：匹配输入的开始位置
         // \：将下一个字符标记为特殊字符或字面值

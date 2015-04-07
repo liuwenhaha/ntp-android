@@ -48,7 +48,7 @@ public class ModifyUserInfoActivity extends Activity{
          if (view.getId()==R.id.save){
              String edit=editText.getText().toString().trim();
              if (edit.equals("")){
-                 Toast.makeText(getApplicationContext(),"请输入",Toast.LENGTH_SHORT);
+                 Toast.makeText(getApplicationContext(), "请输入", Toast.LENGTH_SHORT).show();
                  return;
              }
              else if (type.equals(MeInformationActivity.MODIFY_EMAIL)){//修改邮箱

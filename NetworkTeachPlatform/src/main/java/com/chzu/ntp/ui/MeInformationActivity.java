@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chzu.ntp.dao.UserDao;
+import com.chzu.ntp.model.User;
 import com.chzu.ntp.util.NetworkState;
 import com.chzu.ntp.widget.MyTitleView;
 import com.loopj.android.http.AsyncHttpClient;
@@ -45,6 +47,7 @@ public class MeInformationActivity extends Activity {
     public  static final String MODIFY_TYPE="修改类型";
     public  static final String MODIFY_EMAIL="修改邮箱";
     public  static final String MODIFY_PWD="修改密码";
+    private UserDao userDao;
     /**
      * 修改邮箱请求码
      */
@@ -65,7 +68,16 @@ public class MeInformationActivity extends Activity {
         username = (TextView) findViewById(R.id.username);
         String name = getIntent().getExtras().getString("username");
         username.setText(name);
-        getUser();
+        userDao = new UserDao(getApplicationContext());
+        User user = userDao.findByName(name);
+        if (user.getUsername() != null) {
+            Log.i(TAG, "本地有缓存信息");
+            sex.setText(user.getSex());
+            email.setText(user.getEmail());
+        } else {
+            getUser();
+        }
+
     }
 
     /**
@@ -82,12 +94,20 @@ public class MeInformationActivity extends Activity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
+                Log.i(TAG, response.toString());
                 if (response != null) {
                     try {
-                        String sexStr = response.getString("sex");
-                        String emailStr = response.getString("email");
+                        JSONObject jb = response.getJSONObject("user");
+                        String sexStr = jb.getString("sex");
+                        String emailStr = jb.getString("email");
                         sex.setText(sexStr);
                         email.setText(emailStr);
+                        //缓存到本地
+                        User user = new User();
+                        user.setUsername(username.getText().toString());
+                        user.setEmail(emailStr);
+                        user.setSex(sexStr);
+                        userDao.save(user);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -107,7 +127,7 @@ public class MeInformationActivity extends Activity {
      */
     public void modifyEmail(View view) {
         switch (view.getId()){
-            case R.id.email:
+            case R.id.emailLayout:
                 Intent intent=new Intent(getApplicationContext(),ModifyUserInfoActivity.class);
                 Bundle bundle=new Bundle();
                 bundle.putString(MODIFY_TYPE,MODIFY_EMAIL);
@@ -129,7 +149,7 @@ public class MeInformationActivity extends Activity {
      * 修改密码
      */
     public void modifyPwd(View view) {
-        if (view.getId()==R.id.pwd){
+        if (view.getId() == R.id.pwdLayout) {
             Intent intent=new Intent(getApplicationContext(),ModifyUserInfoActivity.class);
             Bundle bundle=new Bundle();
             bundle.putString(MODIFY_TYPE, MODIFY_PWD);
@@ -204,5 +224,11 @@ public class MeInformationActivity extends Activity {
 
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        userDao.close();
     }
 }

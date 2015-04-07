@@ -8,7 +8,8 @@
     <com.chzu.ntp.widget.MyTitleView
         android:id="@+id/myTitleView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:background="@color/nav_bg" />
 
     <ImageView
         android:layout_width="match_parent"
@@ -67,13 +68,14 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center">
+
         <TextView
             android:id="@+id/register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
             android:textColor="@color/blue_1"
-            android:text="@string/newRegister"/>
-        </LinearLayout>
+            android:text="@string/newRegister" />
+    </LinearLayout>
 
 </LinearLayout>
