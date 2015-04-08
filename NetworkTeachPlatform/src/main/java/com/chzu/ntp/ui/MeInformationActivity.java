@@ -34,11 +34,11 @@ public class MeInformationActivity extends Activity {
     /**
      * 修改邮箱
      */
-    private static final String PATH_EMAIL="http://192.168.1.102/ntp/phone/user-info";
+    private static final String PATH_EMAIL="http://192.168.1.102/ntp/phone/modify-email";
     /**
      * 修改密码
      */
-    private static final String PATH_PWD="http://192.168.1.102/ntp/phone/user-info";
+    private static final String PATH_PWD="http://192.168.1.102/ntp/phone/modify-pwd";
     private MyTitleView myTitleView;
     private TextView username;
     private AsyncHttpClient asyncHttpClient=new AsyncHttpClient();
@@ -165,7 +165,7 @@ public class MeInformationActivity extends Activity {
             if (requestCode==REQUEST_MODIFY_EMAIL){//邮箱修改
                 final String emailStr=data.getExtras().getString("email");
                 RequestParams params=new RequestParams();
-                params.put("username",username.getText());
+                params.put("username",username.getText().toString());
                 params.put("email", emailStr);
                 if (!NetworkState.isNetworkConnected(getApplicationContext())){
                     Toast.makeText(getApplicationContext(),"请连接网络再试",Toast.LENGTH_SHORT).show();
@@ -180,6 +180,10 @@ public class MeInformationActivity extends Activity {
                                 String result = response.getString("result");
                                 if (result.equals("success")){
                                     email.setText(emailStr);
+                                    User user=new User();
+                                    user.setUsername(username.getText().toString());
+                                    user.setEmail(emailStr);
+                                    userDao.update(user);//修改本地缓存
                                 }else {
                                     Toast.makeText(getApplicationContext(),"修改失败",Toast.LENGTH_SHORT).show();
                                 }
