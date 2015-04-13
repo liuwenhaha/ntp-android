@@ -62,7 +62,7 @@ public class MeInformationActivity extends Activity {
     private MyTitleView myTitleView;
     private TextView username;
     private AsyncHttpClient asyncHttpClient=new AsyncHttpClient();
-    private static final String TAG="MeInformationActivity";
+    public static final String TAG="MeInformationActivity";
     private TextView sex,email;
     public  static final String MODIFY_TYPE="修改类型";
     public  static final String MODIFY_EMAIL="修改邮箱";
@@ -84,8 +84,8 @@ public class MeInformationActivity extends Activity {
         User user = userDao.findByName(name);
         if (user.getUsername() != null) {
             Log.i(TAG, "本地有缓存信息");
-            sex.setText(user.getSex());
-            email.setText(user.getEmail());
+            sex.setText((user.getSex().equals("null")?"":user.getSex()));
+            email.setText((user.getEmail().equals("null")?"":user.getEmail()));
         } else {
             getUser();
         }

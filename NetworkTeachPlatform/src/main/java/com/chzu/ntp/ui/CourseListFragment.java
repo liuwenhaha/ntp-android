@@ -62,7 +62,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
      * 请求课程网络地址
      */
 //    public static final String PATH = "http://10.0.2.2/ntp/phone/course-list";
-    public static final String PATH = "http://192.168.1.102/ntp/phone/course-list";
+    public static final String PATH = "http://192.168.1.113/ntp/phone/course-list";
     public static final String TAG = "down_json";
     public static final String TAG1 = "up_json";
     /**
@@ -232,7 +232,24 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 GlobalVariable globalVariable= (GlobalVariable) getActivity().getApplication();
                 for (int i = 0; i < ja.length(); i++) {
                     JSONObject j = ja.getJSONObject(i);
-                    Course course = new Course(null, j.getString("code"), j.getString("name"), j.getJSONObject("coursetype").getString("type"), j.getJSONObject("user").getString("name"));
+                    Object courseTypeJS=j.get("coursetype");//先视为对象，防止空指针
+                    Object userJS=j.get("user");
+                    String coursetypeStr;
+                    String userStr;
+                    if (courseTypeJS.equals(null)){
+                        coursetypeStr="";
+                        Log.i(TAG,"===================="+i);
+                    }
+                    else {
+                        coursetypeStr=j.getJSONObject("coursetype").getString("type");
+                        Log.i(TAG,"--------------------"+i);
+                    }
+                    if (userJS.equals(null)){
+                        userStr="";
+                    }else {
+                        userStr=j.getJSONObject("user").getString("name");
+                    }
+                    Course course = new Course(null, j.getString("code"), j.getString("name"), coursetypeStr, userStr);
                     list.add(course);
                     courseDao.save(course);//缓存到数据库
                     Log.i(TAG, course.toString());
@@ -249,8 +266,10 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             } catch (JSONException e) {
                 Log.i(TAG, e.toString());
                 e.printStackTrace();
+            } finally {
+                handler.sendMessage(msg);
             }
-            handler.sendMessage(msg);
+
         }
 
         /**
@@ -293,7 +312,23 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                     courseDao.delete();//先清空缓存
                     for (int i = 0; i < ja.length(); i++) {
                         JSONObject j = ja.getJSONObject(i);
-                        Course course = new Course(j.getString("code"), j.getString("name"), j.getJSONObject("coursetype").getString("type"), j.getJSONObject("user").getString("name"));
+                        Object courseTypeJS=j.get("coursetype");//先视为对象，防止空指针
+                        Object userJS=j.get("user");
+                        String coursetypeStr;
+                        String userStr;
+                        if (courseTypeJS.equals(null)){
+                            coursetypeStr="";
+                            Log.i(TAG,"+++++++++++++++++++++++++++++"+i);
+                        }else {
+                            coursetypeStr=j.getJSONObject("coursetype").getString("type");
+                            Log.i(TAG,"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+i);
+                        }
+                        if (userJS.equals(null)){
+                            userStr="";
+                        }else {
+                            userStr=j.getJSONObject("user").getString("name");
+                        }
+                        Course course = new Course(j.getString("code"), j.getString("name"), coursetypeStr, userStr);
                         list.add(course);
                         courseDao.save(course);//缓存到数据库
                         Log.i(TAG1, course.toString());
@@ -316,7 +351,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 load.setVisibility(View.GONE);
                 adapter = new CourseAdapter(list, getActivity());
                 adapter.notifyDataSetChanged();
-                //pullToRefreshView.setAdapter(adapter);
+                pullToRefreshView.setAdapter(adapter);
                 Toast.makeText(getActivity().getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getActivity().getApplicationContext(), "没有更新到数据，请检查网络，稍后再试", Toast.LENGTH_LONG).show();
@@ -374,7 +409,21 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                     Log.d(TAG1+" list size=",list.size()+"");
                     for (int i = 0; i < ja.length(); i++) {
                         JSONObject j = ja.getJSONObject(i);
-                        Course course = new Course(j.getString("code"), j.getString("name"), j.getJSONObject("coursetype").getString("type"), j.getJSONObject("user").getString("name"));
+                        Object courseTypeJS=j.get("coursetype");//先视为对象，防止空指针
+                        Object userJS=j.get("user");
+                        String coursetypeStr;
+                        String userStr;
+                        if (courseTypeJS.equals(null)){
+                            coursetypeStr="";
+                        }else {
+                            coursetypeStr=j.getJSONObject("coursetype").getString("type");
+                        }
+                        if (userJS.equals(null)){
+                            userStr="";
+                        }else {
+                            userStr=j.getJSONObject("user").getString("name");
+                        }
+                        Course course = new Course(j.getString("code"), j.getString("name"), coursetypeStr, userStr);
                         list.add(course);
                         Log.i(TAG, course.toString());
                     }

@@ -146,6 +146,7 @@ public class SettingActivity extends Activity implements View.OnClickListener {
         } else if (requestCode == REQUEST_EXIT) {
             if (resultCode == MyExitDialog.RESULT_EXIT_LOGIN) {//退出登录
                 PreferenceUtil.saveLoadName(getApplicationContext(), "");//清除登录信息
+                finish();
             } else if (resultCode == MyExitDialog.RESULT_EXIT_APP) {//退出应用
                 ExitListApplication.getInstance().exit();
             }
