@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.chzu.ntp.dao.UserDao;
 import com.chzu.ntp.model.User;
 import com.chzu.ntp.util.NetworkState;
+import com.chzu.ntp.widget.MySelectDialog;
 import com.chzu.ntp.widget.MyTitleView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -39,6 +40,24 @@ public class MeInformationActivity extends Activity {
      * 修改密码
      */
     private static final String PATH_PWD="http://192.168.1.102/ntp/phone/modify-pwd";
+    /**
+     * 修改性别
+     */
+    private static final String PATH_SEX="http://192.168.1.102/ntp/phone/modify-sex";
+    /**
+     * 修改邮箱请求码
+     */
+    private static final int REQUEST_MODIFY_EMAIL=4;
+    /**
+     * 修改密码请求码
+     */
+    private static final int REQUEST_MODIFY_PWD=5;
+    /**
+     * 修改性别请求码
+     */
+    private static final int REQUEST_MODIFY_SEX=6;
+    public  static final String MAIL="男";
+    public  static final String FEMAIL="女";
     private MyTitleView myTitleView;
     private TextView username;
     private AsyncHttpClient asyncHttpClient=new AsyncHttpClient();
@@ -48,14 +67,6 @@ public class MeInformationActivity extends Activity {
     public  static final String MODIFY_EMAIL="修改邮箱";
     public  static final String MODIFY_PWD="修改密码";
     private UserDao userDao;
-    /**
-     * 修改邮箱请求码
-     */
-    private static final int REQUEST_MODIFY_EMAIL=4;
-    /**
-     * 修改密码请求码
-     */
-    private static final int REQUEST_MODIFY_PWD=5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +153,14 @@ public class MeInformationActivity extends Activity {
      * 修改性别
      */
     public void modifySex(View view) {
+        if (view.getId()==R.id.sexLayout){
+            Intent intent=new Intent(getApplicationContext(), MySelectDialog.class);
+            Bundle bundle=new Bundle();
+            bundle.putString("firstOption",MAIL);
+            bundle.putString("secondOption",FEMAIL);
+            intent.putExtras(bundle);
+            startActivityForResult(intent,REQUEST_MODIFY_SEX);
+        }
 
     }
 
@@ -183,7 +202,7 @@ public class MeInformationActivity extends Activity {
                                     User user=new User();
                                     user.setUsername(username.getText().toString());
                                     user.setEmail(emailStr);
-                                    userDao.update(user);//修改本地缓存
+                                    userDao.update(user);//修改本地邮箱缓存
                                 }else {
                                     Toast.makeText(getApplicationContext(),"修改失败",Toast.LENGTH_SHORT).show();
                                 }
@@ -203,6 +222,7 @@ public class MeInformationActivity extends Activity {
                 String password=data.getExtras().getString("pwd");
                 RequestParams params=new RequestParams();
                 params.put("password",password);
+                params.put("username",username.getText().toString());
                 if (!NetworkState.isNetworkConnected(getApplicationContext())){
                     Toast.makeText(getApplicationContext(),"请连接网络再试",Toast.LENGTH_SHORT).show();
                     return;
@@ -225,7 +245,71 @@ public class MeInformationActivity extends Activity {
                         }
                     }
                 });
-
+            }else if (requestCode==REQUEST_MODIFY_SEX){
+                switch (resultCode){
+                    case MySelectDialog.RESULT_ITEM1:
+                        if (sex.getText().toString().trim().equals(MAIL)){//如果选择项和原来的相等，不作改变
+                            break;
+                        }else{//改变性别
+                            RequestParams requestParams=new RequestParams();
+                            requestParams.put("sex",MAIL);
+                            requestParams.put("username",username.getText().toString());
+                            asyncHttpClient.post(PATH_SEX,requestParams,new JsonHttpResponseHandler(){
+                                @Override
+                                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                    super.onSuccess(statusCode, headers, response);
+                                    if (response != null) {
+                                        try {
+                                            String result = response.getString("result");
+                                            if (result.equals("success")){
+                                                Toast.makeText(getApplicationContext(),"修改成功",Toast.LENGTH_SHORT).show();
+                                                User user=new User();
+                                                user.setUsername(username.getText().toString());
+                                                user.setSex(MAIL);
+                                                userDao.update(user);//修改本地性别缓存
+                                            }else {
+                                                Toast.makeText(getApplicationContext(),"修改失败",Toast.LENGTH_SHORT).show();
+                                            }
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                        break;
+                    case MySelectDialog.RESULT_ITEM2:
+                        if (sex.getText().toString().trim().equals(FEMAIL)){//如果选择项和原来的相等，不作改变
+                            break;
+                        }else{//改变性别
+                            RequestParams requestParams=new RequestParams();
+                            requestParams.put("sex",FEMAIL);
+                            requestParams.put("username",username.getText().toString());
+                            asyncHttpClient.post(PATH_SEX,requestParams,new JsonHttpResponseHandler(){
+                                @Override
+                                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                    super.onSuccess(statusCode, headers, response);
+                                    if (response != null) {
+                                        try {
+                                            String result = response.getString("result");
+                                            if (result.equals("success")){
+                                                Toast.makeText(getApplicationContext(),"修改成功",Toast.LENGTH_SHORT).show();
+                                                User user=new User();
+                                                user.setUsername(username.getText().toString());
+                                                user.setSex(FEMAIL);
+                                                userDao.update(user);//修改本地性别缓存
+                                            }else {
+                                                Toast.makeText(getApplicationContext(),"修改失败",Toast.LENGTH_SHORT).show();
+                                            }
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                        break;
+                }
             }
         }
     }
