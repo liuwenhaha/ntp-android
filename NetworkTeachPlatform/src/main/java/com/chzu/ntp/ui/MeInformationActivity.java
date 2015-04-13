@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.chzu.ntp.dao.UserDao;
 import com.chzu.ntp.model.User;
+import com.chzu.ntp.util.MD5Util;
 import com.chzu.ntp.util.NetworkState;
 import com.chzu.ntp.widget.MySelectDialog;
 import com.chzu.ntp.widget.MyTitleView;
@@ -31,19 +32,19 @@ public class MeInformationActivity extends Activity {
     /**
      * 获取用户详细地址
      */
-    private static final String PATH="http://192.168.1.102/ntp/phone/user-info";
+    private static final String PATH = "http://192.168.1.113/ntp/phone/user-info";
     /**
      * 修改邮箱
      */
-    private static final String PATH_EMAIL="http://192.168.1.102/ntp/phone/modify-email";
+    private static final String PATH_EMAIL = "http://192.168.1.113/ntp/phone/modify-email";
     /**
      * 修改密码
      */
-    private static final String PATH_PWD="http://192.168.1.102/ntp/phone/modify-pwd";
+    private static final String PATH_PWD = "http://192.168.1.113/ntp/phone/modify-pwd";
     /**
      * 修改性别
      */
-    private static final String PATH_SEX="http://192.168.1.102/ntp/phone/modify-sex";
+    private static final String PATH_SEX = "http://192.168.1.113/ntp/phone/modify-sex";
     /**
      * 修改邮箱请求码
      */
@@ -221,7 +222,7 @@ public class MeInformationActivity extends Activity {
             }else if (requestCode==REQUEST_MODIFY_PWD){//密码修改
                 String password=data.getExtras().getString("pwd");
                 RequestParams params=new RequestParams();
-                params.put("password",password);
+                params.put("password", MD5Util.generatePassword(password));
                 params.put("username",username.getText().toString());
                 if (!NetworkState.isNetworkConnected(getApplicationContext())){
                     Toast.makeText(getApplicationContext(),"请连接网络再试",Toast.LENGTH_SHORT).show();
@@ -245,71 +246,81 @@ public class MeInformationActivity extends Activity {
                         }
                     }
                 });
-            }else if (requestCode==REQUEST_MODIFY_SEX){
-                switch (resultCode){
-                    case MySelectDialog.RESULT_ITEM1:
-                        if (sex.getText().toString().trim().equals(MAIL)){//如果选择项和原来的相等，不作改变
+            }
+        } else if (requestCode == REQUEST_MODIFY_SEX) {
+            switch (resultCode) {
+                case MySelectDialog.RESULT_ITEM1:
+                    if (sex.getText().toString().trim().equals(MAIL)) {//如果选择项和原来的相等，不作改变
+                        break;
+                    } else {//改变性别
+                        RequestParams requestParams = new RequestParams();
+                        requestParams.put("sex", MAIL);
+                        requestParams.put("username", username.getText().toString());
+                        if (!NetworkState.isNetworkConnected(getApplicationContext())) {
+                            Toast.makeText(getApplicationContext(), "请连接网络再试", Toast.LENGTH_SHORT).show();
                             break;
-                        }else{//改变性别
-                            RequestParams requestParams=new RequestParams();
-                            requestParams.put("sex",MAIL);
-                            requestParams.put("username",username.getText().toString());
-                            asyncHttpClient.post(PATH_SEX,requestParams,new JsonHttpResponseHandler(){
-                                @Override
-                                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                    super.onSuccess(statusCode, headers, response);
-                                    if (response != null) {
-                                        try {
-                                            String result = response.getString("result");
-                                            if (result.equals("success")){
-                                                Toast.makeText(getApplicationContext(),"修改成功",Toast.LENGTH_SHORT).show();
-                                                User user=new User();
-                                                user.setUsername(username.getText().toString());
-                                                user.setSex(MAIL);
-                                                userDao.update(user);//修改本地性别缓存
-                                            }else {
-                                                Toast.makeText(getApplicationContext(),"修改失败",Toast.LENGTH_SHORT).show();
-                                            }
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
+                        }
+                        asyncHttpClient.post(PATH_SEX, requestParams, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                super.onSuccess(statusCode, headers, response);
+                                if (response != null) {
+                                    try {
+                                        String result = response.getString("result");
+                                        if (result.equals("success")) {
+//                                            Toast.makeText(getApplicationContext(),"修改成功",Toast.LENGTH_SHORT).show();
+                                            sex.setText(MAIL);
+                                            User user = new User();
+                                            user.setUsername(username.getText().toString());
+                                            user.setSex(MAIL);
+                                            userDao.update(user);//修改本地性别缓存
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), "修改失败", Toast.LENGTH_SHORT).show();
                                         }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
                                     }
                                 }
-                            });
-                        }
+                            }
+                        });
+                    }
+                    break;
+                case MySelectDialog.RESULT_ITEM2:
+                    if (sex.getText().toString().trim().equals(FEMAIL)) {//如果选择项和原来的相等，不作改变
                         break;
-                    case MySelectDialog.RESULT_ITEM2:
-                        if (sex.getText().toString().trim().equals(FEMAIL)){//如果选择项和原来的相等，不作改变
+                    } else {//改变性别
+                        RequestParams requestParams = new RequestParams();
+                        requestParams.put("sex", FEMAIL);
+                        requestParams.put("username", username.getText().toString());
+                        if (!NetworkState.isNetworkConnected(getApplicationContext())) {
+                            Toast.makeText(getApplicationContext(), "请连接网络再试", Toast.LENGTH_SHORT).show();
                             break;
-                        }else{//改变性别
-                            RequestParams requestParams=new RequestParams();
-                            requestParams.put("sex",FEMAIL);
-                            requestParams.put("username",username.getText().toString());
-                            asyncHttpClient.post(PATH_SEX,requestParams,new JsonHttpResponseHandler(){
-                                @Override
-                                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                    super.onSuccess(statusCode, headers, response);
-                                    if (response != null) {
-                                        try {
-                                            String result = response.getString("result");
-                                            if (result.equals("success")){
-                                                Toast.makeText(getApplicationContext(),"修改成功",Toast.LENGTH_SHORT).show();
-                                                User user=new User();
-                                                user.setUsername(username.getText().toString());
-                                                user.setSex(FEMAIL);
-                                                userDao.update(user);//修改本地性别缓存
-                                            }else {
-                                                Toast.makeText(getApplicationContext(),"修改失败",Toast.LENGTH_SHORT).show();
-                                            }
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
+                        }
+                        asyncHttpClient.post(PATH_SEX, requestParams, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                super.onSuccess(statusCode, headers, response);
+                                if (response != null) {
+                                    try {
+                                        String result = response.getString("result");
+                                        if (result.equals("success")) {
+//                                            Toast.makeText(getApplicationContext(),"修改成功",Toast.LENGTH_SHORT).show();
+                                            sex.setText(FEMAIL);
+                                            User user = new User();
+                                            user.setUsername(username.getText().toString());
+                                            user.setSex(FEMAIL);
+                                            userDao.update(user);//修改本地性别缓存
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), "修改失败", Toast.LENGTH_SHORT).show();
                                         }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
                                     }
                                 }
-                            });
-                        }
-                        break;
-                }
+                            }
+                        });
+                    }
+                    break;
             }
         }
     }

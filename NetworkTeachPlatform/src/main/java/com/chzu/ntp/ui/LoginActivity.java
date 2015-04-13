@@ -29,7 +29,7 @@ import org.json.JSONObject;
  */
 public class LoginActivity extends Activity implements View.OnClickListener {
 
-    private static final String PATH = "http://192.168.1.102/ntp/phone/login";
+    private static final String PATH = "http://192.168.1.113/ntp/phone/login";
     private ImageView back;//返回
     private Button login;//登录
     private EditText username, password;

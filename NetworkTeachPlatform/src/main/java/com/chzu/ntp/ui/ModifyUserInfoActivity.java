@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -56,10 +57,12 @@ public class ModifyUserInfoActivity extends Activity{
                      String email=bundle.getString("email");
                      if (email.equals(edit)){//没有修改
                          setResult(RESULT_CANCELED);
+                         finish();
                      }else {
                          Bundle bundle1=new Bundle();
                          bundle1.putString("email",editText.getText().toString());
                          setResult(RESULT_OK,new Intent().putExtras(bundle1));
+                         finish();
                      }
                  }else{
                      Toast.makeText(getApplicationContext(),"邮箱格式不正确",Toast.LENGTH_SHORT).show();
@@ -67,8 +70,9 @@ public class ModifyUserInfoActivity extends Activity{
              }
              else if (type.equals(MeInformationActivity.MODIFY_PWD)){//修改密码
                      Bundle bundle1=new Bundle();
-                     bundle1.putString("pwd",editText.getText().toString());
-                     setResult(RESULT_OK,new Intent().putExtras(bundle1));
+                 bundle1.putString("pwd", editText.getText().toString().trim());
+                     setResult(RESULT_OK, new Intent().putExtras(bundle1));
+                 finish();
              }
          }
     }
