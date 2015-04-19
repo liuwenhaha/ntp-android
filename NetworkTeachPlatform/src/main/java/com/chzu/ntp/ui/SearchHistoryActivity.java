@@ -33,10 +33,7 @@ import java.util.List;
  * 课程搜索历史显示，悬浮activity
  */
 public class SearchHistoryActivity extends Activity implements CoursevideoAdapter.Callback {
-    /**
-     * 搜索课程路径
-     */
-    private static final String PATH = "http://10.0.2.2/ntp/phone/course-search";
+
     private ListView searchHistoryList;
     private CoursevideoAdapter coursevideoAdapter;//和视频列表同用一个适配器,数据展示结构一样
     private SearchHistoryDao searchHistoryDao;
@@ -85,7 +82,7 @@ public class SearchHistoryActivity extends Activity implements CoursevideoAdapte
                 String nameStr = list.get(posi).getName();
                 RequestParams params = new RequestParams();
                 params.put("name", nameStr);//键和后台参数接受字段一直
-                client.post(PATH, params, new JsonHttpResponseHandler() {
+                client.post(PathConstant.PATH_COURSE_SEARCH, params, new JsonHttpResponseHandler() {
                     public void onSuccess(int statusCode, Header[] headers,
                                           JSONObject response) {
                         super.onSuccess(statusCode, headers, response);

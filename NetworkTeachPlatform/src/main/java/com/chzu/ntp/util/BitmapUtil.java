@@ -1,23 +1,31 @@
 package com.chzu.ntp.util;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 /**
- * 图片缩放工具类
+ * 图片工具类
  *
  * @author yanxing
  */
-public class BitmapZoomHttp {
+public class BitmapUtil {
 
     /**
-     *
+     * 缩放图片
      * @param bitmap  原图片
      * @param newWidth  缩放后图片的宽度，单位像素
      * @param newHeight 缩放后图片的长度，单位像素
      * @return  返回缩放后的图片
      */
     public static Bitmap createBitmapZoop(Bitmap bitmap, int newWidth, int newHeight) {
+        if (bitmap == null) {
+            return bitmap;
+        }
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
         // 设置想要的大小
@@ -32,4 +40,21 @@ public class BitmapZoomHttp {
                 matrix, true);
     }
 
+    /**
+     * 将图片转换为字节数组,如果图片大于500kb，将压缩
+     *
+     * @param bitmap 图片对象
+     * @return 该图片的字节数组数据
+     */
+    public static byte[] getBitmapByte(Bitmap bitmap) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+        try {
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return out.toByteArray();
+    }
 }

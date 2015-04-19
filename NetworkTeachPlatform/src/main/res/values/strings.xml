@@ -60,5 +60,8 @@
     <string name="emailOrPwd">邮箱或密码</string>
     <string name="male">男</string>
     <string name="female">女</string>
+    <string name="photo">拍摄头像</string>
+    <string name="picture">从相册中选择</string>
+    <string name="save">保存</string>
 
 </resources>

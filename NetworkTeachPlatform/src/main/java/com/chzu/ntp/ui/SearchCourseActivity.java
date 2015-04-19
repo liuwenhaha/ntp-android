@@ -36,13 +36,8 @@ import java.util.Map;
 /**
  * 搜索课程
  */
-public class SearchCourseActivity extends Activity implements View.OnClickListener,View.OnKeyListener,AdapterView.OnItemClickListener {
+public class SearchCourseActivity extends Activity implements View.OnClickListener, View.OnKeyListener, AdapterView.OnItemClickListener {
 
-    /**
-     * 搜索课程路径
-     */
-//    private static  final String PATH="http://10.0.2.2/ntp/phone/course-search";
-    private static final String PATH = "http://192.168.1.105/ntp/phone/course-search";
     private ImageView back;//返回
     private EditText search;
     private SearchHistoryDao searchHistoryDao;
@@ -50,8 +45,8 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
     private ListView listView;
     private TextView tip;
     List<Course> list;
-    private static final int REQUEST=1;//请求码
-    private static final int REQUEST_PROGRESS=2;//请求码
+    private static final int REQUEST = 1;//请求码
+    private static final int REQUEST_PROGRESS = 2;//请求码
     private static AsyncHttpClient client = new AsyncHttpClient();
     private static final String TAG = "SearchCourseActivity";
 
@@ -63,11 +58,11 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
         search = (EditText) findViewById(R.id.search);
         back.setOnClickListener(this);
         search.setOnKeyListener(this);
-        listView= (ListView) findViewById(R.id.history);
-        tip= (TextView) findViewById(R.id.no_search_tip);
+        listView = (ListView) findViewById(R.id.history);
+        tip = (TextView) findViewById(R.id.no_search_tip);
         list = new ArrayList<Course>();
-        searchHistoryDao=new SearchHistoryDao(getApplicationContext());
-        courseAdapter=new CourseAdapter(list,getApplicationContext());
+        searchHistoryDao = new SearchHistoryDao(getApplicationContext());
+        courseAdapter = new CourseAdapter(list, getApplicationContext());
         listView.setAdapter(courseAdapter);
         listView.setOnItemClickListener(this);
 //        Intent intent=new Intent(getApplicationContext(),SearchHistoryActivity.class);
@@ -99,7 +94,7 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
             startActivityForResult(intent, REQUEST_PROGRESS);
             RequestParams params = new RequestParams();
             params.put("name", search.getText().toString());//键和后台参数接受字段一直
-            client.post(PATH, params, new JsonHttpResponseHandler() {
+            client.post(PathConstant.PATH_COURSE_SEARCH, params, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers,
                                       JSONObject response) {
@@ -150,13 +145,13 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==REQUEST){
-            if (resultCode==RESULT_OK){//如果用户利用搜索历史搜索课程，如果搜索成功
-                list= (List<Course>) data.getExtras().getSerializable("list");
+        if (requestCode == REQUEST) {
+            if (resultCode == RESULT_OK) {//如果用户利用搜索历史搜索课程，如果搜索成功
+                list = (List<Course>) data.getExtras().getSerializable("list");
                 courseAdapter = new CourseAdapter(list, getApplicationContext());
                 listView.setAdapter(courseAdapter);
-            }else if(resultCode==RESULT_CANCELED){
-                Toast.makeText(getApplicationContext(),"没有搜索到相关课程",Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(getApplicationContext(), "没有搜索到相关课程", Toast.LENGTH_SHORT).show();
             }
         }
     }

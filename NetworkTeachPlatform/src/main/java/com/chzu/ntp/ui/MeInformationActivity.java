@@ -2,14 +2,18 @@ package com.chzu.ntp.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chzu.ntp.dao.UserDao;
 import com.chzu.ntp.model.User;
+import com.chzu.ntp.util.BitmapUtil;
 import com.chzu.ntp.util.MD5Util;
 import com.chzu.ntp.util.NetworkState;
 import com.chzu.ntp.widget.MySelectDialog;
@@ -22,6 +26,8 @@ import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * 个人信息
  *
@@ -29,22 +35,6 @@ import org.json.JSONObject;
  */
 public class MeInformationActivity extends Activity {
 
-    /**
-     * 获取用户详细地址
-     */
-    private static final String PATH = "http://192.168.1.113/ntp/phone/user-info";
-    /**
-     * 修改邮箱
-     */
-    private static final String PATH_EMAIL = "http://192.168.1.113/ntp/phone/modify-email";
-    /**
-     * 修改密码
-     */
-    private static final String PATH_PWD = "http://192.168.1.113/ntp/phone/modify-pwd";
-    /**
-     * 修改性别
-     */
-    private static final String PATH_SEX = "http://192.168.1.113/ntp/phone/modify-sex";
     /**
      * 修改邮箱请求码
      */
@@ -57,6 +47,10 @@ public class MeInformationActivity extends Activity {
      * 修改性别请求码
      */
     private static final int REQUEST_MODIFY_SEX=6;
+    /**
+     * 浏览头像请求码
+     */
+    private static final int REQUEST_HEAD_BROWER = 7;
     public  static final String MAIL="男";
     public  static final String FEMAIL="女";
     private MyTitleView myTitleView;
@@ -68,6 +62,7 @@ public class MeInformationActivity extends Activity {
     public  static final String MODIFY_EMAIL="修改邮箱";
     public  static final String MODIFY_PWD="修改密码";
     private UserDao userDao;
+    private CircleImageView head;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,14 +73,22 @@ public class MeInformationActivity extends Activity {
         sex= (TextView) findViewById(R.id.sex);
         email= (TextView) findViewById(R.id.email);
         username = (TextView) findViewById(R.id.username);
+        head = (CircleImageView) findViewById(R.id.head);
         String name = getIntent().getExtras().getString("username");
         username.setText(name);
         userDao = new UserDao(getApplicationContext());
         User user = userDao.findByName(name);
+        head.setClickable(false);//暂时不能换头像
         if (user.getUsername() != null) {
             Log.i(TAG, "本地有缓存信息");
             sex.setText((user.getSex().equals("null")?"":user.getSex()));
             email.setText((user.getEmail().equals("null")?"":user.getEmail()));
+            if (user.getHead() != null) {
+                head.setImageBitmap(BitmapFactory.decodeByteArray(user.getHead(), 0, user.getHead().length));
+            } else {
+                head.setImageDrawable(getResources().getDrawable(R.drawable.head_default));
+            }
+
         } else {
             getUser();
         }
@@ -102,7 +105,7 @@ public class MeInformationActivity extends Activity {
             Toast.makeText(getApplicationContext(),"请连接网络再试",Toast.LENGTH_SHORT).show();
             return;
         }
-        asyncHttpClient.post(PATH, params, new JsonHttpResponseHandler() {
+        asyncHttpClient.post(PathConstant.PATH_USER_INFO, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
@@ -182,7 +185,8 @@ public class MeInformationActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode==RESULT_OK){
-            if (requestCode==REQUEST_MODIFY_EMAIL){//邮箱修改
+            //邮箱修改
+            if (requestCode == REQUEST_MODIFY_EMAIL) {
                 final String emailStr=data.getExtras().getString("email");
                 RequestParams params=new RequestParams();
                 params.put("username",username.getText().toString());
@@ -191,7 +195,7 @@ public class MeInformationActivity extends Activity {
                     Toast.makeText(getApplicationContext(),"请连接网络再试",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                asyncHttpClient.post(PATH_EMAIL, params, new JsonHttpResponseHandler() {
+                asyncHttpClient.post(PathConstant.PATH_EMAIL, params, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
@@ -228,7 +232,7 @@ public class MeInformationActivity extends Activity {
                     Toast.makeText(getApplicationContext(),"请连接网络再试",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                asyncHttpClient.post(PATH_PWD,params,new JsonHttpResponseHandler(){
+                asyncHttpClient.post(PathConstant.PATH_PWD, params, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
@@ -260,7 +264,7 @@ public class MeInformationActivity extends Activity {
                             Toast.makeText(getApplicationContext(), "请连接网络再试", Toast.LENGTH_SHORT).show();
                             break;
                         }
-                        asyncHttpClient.post(PATH_SEX, requestParams, new JsonHttpResponseHandler() {
+                        asyncHttpClient.post(PathConstant.PATH_SEX, requestParams, new JsonHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                 super.onSuccess(statusCode, headers, response);
@@ -288,7 +292,7 @@ public class MeInformationActivity extends Activity {
                 case MySelectDialog.RESULT_ITEM2:
                     if (sex.getText().toString().trim().equals(FEMAIL)) {//如果选择项和原来的相等，不作改变
                         break;
-                    } else {//改变性别
+                    } else {///修改性别，无论用户选择哪个item，都先视作修改性别
                         RequestParams requestParams = new RequestParams();
                         requestParams.put("sex", FEMAIL);
                         requestParams.put("username", username.getText().toString());
@@ -296,7 +300,7 @@ public class MeInformationActivity extends Activity {
                             Toast.makeText(getApplicationContext(), "请连接网络再试", Toast.LENGTH_SHORT).show();
                             break;
                         }
-                        asyncHttpClient.post(PATH_SEX, requestParams, new JsonHttpResponseHandler() {
+                        asyncHttpClient.post(PathConstant.PATH_SEX, requestParams, new JsonHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                 super.onSuccess(statusCode, headers, response);
@@ -329,5 +333,17 @@ public class MeInformationActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         userDao.close();
+    }
+
+    //点击头像事件
+    public void watchHead(View view) {
+        if (view.getId() == R.id.head) {
+            Intent intent = new Intent(getApplicationContext(), HeadBrowseActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("username", username.getText().toString());
+            bundle.putByteArray("head", BitmapUtil.getBitmapByte(((BitmapDrawable) head.getDrawable()).getBitmap()));
+            intent.putExtras(bundle);
+            startActivityForResult(intent, REQUEST_HEAD_BROWER);
+        }
     }
 }

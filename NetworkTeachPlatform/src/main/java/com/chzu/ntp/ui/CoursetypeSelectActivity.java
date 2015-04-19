@@ -33,11 +33,6 @@ public class CoursetypeSelectActivity extends Activity implements View.OnClickLi
     private TextView coursetypeTitle;//课程类型标题
     private GridView courseTypeName;//课程类型名称
     private CourseTypeDao courseTypeDao;
-    /**
-     * 请求课程类型网络地址
-     */
-    /*public  static final String PATH = "http://10.0.2.2/ntp/phone/course-type";*/
-    public  static final String PATH = "http://192.168.1.112/ntp/phone/course-type";
     public static final String TAG = "CoursetypeSelectActivit";
 
     @Override
@@ -46,12 +41,12 @@ public class CoursetypeSelectActivity extends Activity implements View.OnClickLi
         setContentView(R.layout.activity_coursetype_select);
         coursetypeTitle = (TextView) findViewById(R.id.coursetypeTitle);
         courseTypeName = (GridView) findViewById(R.id.courseTypeName);
-        courseTypeDao=new CourseTypeDao(getApplicationContext());
-        String type[]=courseTypeDao.getAllCourseType();
-        if (type.length>0){//本地有缓存
+        courseTypeDao = new CourseTypeDao(getApplicationContext());
+        String type[] = courseTypeDao.getAllCourseType();
+        if (type.length > 0) {//本地有缓存
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.activity_coursetype_select_gridview, R.id.type, type);
             courseTypeName.setAdapter(adapter);
-        }else{//没有缓存
+        } else {//没有缓存
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.activity_coursetype_select_gridview, R.id.type, getData());
             courseTypeName.setAdapter(adapter);
         }
@@ -61,9 +56,9 @@ public class CoursetypeSelectActivity extends Activity implements View.OnClickLi
      * 获取网络数据并缓存到数据库
      */
     public String[] getData() {
-        if(NetworkState.isNetworkConnected(getApplicationContext())){//网络可用
+        if (NetworkState.isNetworkConnected(getApplicationContext())) {//网络可用
             try {
-                JSONObject jb = HttpUtil.getDataFromInternet(new URL(PATH), null);
+                JSONObject jb = HttpUtil.getDataFromInternet(new URL(PathConstant.PATH_COURSE_TYPE_LIST), null);
                 if (jb != null) {
                     JSONArray ja = jb.getJSONArray("listCType");
                     String name[] = new String[ja.length()];

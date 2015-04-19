@@ -2,27 +2,26 @@ package com.chzu.ntp.ui;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.chzu.ntp.util.ImageNameGenerator;
+import com.chzu.ntp.dao.UserDao;
+import com.chzu.ntp.model.User;
+import com.chzu.ntp.util.BitmapUtil;
 import com.chzu.ntp.util.PreferenceUtil;
-import com.chzu.ntp.util.SDCardUtil;
-import com.chzu.ntp.widget.MyExitDialog;
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
-import java.io.File;
+import org.apache.http.Header;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 /**
@@ -30,19 +29,14 @@ import java.io.File;
  */
 public class MeFragment extends Fragment implements View.OnClickListener {
 
-    /**
-     * Universal Image Loader加载图片类
-     */
-    private ImageLoader imageLoader;
-    private static ImageLoaderConfiguration config;
-    private static DisplayImageOptions options;
     private static MeFragment meFragment;
     private TextView myCourse, myDownload, setting;//我的课程、我的下载、设置
-    private ImageView login;
+    private CircleImageView login;
     private TextView username;
     private static final int REQUEST_CODE = 3;//请求码
     private static final String TAG = "MeFragment";
-
+    private UserDao userDao;
+    private AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
 
     /**
      * 创建单例对象
@@ -66,7 +60,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
         super.onResume();
         if (PreferenceUtil.getLoadName(getActivity()).equals("")) {
             username.setText("");
-            login.setImageBitmap(null);
+            login.setImageDrawable(getResources().getDrawable(R.drawable.default_head));
         }
         Log.i(TAG, "onResume");
     }
@@ -75,17 +69,17 @@ public class MeFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_me, container, false);
-        login = (ImageView) view.findViewById(R.id.login);
+        login = (CircleImageView) view.findViewById(R.id.login);
         myCourse = (TextView) view.findViewById(R.id.myCourse);
         myDownload = (TextView) view.findViewById(R.id.myDownload);
         username = (TextView) view.findViewById(R.id.username);
         setting = (TextView) view.findViewById(R.id.setting);
         username.setText(PreferenceUtil.getLoadName(getActivity()));
-        imageLoader = ImageLoader.getInstance();
         login.setOnClickListener(this);
         myCourse.setOnClickListener(this);
         myDownload.setOnClickListener(this);
         setting.setOnClickListener(this);
+        userDao = new UserDao(getActivity().getApplicationContext());
         if (!PreferenceUtil.getLoadName(getActivity()).equals("")) {//已有用户登陆
             displayHead();
         }
@@ -96,19 +90,13 @@ public class MeFragment extends Fragment implements View.OnClickListener {
      * 显示本地缓存头像
      */
     private void displayHead() {
-        String imageUri = "file:///mnt/sdcard/ntp/head.png";//缓存图片路径
-        File file = SDCardUtil.creatSDDir("ntp");
-        config = new ImageLoaderConfiguration.Builder(getActivity().getApplicationContext())
-                .diskCache(new UnlimitedDiscCache(file, null, new ImageNameGenerator("head.png"))) // 缓存到SD卡
-                .build();
-        imageLoader.init(config);
-        //显示图片的配置
-        options = new DisplayImageOptions.Builder()
-                .cacheOnDisk(true)
-                .displayer(new RoundedBitmapDisplayer(60))//设置圆角，弧度60
-                .showImageOnFail(R.drawable.head)//不存在默认显示图片
-                .build();
-        imageLoader.displayImage(imageUri, login, options);
+        User user = userDao.findByName(PreferenceUtil.getLoadName(getActivity().getApplicationContext()));
+        if (user.getHead() != null) {//数据库有缓存头像
+            Bitmap bitmap = BitmapFactory.decodeByteArray(user.getHead(), 0, user.getHead().length);
+            login.setImageBitmap(bitmap);
+        } else {//没有显示默认应用默认头像
+            login.setImageDrawable(getResources().getDrawable(R.drawable.head_default));
+        }
     }
 
     @Override
@@ -149,23 +137,40 @@ public class MeFragment extends Fragment implements View.OnClickListener {
             if (resultCode == LoginActivity.RESULT_CODE) {
                 String name = data.getExtras().getString("username");
                 username.setText(name);
-                /** 下面的Universal Image Loader配置、选项和onCreate重复，因为跳到登录界面登录成功返回，
-                 * Activity生命周期从OnResume开始，没有对UIL配置、选项初始化，导致显示图片无效。这些配置、
-                 * 选项代码可以放到OnResume方法中**/
-                File file = SDCardUtil.creatSDDir("ntp");
-                config = new ImageLoaderConfiguration.Builder(getActivity().getApplicationContext())
-                        .diskCache(new UnlimitedDiscCache(file, null, new ImageNameGenerator("head.png"))) // 缓存到SD卡
-                        .build();
-                imageLoader.init(config);
-                //显示图片的配置
-                options = new DisplayImageOptions.Builder()
-                        .cacheOnDisk(true)
-                        .displayer(new RoundedBitmapDisplayer(60))
-                        .showImageOnFail(R.drawable.head)//不存在默认显示图片
-                        .build();
-                String imageUri = "file:///mnt/sdcard/ntp/head.png";
-                imageLoader.displayImage(imageUri, login, options);
+                String head = data.getExtras().getString("head");
+                if (head.equals("error")) {//用户没有服务器没有头像
+                    login.setImageDrawable(getResources().getDrawable(R.drawable.head_default));
+                    return;
+                }
+                login.setImageDrawable(getResources().getDrawable(R.drawable.default_head_loading));
+                String imageUri = PathConstant.PATH_HEAD + head;
+                asyncHttpClient.get(imageUri, new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        if (statusCode == 200) {
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(responseBody, 0, responseBody.length);
+                            Bitmap bitmap1 = BitmapUtil.createBitmapZoop(bitmap, 70, 70);
+                            login.setImageBitmap(bitmap1);
+                            User user = new User();
+                            user.setUsername(username.getText().toString());
+                            user.setHead(BitmapUtil.getBitmapByte(bitmap1));
+                            userDao.update(user);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers,
+                                          byte[] responseBody, Throwable error) {
+                        error.printStackTrace();
+                    }
+                });
             }
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        userDao.close();
+        super.onDestroy();
     }
 }

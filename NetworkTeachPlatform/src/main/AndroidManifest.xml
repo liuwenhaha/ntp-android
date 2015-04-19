@@ -102,6 +102,10 @@
             android:name="com.chzu.ntp.widget.MySelectDialog"
             android:theme="@style/MyDialogStyle"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".HeadBrowseActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Anim_style2" />
     </application>
 
 </manifest>

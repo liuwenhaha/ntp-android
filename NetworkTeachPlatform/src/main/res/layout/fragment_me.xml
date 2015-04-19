@@ -10,14 +10,16 @@
         android:paddingLeft="12dp"
         android:gravity="center_vertical">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/login"
-            android:layout_width="62dp"
-            android:layout_height="62dp"
+            android:layout_width="69dp"
+            android:layout_height="69dp"
             android:gravity="center"
             android:clickable="true"
+            app:border_width="2dp"
+            app:border_color="@color/light"
             android:textColor="@color/menu_text_reserve"
-            android:background="@drawable/default_head"
+            android:src="@drawable/default_head"
             android:text="@string/noLogin" />
 
         <TextView

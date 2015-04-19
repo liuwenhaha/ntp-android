@@ -29,7 +29,6 @@ import org.json.JSONObject;
  */
 public class LoginActivity extends Activity implements View.OnClickListener {
 
-    private static final String PATH = "http://192.168.1.113/ntp/phone/login";
     private ImageView back;//返回
     private Button login;//登录
     private EditText username, password;
@@ -74,7 +73,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     RequestParams requestParams = new RequestParams();
                     requestParams.put("username", nameString);
                     requestParams.put("password", MD5Util.generatePassword(passwordString));
-                    asyncHttpClient.post(PATH, requestParams, new JsonHttpResponseHandler() {
+                    asyncHttpClient.post(PathConstant.PATH_LOGIN, requestParams, new JsonHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             super.onSuccess(statusCode, headers, response);
@@ -83,11 +82,14 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                     String result = response.getString("result");
                                     Log.i(TAG, result);
                                     if (result.equals("success")) {//登陆成功
+                                        String head = response.getString("head");
+                                        Log.i(TAG, head);
                                         PreferenceUtil.saveLoadName(getApplicationContext(), nameString);
                                         finishActivity(REQUEST_CODE);
                                         Intent intent = new Intent();
                                         Bundle bundle = new Bundle();
                                         bundle.putString("username", nameString);
+                                        bundle.putString("head", head);
                                         intent.putExtras(bundle);
                                         setResult(RESULT_CODE, intent);
                                         finish();

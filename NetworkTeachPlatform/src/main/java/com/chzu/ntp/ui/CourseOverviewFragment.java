@@ -24,12 +24,7 @@ public class CourseOverviewFragment extends Fragment {
 
     private static CourseOverviewFragment mCourseOverviewFragment;
     private String code;//课程代码
-    /**
-     * 根据课程代码获取该课程详细信息网络地址
-     */
-    public static final String PATH = "http://192.168.1.112/ntp/phone/course-detail";
-   /* public static final String PATH = "http://10.0.2.2/ntp/phone/course-detail";*/
-   private static final String TAG = "CourseOverviewFragment";
+    private static final String TAG = "CourseOverviewFragment";
     private static AsyncHttpClient client = new AsyncHttpClient();
 
 
@@ -60,7 +55,7 @@ public class CourseOverviewFragment extends Fragment {
         RequestParams params=new RequestParams();
         params.put("code",code);
         if(NetworkState.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
-            client.post(PATH, params, new JsonHttpResponseHandler() {
+            client.post(PathConstant.PATH_COURSE_DETAIL, params, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers,
                                       JSONObject response) {

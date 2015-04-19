@@ -1,5 +1,7 @@
 package com.chzu.ntp.util;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -66,5 +68,24 @@ public class HttpUtil {
         }
         inStream.close();
         return outputStream.toByteArray();
+    }
+
+    /**
+     * 获取网络图片
+     *
+     * @param path 图片路径
+     * @return
+     */
+    public static Bitmap getImage(String path) throws Exception {
+        URL url = new URL(path);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setConnectTimeout(6000);
+        conn.setRequestMethod("GET");
+        if (conn.getResponseCode() == 200) {
+            InputStream inStream = conn.getInputStream();
+            Bitmap bitmap = BitmapFactory.decodeStream(inStream);
+            return bitmap;
+        }
+        return null;
     }
 }
