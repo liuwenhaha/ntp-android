@@ -35,6 +35,14 @@ public class SDCardUtil {
     }
 
     /**
+     * 获取内置SD卡路径
+     * @return
+     */
+    public static String getInnerSDCardPath() {
+        return Environment.getExternalStorageDirectory().getPath();
+    }
+
+    /**
      * 在SD卡上创建文件
      *
      * @throws IOException
@@ -78,6 +86,20 @@ public class SDCardUtil {
             }
         } else {
             Log.i(TAG, "SD卡不存在");
+        }
+        return dir;
+    }
+
+    /**
+     * 在内置SD卡上创建目录
+     *
+     * @param dirName
+     */
+    public static File createInnerSDDir(String dirName) {
+        File dir = new File(getInnerSDCardPath() + dirName);
+        if (!dir.exists()) {
+            Boolean bo = dir.mkdir();
+            Log.i(TAG, bo.toString());
         }
         return dir;
     }

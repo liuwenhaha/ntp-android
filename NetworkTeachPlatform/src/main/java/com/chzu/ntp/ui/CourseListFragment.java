@@ -162,11 +162,6 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
         }
 
         String imageUri = "file:///mnt/sdcard/ntp/1.png";//缓存图片路径
-        File file = SDCardUtil.creatSDDir("ntp");
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity().getApplicationContext())
-                .diskCache(new UnlimitedDiscCache(file, null, new ImageNameGenerator("1.png"))) // 缓存到SD卡
-                .build();
-        imageLoader.init(config);
         //显示图片的配置
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .cacheOnDisk(true)
@@ -264,13 +259,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
          */
         private void loadImage(List<Course> list) {
             //模拟图片
-            String imageUri = PathConstant.PATH_HEAD + "63c74291-c036-477e-af9f-843714875c26.jpg";
-//            String imageUri = "http://h.hiphotos.baidu.com/image/w%3D230/sign=1ea5b9ff34d3d539c13d08c00a87e927/2e2eb9389b504fc2022d2904e7dde71190ef6d45.jpg";
-            File file = SDCardUtil.creatSDDir("ntp");
-            ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity())
-                    .diskCache(new UnlimitedDiscCache(file, null, new ImageNameGenerator("1.png"))) // 缓存到SD卡
-                    .build();
-            imageLoader.init(config);
+            String imageUri = PathConstant.PATH_HEAD + "C语言.png";
             //显示图片的配置
             DisplayImageOptions options = new DisplayImageOptions.Builder()
                     .cacheOnDisk(true)

@@ -10,14 +10,10 @@ import com.nostra13.universalimageloader.cache.disc.naming.FileNameGenerator;
  * @author yanxing
  */
 public class ImageNameGenerator implements FileNameGenerator {
-    private static String fileName;
-
-   public ImageNameGenerator(String filename) {
-        this.fileName = filename;
-    }
 
     @Override
     public String generate(String imageUri) {
-        return fileName;
+        String image[]=imageUri.split("/");
+        return image[image.length-1];//使用图片原名称命名缓存的图片
     }
 }
