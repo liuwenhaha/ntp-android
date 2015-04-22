@@ -22,6 +22,7 @@ import com.chzu.ntp.widget.MyProgress;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -48,6 +49,7 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
     private static final int REQUEST = 1;//请求码
     private static final int REQUEST_PROGRESS = 2;//请求码
     private static AsyncHttpClient client = new AsyncHttpClient();
+    private ImageLoader imageLoader;//Universal Image Loader加载图片类
     private static final String TAG = "SearchCourseActivity";
 
     @Override
@@ -62,7 +64,7 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
         tip = (TextView) findViewById(R.id.no_search_tip);
         list = new ArrayList<Course>();
         searchHistoryDao = new SearchHistoryDao(getApplicationContext());
-        courseAdapter = new CourseAdapter(list, getApplicationContext());
+        courseAdapter = new CourseAdapter(list, getApplicationContext(),imageLoader);
         listView.setAdapter(courseAdapter);
         listView.setOnItemClickListener(this);
 //        Intent intent=new Intent(getApplicationContext(),SearchHistoryActivity.class);
@@ -116,7 +118,7 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
                                 list.add(course);
                             }
                             searchHistoryDao.save(search.getText().toString());//保存搜索历史
-                            courseAdapter = new CourseAdapter(list, getApplicationContext());
+                            courseAdapter = new CourseAdapter(list, getApplicationContext(),imageLoader);
                             listView.setVisibility(View.VISIBLE);//设置listView可见
                             tip.setVisibility(View.GONE);
                             courseAdapter.notifyDataSetChanged();
@@ -148,7 +150,7 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
         if (requestCode == REQUEST) {
             if (resultCode == RESULT_OK) {//如果用户利用搜索历史搜索课程，如果搜索成功
                 list = (List<Course>) data.getExtras().getSerializable("list");
-                courseAdapter = new CourseAdapter(list, getApplicationContext());
+                courseAdapter = new CourseAdapter(list, getApplicationContext(),imageLoader);
                 listView.setAdapter(courseAdapter);
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(getApplicationContext(), "没有搜索到相关课程", Toast.LENGTH_SHORT).show();

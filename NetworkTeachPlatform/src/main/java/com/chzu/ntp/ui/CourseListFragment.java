@@ -1,7 +1,6 @@
 package com.chzu.ntp.ui;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,7 +21,6 @@ import com.chzu.ntp.adapter.CourseAdapter;
 import com.chzu.ntp.dao.CourseDao;
 import com.chzu.ntp.dao.CourseTypeDao;
 import com.chzu.ntp.model.Course;
-import com.chzu.ntp.util.BitmapUtil;
 import com.chzu.ntp.util.HttpUtil;
 import com.chzu.ntp.util.NetworkState;
 import com.chzu.ntp.util.PreferenceUtil;
@@ -30,7 +28,6 @@ import com.chzu.ntp.util.SDCardUtil;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,7 +53,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
     private LinearLayout load;
 
     private static final int RESULT = 1;//发送消息成功标识
-    private static final String imageUri = "file:///mnt/sdcard/ntp/";//缓存图片文件夹
+    private static final String IMAGE_URI = "file:///mnt/sdcard/ntp/";//缓存图片文件夹
     public static final String TAG = "down_json";//下拉日志标识
     public static final String TAG1 = "up_json";//下拉日志标识
 
@@ -150,7 +147,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             Toast.makeText(getActivity().getApplicationContext(), "请插入SD卡", Toast.LENGTH_SHORT).show();
         }
         for (Course course : courseList) {//追加图片路径前缀
-            course.setImageUri(imageUri + course.getImageUri());
+            course.setImageUri(IMAGE_URI + course.getImageUri());
         }
         GlobalVariable globalVariable = (GlobalVariable) getActivity().getApplication();
         globalVariable.setList(courseList);
@@ -207,7 +204,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                     } else {
                         userStr = j.getJSONObject("user").getString("name");
                     }
-                    Course course = new Course(j.getString("code"), j.getString("name"), j.getString("image"), coursetypeStr, userStr);
+                    Course course = new Course(j.getString("code"), j.getString("name"), j.getString("image").equals("null")?"":j.getString("image"), coursetypeStr, userStr);
                     list.add(course);
                     courseDao.save(course);//缓存到数据库
                     Log.i(TAG, course.toString());
@@ -267,7 +264,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                         } else {
                             userStr = j.getJSONObject("user").getString("name");
                         }
-                        Course course = new Course(j.getString("code"), j.getString("name"), j.getString("image"), coursetypeStr, userStr);
+                        Course course = new Course(j.getString("code"), j.getString("name"), j.getString("image").equals("null")?"":j.getString("image"), coursetypeStr, userStr);
                         list.add(course);
                         courseDao.save(course);//缓存到数据库
                         Log.i(TAG1, course.toString());
@@ -364,7 +361,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                         } else {
                             userStr = j.getJSONObject("user").getString("name");
                         }
-                        Course course = new Course(j.getString("code"), j.getString("name"), j.getString("image"), coursetypeStr, userStr);
+                        Course course = new Course(j.getString("code"), j.getString("name"), j.getString("image").equals("null")?"":j.getString("image"), coursetypeStr, userStr);
                         list.add(course);
                         Log.i(TAG, course.toString());
                     }

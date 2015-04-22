@@ -60,29 +60,43 @@ public class CourseAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        TextView code,courseName, courseType, teacher;
-        convertView = LayoutInflater.from(context).inflate(R.layout.listview_item_course, null);
-        imageView = (ImageView) convertView.findViewById(R.id.img);
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        View view = convertView;
+        final ViewHolder holder;
+        if (convertView == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.listview_item_course, null);
+            holder = new ViewHolder();
+            holder.code= (TextView) view.findViewById(R.id.code);
+            holder.code.setText(mCourseList.get(position).getCode());
+            holder.courseName = (TextView) view.findViewById(R.id.courseName);
+            holder.courseName.setText(mCourseList.get(position).getName());
+            holder.courseType = (TextView) view.findViewById(R.id.courseType);
+            holder.courseType.setText(TYPE + mCourseList.get(position).getType());
+            holder.teacher = (TextView) view.findViewById(R.id.teacher);
+            holder.teacher.setText(TEACHER + mCourseList.get(position).getTeacher());
+            holder.imageView = (ImageView) view.findViewById(R.id.img);
+            // 预设一个图片,防止因课程图片路径错误下载失败导致无法加载该课程信息，也防止重复加载有图片的课程
+            holder.imageView.setImageResource(R.drawable.course_default);
+            view.setTag(holder);
+        } else {
+            holder = (ViewHolder) view.getTag();
+        }
         //加载图片
         imageLoader.loadImage(mCourseList.get(position).getImageUri(),options,new SimpleImageLoadingListener(){
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                 super.onLoadingComplete(imageUri, view, loadedImage);
-                imageView.setImageBitmap(BitmapUtil.createBitmapZoop(loadedImage,120,70));
-                //图片的淡入效果
+                holder.imageView.setImageBitmap(BitmapUtil.createBitmapZoop(loadedImage,120,70));
                 FadeInBitmapDisplayer.animate(imageView, 500);
             }
         });
-        code= (TextView) convertView.findViewById(R.id.code);
-        code.setText(mCourseList.get(position).getCode());
-        courseName = (TextView) convertView.findViewById(R.id.courseName);
-        courseName.setText(mCourseList.get(position).getName());
-        courseType = (TextView) convertView.findViewById(R.id.courseType);
-        courseType.setText(TYPE + mCourseList.get(position).getType());
-        teacher = (TextView) convertView.findViewById(R.id.teacher);
-        teacher.setText(TEACHER + mCourseList.get(position).getTeacher());
-        return convertView;
+        return view;
+    }
+
+    //中间变量，标记一个
+    private class ViewHolder{
+        ImageView imageView;
+        TextView code,courseName, courseType, teacher;
     }
 
 
