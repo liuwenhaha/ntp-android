@@ -41,9 +41,9 @@ public class PathConstant {
     public static final String PATH_COURSE_TYPE_LIST = "http://192.168.1.100/ntp/phone/course-type";
 
     /**
-     * 访问用户服务器端头像地址，需要拼接加上头像名称
+     * 访问用户服务器端图片地址，需要拼接加上图片名称
      */
-    public static String PATH_HEAD = "http://192.168.1.100/ntp/upload/";
+    public static String PATH_IMAGE = "http://192.168.1.100/ntp/upload/";
 
     /**
      * 获取用户详细信息地址

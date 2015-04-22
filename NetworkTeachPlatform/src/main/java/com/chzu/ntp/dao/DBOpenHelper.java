@@ -20,7 +20,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         //课程表
-        String sql = "create table course_table(_id integer primary key,code varchar(20),name varchar(20),type varchar(20),username varchar(20))";
+        String sql = "create table course_table(_id integer primary key,code varchar(20),name varchar(20),imageUri varchar(20),type varchar(20),username varchar(20))";
         //课程类型表
         String sqlType = "create table coursetype_table(_id integer primary key,type varchar(20))";
         //搜索历史

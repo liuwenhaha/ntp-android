@@ -31,7 +31,7 @@
             android:id="@+id/courseName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="11dp"
             android:textColor="@color/course_name"
             android:textSize="15sp" />
         <!-- 课程类型-->

@@ -6,51 +6,32 @@ import android.graphics.Bitmap;
  * 课程实体
  */
 public class Course {
-    private Bitmap bitmap;//课程图片
+
     private String code;//课程代码
     private String name;//名称
+    private String imageUri;//课程图片路径
     private String type;//课程类型
     private String teacher;//代课老师
+
 
     public Course() {
     }
 
     /**
-     * 不包括课程图片
+     * imageUri只存图片名称，不存前缀，例如"http://site.com/image.png"，
+     * 只存image.png
      * @param code    课程代码
      * @param name    课程名称
+     * @param imageUri 课程图片路径
      * @param type    课程类型
      * @param teacher 老师姓名
      */
-    public Course(String code, String name, String type, String teacher) {
+    public Course(String code, String name, String imageUri,String type, String teacher) {
         this.code = code;
         this.teacher = teacher;
         this.type = type;
         this.name = name;
-    }
-
-
-    /**
-     * @param bitmap  课程图片，
-     * @param code    课程代码
-     * @param name    课程名称
-     * @param type    课程类型
-     * @param teacher 老师姓名
-     */
-    public Course(Bitmap bitmap, String code, String name, String type, String teacher) {
-        this.bitmap = bitmap;
-        this.code = code;
-        this.name = name;
-        this.type = type;
-        this.teacher = teacher;
-    }
-
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
-
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
+        this.imageUri = imageUri;
     }
 
     public String getCode() {
@@ -85,6 +66,14 @@ public class Course {
         this.name = name;
     }
 
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
+    }
+
     @Override
     public String toString() {
         return "Course{" +
@@ -92,6 +81,7 @@ public class Course {
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
                 ", teacher='" + teacher + '\'' +
+                ", imageUri='" + imageUri + '\'' +
                 '}';
     }
 }

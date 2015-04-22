@@ -23,18 +23,12 @@ public class NoticeFragment extends Fragment {
 
 //    private OnFragmentInteractionListener mListener;
 
-    /**
-     * 创建单例对象
-     */
+    //创建对象
     public static NoticeFragment getInstance() {
         if (noticeFragment == null) {
             noticeFragment = new NoticeFragment();
         }
         return noticeFragment;
-    }
-
-    public NoticeFragment() {
-        // Required empty public constructor
     }
 
     @Override

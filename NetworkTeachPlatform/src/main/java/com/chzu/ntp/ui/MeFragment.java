@@ -38,16 +38,13 @@ public class MeFragment extends Fragment implements View.OnClickListener {
     private UserDao userDao;
     private AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
 
-    /**
-     * 创建单例对象
-     */
+     //创建对象
     public static MeFragment getInstance() {
         if (meFragment == null) {
             meFragment = new MeFragment();
         }
         return meFragment;
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -143,7 +140,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
                     return;
                 }
                 login.setImageDrawable(getResources().getDrawable(R.drawable.default_head_loading));
-                String imageUri = PathConstant.PATH_HEAD + head;
+                String imageUri = PathConstant.PATH_IMAGE + head;
                 asyncHttpClient.get(imageUri, new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
