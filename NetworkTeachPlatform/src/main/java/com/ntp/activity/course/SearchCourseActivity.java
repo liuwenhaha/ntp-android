@@ -14,9 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ntp.activity.R;
-import com.ntp.activity.course.CourseDetailActivity;
 import com.ntp.adapter.CourseAdapter;
-import com.ntp.constant.PathConstant;
+import com.ntp.dao.PathConstant;
 import com.ntp.dao.SearchHistoryDao;
 import com.ntp.model.Course;
 import com.ntp.util.NetworkState;

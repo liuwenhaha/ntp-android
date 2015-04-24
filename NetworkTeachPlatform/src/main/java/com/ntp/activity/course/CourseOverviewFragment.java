@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ntp.activity.R;
-import com.ntp.constant.PathConstant;
+import com.ntp.dao.PathConstant;
 import com.ntp.util.NetworkState;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;

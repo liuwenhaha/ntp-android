@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.ntp.activity.R;
 import com.ntp.adapter.CoursevideoAdapter;
-import com.ntp.constant.PathConstant;
+import com.ntp.dao.PathConstant;
 import com.ntp.dao.SearchHistoryDao;
 import com.ntp.model.Course;
 import com.ntp.model.Coursevideo;

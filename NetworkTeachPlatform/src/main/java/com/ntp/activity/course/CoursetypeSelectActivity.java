@@ -14,7 +14,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.ntp.activity.R;
-import com.ntp.constant.PathConstant;
+import com.ntp.dao.PathConstant;
 import com.ntp.dao.CourseTypeDao;
 import com.ntp.util.HttpUtil;
 import com.ntp.util.NetworkState;
