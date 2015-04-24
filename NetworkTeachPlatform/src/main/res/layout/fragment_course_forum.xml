@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/layout_bg_normal"
-    tools:context="com.chzu.ntp.ui.CourseForumFragment">
+    tools:context="com.ntp.activity.course.CourseForumFragment">
 
     <!-- 自定义样式，PullToRefresh样式属性文件attrs.xml,加入命名空间
          xmlns:ptr="http://schemas.android.com/apk/res-auto" ，ptr:加上

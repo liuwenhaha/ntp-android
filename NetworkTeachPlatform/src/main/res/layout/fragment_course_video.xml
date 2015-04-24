@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/layout_bg_normal"
-    tools:context="com.chzu.ntp.ui.CoursevideoFragment">
+    tools:context="com.ntp.activity.course.CoursevideoFragment">
 
     <ListView
         android:id="@+id/coursevideoList"
