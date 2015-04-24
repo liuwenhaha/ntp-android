@@ -24,7 +24,7 @@ public class CourseForumFragment extends Fragment {
     private static PullToRefreshListView pullToRefreshListView;
 
     /**
-     * 创建单例对象
+     * 创建对象
      */
     public static CourseForumFragment getInstance() {
         if (mCourseForumFragment == null) {

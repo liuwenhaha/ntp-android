@@ -29,7 +29,7 @@ public class CoursevideoFragment extends Fragment implements CoursevideoAdapter.
     private CoursevideoAdapter mCoursevideoAdapter;
 
     /**
-     * 创建单例对象
+     * 创建对象
      */
     public static CoursevideoFragment getInstance() {
         if (mCoursevideoFragment == null) {

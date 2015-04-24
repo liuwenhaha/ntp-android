@@ -1,12 +1,14 @@
 package com.ntp.activity.course;
 
 
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.ntp.activity.R;
 import com.ntp.dao.PathConstant;
@@ -28,10 +30,11 @@ public class CourseOverviewFragment extends Fragment {
     private String code;//课程代码
     private static final String TAG = "CourseOverviewFragment";
     private static AsyncHttpClient client = new AsyncHttpClient();
+    private TextView content;//课程简介
 
 
     /**
-     * 创建单例对象
+     * 创建对象
      * @param code 需要向Fragment传入的课程代码
      */
     public static CourseOverviewFragment getInstance(String code) {
@@ -54,8 +57,10 @@ public class CourseOverviewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_course_overview, container, false);
+        content= (TextView) view.findViewById(R.id.content);
         RequestParams params=new RequestParams();
         params.put("code",code);
+        Log.i(TAG,code);
         if(NetworkState.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
             client.post(PathConstant.PATH_COURSE_DETAIL, params, new JsonHttpResponseHandler() {
                 @Override
@@ -64,6 +69,7 @@ public class CourseOverviewFragment extends Fragment {
                     super.onSuccess(statusCode, headers, response);
                     try {
                         String overview = response.getJSONObject("course").getString("overview");
+                        content.setText(overview);
                         Log.i(TAG, overview);
                     } catch (JSONException e) {
                         Log.i(TAG, e.toString());

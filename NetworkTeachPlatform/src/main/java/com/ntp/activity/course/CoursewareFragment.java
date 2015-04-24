@@ -25,7 +25,7 @@ public class CoursewareFragment extends Fragment implements CoursewareAdapter.Ca
     private CoursewareAdapter mCoursewareAdapter;
 
     /**
-     * 创建单例对象
+     * 创建对象
      */
     public static CoursewareFragment getInstance() {
         if (mCoursewareFragment == null) {

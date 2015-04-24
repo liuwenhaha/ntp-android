@@ -113,10 +113,16 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
                             }
                             for (int i = 0; i < ja.length(); i++) {
                                 JSONObject j = ja.getJSONObject(i);
-                                Course course = new Course(null, j.getString("code"), j.getString("name"), j.getJSONObject("coursetype").getString("type"), j.getJSONObject("user").getString("name"));
+                                Course course = new Course(j.getString("code"), j.getString("name"),j.getString("image").equals("null")?"":j.getString("image"),j.getJSONObject("coursetype").getString("type"), j.getJSONObject("user").getString("name"));
                                 list.add(course);
                             }
                             searchHistoryDao.save(search.getText().toString());//保存搜索历史
+                            for (Course course:list){
+                                //有图片加上网址前缀
+                                if (!course.getImageUri().equals("")){
+                                    course.setImageUri(PathConstant.PATH_IMAGE+course.getImageUri());
+                                }
+                            }
                             courseAdapter = new CourseAdapter(list, getApplicationContext(),imageLoader);
                             listView.setVisibility(View.VISIBLE);//设置listView可见
                             tip.setVisibility(View.GONE);
