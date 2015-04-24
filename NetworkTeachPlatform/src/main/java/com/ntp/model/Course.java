@@ -17,7 +17,7 @@ public class Course {
 
     /**
      * imageUri只存图片名称，不存前缀，例如"http://site.com/image.png"，
-     * 只存image.png
+     * 只存image.png,方便加载本地缓存图片
      * @param code    课程代码
      * @param name    课程名称
      * @param imageUri 课程图片路径

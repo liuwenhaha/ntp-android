@@ -40,7 +40,8 @@ public class CourseAdapter extends BaseAdapter {
         this.imageLoader=imageLoader;
         options = new DisplayImageOptions.Builder()
                 .cacheOnDisk(true)
-                .showImageOnFail(R.drawable.course_default)//不存在默认显示图片
+                .showImageForEmptyUri(R.drawable.course_default)//设置图片URI为空时默认显示图片
+                .showImageOnFail(R.drawable.course_default)//设置图片加载失败时默认显示图片
                 .build();
     }
 
@@ -75,8 +76,6 @@ public class CourseAdapter extends BaseAdapter {
             holder.teacher = (TextView) view.findViewById(R.id.teacher);
             holder.teacher.setText(TEACHER + mCourseList.get(position).getTeacher());
             holder.imageView = (ImageView) view.findViewById(R.id.img);
-            // 预设一个图片,防止因课程图片路径错误下载失败导致无法加载该课程信息，也防止重复加载有图片的课程
-            holder.imageView.setImageResource(R.drawable.course_default);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();

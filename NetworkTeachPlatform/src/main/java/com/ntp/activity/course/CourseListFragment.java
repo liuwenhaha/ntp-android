@@ -76,7 +76,8 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             if (msg.what == RESULT) {
                 ArrayList<Course> list = (ArrayList<Course>) msg.getData().getSerializable("list");
                 adapter = new CourseAdapter(list, getActivity(), imageLoader);
-                //图片显示不了，需要此句
+                adapter.notifyDataSetChanged();
+                //需要此句，不然无法显示
                 pullToRefreshView.setAdapter(adapter);
                 load.setVisibility(View.GONE);
                 Toast.makeText(getActivity().getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
@@ -150,7 +151,10 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             Toast.makeText(getActivity().getApplicationContext(), "请插入SD卡", Toast.LENGTH_SHORT).show();
         }
         for (Course course : courseList) {//追加图片路径前缀
-            course.setImageUri(IMAGE_URI + course.getImageUri());
+            //如果课程图片名称不为空，则添加前缀本地缓存路径，为空，则默认显示course_default图片（在适配器中配置）
+            if (!course.getImageUri().equals("")) {
+                course.setImageUri(IMAGE_URI + course.getImageUri());
+            }
         }
         GlobalVariable globalVariable = (GlobalVariable) getActivity().getApplication();
         globalVariable.setList(courseList);
@@ -207,16 +211,19 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                     } else {
                         userStr = j.getJSONObject("user").getString("name");
                     }
-                    Course course = new Course(j.getString("code"), j.getString("name"), j.getString("image").equals("null")?"":j.getString("image"), coursetypeStr, userStr);
+                    Course course = new Course(j.getString("code"), j.getString("name"), j.getString("image").equals("null") ? "" : j.getString("image"), coursetypeStr, userStr);
                     list.add(course);
                     courseDao.save(course);//缓存到数据库
                     Log.i(TAG, course.toString());
                 }
-                for (Course course : list) {
-                    course.setImageUri(PathConstant.PATH_IMAGE + course.getImageUri());
-                }
                 msg.what = RESULT;
                 Bundle bundle = new Bundle();
+                for (Course course : list) {
+                    //如果课程图片名称不为空，则添加其网络地址前缀，为空，则默认显示course_default图片（在适配器中配置）
+                    if (!course.getImageUri().equals("")) {
+                        course.setImageUri(PathConstant.PATH_IMAGE + course.getImageUri());
+                    }
+                }
                 bundle.putSerializable("list", (java.io.Serializable) list);
                 msg.setData(bundle);
                 globalVariable.setList(list);
@@ -267,7 +274,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                         } else {
                             userStr = j.getJSONObject("user").getString("name");
                         }
-                        Course course = new Course(j.getString("code"), j.getString("name"), j.getString("image").equals("null")?"":j.getString("image"), coursetypeStr, userStr);
+                        Course course = new Course(j.getString("code"), j.getString("name"), j.getString("image").equals("null") ? "" :j.getString("image"), coursetypeStr, userStr);
                         list.add(course);
                         courseDao.save(course);//缓存到数据库
                         Log.i(TAG1, course.toString());
@@ -288,6 +295,12 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             pullToRefreshView.onRefreshComplete();
             if (list.size() > 0) {//获取到数据，更新UI
                 load.setVisibility(View.GONE);
+                for (Course course : list) {
+                    //如果课程图片名称不为空，则添加其网络地址前缀，为空，则默认显示course_default图片（在适配器中配置）
+                    if (!course.getImageUri().equals("")) {
+                        course.setImageUri(PathConstant.PATH_IMAGE + course.getImageUri());
+                    }
+                }
                 adapter = new CourseAdapter(list, getActivity(), imageLoader);
                 adapter.notifyDataSetChanged();
                 pullToRefreshView.setAdapter(adapter);
@@ -364,7 +377,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                         } else {
                             userStr = j.getJSONObject("user").getString("name");
                         }
-                        Course course = new Course(j.getString("code"), j.getString("name"), j.getString("image").equals("null")?"":j.getString("image"), coursetypeStr, userStr);
+                        Course course = new Course(j.getString("code"), j.getString("name"), j.getString("image").equals("null") ? "" :j.getString("image"), coursetypeStr, userStr);
                         list.add(course);
                         Log.i(TAG, course.toString());
                     }
@@ -384,9 +397,15 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             pullToRefreshView.onRefreshComplete();
             if (jb != null && ja.length() != 0) {//获取到数据，更新UI
                 load.setVisibility(View.GONE);
+                for (Course course : list) {
+                    //如果课程图片名称不为空，则添加其网络地址前缀，为空，则默认显示course_default图片（在适配器中配置）
+                    if (!course.getImageUri().equals("")) {
+                        course.setImageUri(PathConstant.PATH_IMAGE + course.getImageUri());
+                    }
+                }
                 adapter = new CourseAdapter(list, getActivity(), imageLoader);
                 adapter.notifyDataSetChanged();
-//                pullToRefreshView.setAdapter(adapter);
+                pullToRefreshView.setAdapter(adapter);
                 Toast.makeText(getActivity().getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
             } else if (jb == null) {
                 Toast.makeText(getActivity().getApplicationContext(), "没有更新到数据，请检查网络，稍后再试", Toast.LENGTH_LONG).show();
