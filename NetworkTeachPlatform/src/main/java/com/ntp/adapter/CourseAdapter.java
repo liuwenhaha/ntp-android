@@ -68,18 +68,18 @@ public class CourseAdapter extends BaseAdapter {
             view = LayoutInflater.from(context).inflate(R.layout.listview_item_course, null);
             holder = new ViewHolder();
             holder.code= (TextView) view.findViewById(R.id.code);
-            holder.code.setText(mCourseList.get(position).getCode());
             holder.courseName = (TextView) view.findViewById(R.id.courseName);
-            holder.courseName.setText(mCourseList.get(position).getName());
             holder.courseType = (TextView) view.findViewById(R.id.courseType);
-            holder.courseType.setText(TYPE + mCourseList.get(position).getType());
             holder.teacher = (TextView) view.findViewById(R.id.teacher);
-            holder.teacher.setText(TEACHER + mCourseList.get(position).getTeacher());
             holder.imageView = (ImageView) view.findViewById(R.id.img);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }
+        holder.code.setText(mCourseList.get(position).getCode());
+        holder.courseName.setText(mCourseList.get(position).getName());
+        holder.courseType.setText(TYPE + mCourseList.get(position).getType());
+        holder.teacher.setText(TEACHER + mCourseList.get(position).getTeacher());
         //加载图片
         imageLoader.loadImage(mCourseList.get(position).getImageUri(),options,new SimpleImageLoadingListener(){
             @Override

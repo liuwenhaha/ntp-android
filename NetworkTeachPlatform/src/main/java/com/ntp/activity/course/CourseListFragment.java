@@ -302,7 +302,6 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                     }
                 }
                 adapter = new CourseAdapter(list, getActivity(), imageLoader);
-                adapter.notifyDataSetChanged();
                 pullToRefreshView.setAdapter(adapter);
                 Toast.makeText(getActivity().getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
             } else {
@@ -405,7 +404,6 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 }
                 adapter = new CourseAdapter(list, getActivity(), imageLoader);
                 adapter.notifyDataSetChanged();
-                pullToRefreshView.setAdapter(adapter);
                 Toast.makeText(getActivity().getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
             } else if (jb == null) {
                 Toast.makeText(getActivity().getApplicationContext(), "没有更新到数据，请检查网络，稍后再试", Toast.LENGTH_LONG).show();
