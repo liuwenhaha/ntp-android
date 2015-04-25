@@ -34,16 +34,13 @@ public class CourseOverviewFragment extends Fragment {
 
 
     /**
-     * 创建对象
      * @param code 需要向Fragment传入的课程代码
      */
     public static CourseOverviewFragment getInstance(String code) {
-        if (mCourseOverviewFragment == null) {
-            mCourseOverviewFragment = new CourseOverviewFragment();
-            Bundle bundle=new Bundle();
-            bundle.putString("code",code);
-            mCourseOverviewFragment.setArguments(bundle);
-        }
+        mCourseOverviewFragment = new CourseOverviewFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("code", code);
+        mCourseOverviewFragment.setArguments(bundle);
         return mCourseOverviewFragment;
     }
 
@@ -59,8 +56,7 @@ public class CourseOverviewFragment extends Fragment {
         View view=inflater.inflate(R.layout.fragment_course_overview, container, false);
         content= (TextView) view.findViewById(R.id.content);
         RequestParams params=new RequestParams();
-        params.put("code",code);
-        Log.i(TAG,code);
+        params.put("code", code);
         if(NetworkState.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
             client.post(PathConstant.PATH_COURSE_DETAIL, params, new JsonHttpResponseHandler() {
                 @Override
@@ -69,7 +65,7 @@ public class CourseOverviewFragment extends Fragment {
                     super.onSuccess(statusCode, headers, response);
                     try {
                         String overview = response.getJSONObject("course").getString("overview");
-                        content.setText(overview);
+                        content.setText(overview.equals("null")?"无":overview);
                         Log.i(TAG, overview);
                     } catch (JSONException e) {
                         Log.i(TAG, e.toString());

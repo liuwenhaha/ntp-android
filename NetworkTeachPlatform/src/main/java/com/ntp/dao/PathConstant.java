@@ -35,6 +35,11 @@ public class PathConstant {
    /* public static final String PATH = "http://10.0.2.2/ntp/phone/course-detail";*/
 
     /**
+     * 根据课程代码获取该课程所有课件网络地址
+     */
+    public static final String PATH_COURSE_WARE = "http://192.168.1.105/ntp/phone/course-ware";
+
+    /**
      * 请求课程类型网络地址
      */
     /*public  static final String PATH = "http://10.0.2.2/ntp/phone/course-type";*/

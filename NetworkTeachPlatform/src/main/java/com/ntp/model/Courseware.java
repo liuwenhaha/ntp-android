@@ -8,6 +8,7 @@ public class Courseware {
 
     private String id;
     private String name;
+    private String path;
     private String size;
 
     public String getId() {
@@ -34,14 +35,24 @@ public class Courseware {
         this.size = size;
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     /**
      * @param id   课件id
      * @param name 课件名称
+     * @param path 课件路径
      * @param size 课件大小
      */
-    public Courseware(String id,  String name,String size) {
+    public Courseware(String id, String name, String path, String size) {
         this.id = id;
-        this.size = size;
         this.name = name;
+        this.path = path;
+        this.size = size;
     }
 }

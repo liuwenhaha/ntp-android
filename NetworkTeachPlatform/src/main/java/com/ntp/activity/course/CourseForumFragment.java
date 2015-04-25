@@ -27,9 +27,7 @@ public class CourseForumFragment extends Fragment {
      * 创建对象
      */
     public static CourseForumFragment getInstance() {
-        if (mCourseForumFragment == null) {
-            mCourseForumFragment = new CourseForumFragment();
-        }
+        mCourseForumFragment = new CourseForumFragment();
         return mCourseForumFragment;
     }
 

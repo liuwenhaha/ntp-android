@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -59,7 +60,7 @@ public class CourseDetailActivity extends FragmentActivity implements View.OnCli
         back = (ImageView) findViewById(R.id.back);
         back.setOnClickListener(this);
         fragments.add(CourseOverviewFragment.getInstance(code));
-        fragments.add(CoursewareFragment.getInstance());
+        fragments.add(CoursewareFragment.getInstance(code));
         fragments.add(CoursevideoFragment.getInstance());
         fragments.add(CourseForumFragment.getInstance());
         fragAdapter = new FragAdapter(getSupportFragmentManager(), fragments);
