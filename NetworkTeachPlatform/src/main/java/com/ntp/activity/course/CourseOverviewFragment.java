@@ -8,7 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ntp.activity.R;
 import com.ntp.dao.PathConstant;
@@ -31,6 +33,7 @@ public class CourseOverviewFragment extends Fragment {
     private static final String TAG = "CourseOverviewFragment";
     private static AsyncHttpClient client = new AsyncHttpClient();
     private TextView content;//课程简介
+    private LinearLayout load;//加载提示
 
 
     /**
@@ -55,6 +58,7 @@ public class CourseOverviewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_course_overview, container, false);
         content= (TextView) view.findViewById(R.id.content);
+        load= (LinearLayout) view.findViewById(R.id.load);
         RequestParams params=new RequestParams();
         params.put("code", code);
         if(NetworkState.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
@@ -66,6 +70,7 @@ public class CourseOverviewFragment extends Fragment {
                     try {
                         String overview = response.getJSONObject("course").getString("overview");
                         content.setText(overview.equals("null")?"无":overview);
+                        load.setVisibility(View.GONE);
                         Log.i(TAG, overview);
                     } catch (JSONException e) {
                         Log.i(TAG, e.toString());
@@ -78,6 +83,8 @@ public class CourseOverviewFragment extends Fragment {
                     super.onFailure(statusCode, headers, responseString, throwable);
                     Log.i(TAG, responseString);
                     Log.i(TAG, throwable.toString());
+                    Toast.makeText(getActivity().getApplicationContext(), "加载失败", Toast.LENGTH_SHORT).show();
+                    load.setVisibility(View.GONE);
                 }
             });
         }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    android:installLocation="preferExternal"
-    package="com.ntp.activity">
+    package="com.ntp.activity"
+    android:installLocation="preferExternal" >
 
     <!-- To access Google+ APIs: -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -20,15 +20,15 @@
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE" />
 
     <application
-        android:name="com.ntp.activity.GlobalVariable"
+        android:name=".GlobalVariable"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
-            android:name="com.ntp.activity.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/Anim_style2">
+            android:theme="@style/Anim_style2" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,8 +39,8 @@
             android:name=".course.SearchCourseActivity"
             android:configChanges="orientation|keyboardHidden|locale"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible|adjustPan"
-            android:theme="@style/MyEditStyle" />
+            android:theme="@style/MyEditStyle"
+            android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
             android:name=".course.CoursetypeSelectActivity"
             android:screenOrientation="portrait"
@@ -63,7 +63,6 @@
             android:theme="@style/Anim_style2" />
         <activity
             android:name="com.ntp.widget.MyDialog"
-            android:label="@string/title_activity_my_dialog"
             android:screenOrientation="portrait"
             android:theme="@style/MyDialogStyle" />
         <activity
@@ -83,12 +82,12 @@
             android:theme="@style/MyProgressStyle" />
         <activity
             android:name=".course.SearchHistoryActivity"
-            android:theme="@style/MyDialogStyleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/MyDialogStyleTop" />
         <activity
             android:name="com.ntp.widget.MyExitDialog"
-            android:theme="@style/MyDialogStyle"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/MyDialogStyle" />
         <activity
             android:name=".me.MeInformationActivity"
             android:screenOrientation="portrait"
@@ -96,16 +95,21 @@
         <activity
             android:name=".me.ModifyUserInfoActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible|adjustPan"
-            android:theme="@style/Anim_style2" />
+            android:theme="@style/Anim_style2"
+            android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
             android:name="com.ntp.widget.MySelectDialog"
-            android:theme="@style/MyDialogStyle"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/MyDialogStyle" />
         <activity
             android:name=".me.HeadBrowseActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Anim_style2" />
+
+        <service
+            android:name="com.ntp.service.DownloadService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>

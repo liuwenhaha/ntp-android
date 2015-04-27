@@ -6,6 +6,27 @@
     android:orientation="vertical"
     tools:context="com.ntp.activity.course.CourseOverviewFragment">
 
+    <LinearLayout
+        android:id="@+id/load"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateDuration="500"
+            android:indeterminateBehavior="repeat"
+            android:indeterminateDrawable="@drawable/load_course_progress" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/load" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/content"
         android:layout_width="match_parent"

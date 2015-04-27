@@ -59,7 +59,7 @@ public class SDCardUtil {
 
     /**
      * 在SD卡是否有文件
-     * @param filePath 文件路径 ,不需要加mnt/sdcard
+     * @param filePath 文件路径 ,不需要加mnt/sdcard/
      * @return 存在 返回true 否则false
      */
     public static Boolean isExistSDFile(String filePath){
@@ -73,9 +73,9 @@ public class SDCardUtil {
     }
 
     /**
-     * 在SD卡上创建目录
+     * 在SD卡上创建目录,如果存在，则不创建
      *
-     * @param dirName
+     * @param dirName  文件路径,不需要加mnt/sdcard
      */
     public static File creatSDDir(String dirName) {
         File dir = new File(SDPATH + dirName);
