@@ -16,9 +16,8 @@ import com.ntp.dao.UserDao;
 import com.ntp.model.User;
 import com.ntp.util.BitmapUtil;
 import com.ntp.util.MD5Util;
-import com.ntp.util.NetworkState;
+import com.ntp.util.NetworkStateUtil;
 import com.ntp.widget.MySelectDialog;
-import com.ntp.widget.MyTitleView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -99,7 +98,7 @@ public class MeInformationActivity extends Activity {
     private void getUser(){
         RequestParams params=new RequestParams();
         params.put("username", username.getText());
-        if (!NetworkState.isNetworkConnected(getApplicationContext())){
+        if (!NetworkStateUtil.isNetworkConnected(getApplicationContext())){
             Toast.makeText(getApplicationContext(),"请连接网络再试",Toast.LENGTH_SHORT).show();
             return;
         }
@@ -189,7 +188,7 @@ public class MeInformationActivity extends Activity {
                 RequestParams params=new RequestParams();
                 params.put("username",username.getText().toString());
                 params.put("email", emailStr);
-                if (!NetworkState.isNetworkConnected(getApplicationContext())){
+                if (!NetworkStateUtil.isNetworkConnected(getApplicationContext())){
                     Toast.makeText(getApplicationContext(),"请连接网络再试",Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -226,7 +225,7 @@ public class MeInformationActivity extends Activity {
                 RequestParams params=new RequestParams();
                 params.put("password", MD5Util.generatePassword(password));
                 params.put("username",username.getText().toString());
-                if (!NetworkState.isNetworkConnected(getApplicationContext())){
+                if (!NetworkStateUtil.isNetworkConnected(getApplicationContext())){
                     Toast.makeText(getApplicationContext(),"请连接网络再试",Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -258,7 +257,7 @@ public class MeInformationActivity extends Activity {
                         RequestParams requestParams = new RequestParams();
                         requestParams.put("sex", MAIL);
                         requestParams.put("username", username.getText().toString());
-                        if (!NetworkState.isNetworkConnected(getApplicationContext())) {
+                        if (!NetworkStateUtil.isNetworkConnected(getApplicationContext())) {
                             Toast.makeText(getApplicationContext(), "请连接网络再试", Toast.LENGTH_SHORT).show();
                             break;
                         }
@@ -290,11 +289,11 @@ public class MeInformationActivity extends Activity {
                 case MySelectDialog.RESULT_ITEM2:
                     if (sex.getText().toString().trim().equals(FEMAIL)) {//如果选择项和原来的相等，不作改变
                         break;
-                    } else {///修改性别，无论用户选择哪个item，都先视作修改性别
+                    } else {//修改性别，无论用户选择哪个item，都先视作修改性别
                         RequestParams requestParams = new RequestParams();
                         requestParams.put("sex", FEMAIL);
                         requestParams.put("username", username.getText().toString());
-                        if (!NetworkState.isNetworkConnected(getApplicationContext())) {
+                        if (!NetworkStateUtil.isNetworkConnected(getApplicationContext())) {
                             Toast.makeText(getApplicationContext(), "请连接网络再试", Toast.LENGTH_SHORT).show();
                             break;
                         }

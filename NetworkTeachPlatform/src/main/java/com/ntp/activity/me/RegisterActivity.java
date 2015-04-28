@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.ntp.activity.R;
 import com.ntp.dao.PathConstant;
 import com.ntp.util.MD5Util;
-import com.ntp.util.NetworkState;
+import com.ntp.util.NetworkStateUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -54,7 +54,7 @@ public class RegisterActivity extends Activity {
             public void afterTextChanged(Editable s) {
                 RequestParams params = new RequestParams();
                 params.put("username", s.toString().trim());
-                if (!NetworkState.isNetworkConnected(getApplicationContext())) {
+                if (!NetworkStateUtil.isNetworkConnected(getApplicationContext())) {
                     Toast.makeText(getApplicationContext(), "请连接网络再试", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -97,7 +97,7 @@ public class RegisterActivity extends Activity {
                 RequestParams params = new RequestParams();
                 params.put("username", username.getText().toString().trim());
                 params.put("password", MD5Util.generatePassword(password.getText().toString().trim()));
-                if (!NetworkState.isNetworkConnected(getApplicationContext())) {
+                if (!NetworkStateUtil.isNetworkConnected(getApplicationContext())) {
                     Toast.makeText(getApplicationContext(), "请连接网络再试", Toast.LENGTH_SHORT).show();
                     return;
                 }

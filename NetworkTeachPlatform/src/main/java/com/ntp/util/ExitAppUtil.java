@@ -9,13 +9,13 @@ import java.util.List;
 /**
  * 销毁该应用所有的Activity，即完全退出应用
  */
-public class ExitListApplication extends Application {
+public class ExitAppUtil extends Application {
     private List<Activity> mList = new LinkedList<Activity>();
-    private static ExitListApplication instance;
+    private static ExitAppUtil instance;
 
-    public synchronized static ExitListApplication getInstance() {
+    public synchronized static ExitAppUtil getInstance() {
         if (null == instance) {
-            instance = new ExitListApplication();
+            instance = new ExitAppUtil();
         }
         return instance;
     }

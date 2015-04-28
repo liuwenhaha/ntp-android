@@ -81,5 +81,9 @@ public class PathConstant {
     /*private static  final String PATH="http://10.0.2.2/ntp/phone/course-search";*/
     public static final String PATH_COURSE_SEARCH = "http://192.168.1.103/ntp/phone/course-search";
 
+    /**
+     * 课件下载文件夹
+     */
+    public static final String SAVE_PATH = "mnt/sdcard/ntp/download/";
 
 }

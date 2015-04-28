@@ -18,7 +18,7 @@ import com.ntp.adapter.CourseAdapter;
 import com.ntp.dao.PathConstant;
 import com.ntp.dao.SearchHistoryDao;
 import com.ntp.model.Course;
-import com.ntp.util.NetworkState;
+import com.ntp.util.NetworkStateUtil;
 import com.ntp.widget.MyProgress;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -87,7 +87,7 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
                 Toast.makeText(getApplicationContext(), "请输入课程名称", Toast.LENGTH_SHORT).show();
                 return false;
             }
-            if (!NetworkState.isNetworkConnected(getApplicationContext())) {
+            if (!NetworkStateUtil.isNetworkConnected(getApplicationContext())) {
                 Toast.makeText(getApplicationContext(), "当前网络不可用", Toast.LENGTH_SHORT).show();
                 return false;
             }

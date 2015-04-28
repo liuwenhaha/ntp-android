@@ -10,15 +10,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ntp.activity.R;
-import com.ntp.activity.me.AboutActivity;
 import com.ntp.dao.CourseDao;
 import com.ntp.dao.CourseTypeDao;
 import com.ntp.dao.PreferenceDao;
 import com.ntp.dao.SearchHistoryDao;
-import com.ntp.util.ExitListApplication;
-import com.ntp.widget.MyDialog;
+import com.ntp.util.ExitAppUtil;
+import com.ntp.widget.MyConfirmDialog;
 import com.ntp.widget.MyExitDialog;
-import com.ntp.widget.MyTitleView;
 
 import java.io.File;
 
@@ -43,7 +41,6 @@ public class SettingActivity extends Activity implements View.OnClickListener {
     private CourseTypeDao courseTypeDao;
     private CourseDao courseDao;
     private SearchHistoryDao searchHistoryDao;
-    private MyTitleView myTitleView;
     private final static String  TIP="将删除所有缓存的课程信息";
 
     @Override
@@ -56,8 +53,6 @@ public class SettingActivity extends Activity implements View.OnClickListener {
         exit = (TextView) findViewById(R.id.exit);
         cache= (RelativeLayout) findViewById(R.id.cache);
         cacheText= (TextView) findViewById(R.id.cache_text);
-        myTitleView= (MyTitleView) findViewById(R.id.myTitleView);
-        myTitleView.setTitle("设置");
         back.setOnClickListener(this);
         switchImg.setOnClickListener(this);
         about.setOnClickListener(this);
@@ -90,7 +85,7 @@ public class SettingActivity extends Activity implements View.OnClickListener {
                 }
                 break;
             case R.id.cache://清除缓存
-                Intent intent=new Intent(getApplicationContext(), MyDialog.class);
+                Intent intent=new Intent(getApplicationContext(), MyConfirmDialog.class);
                 Bundle bundle=new Bundle();
                 bundle.putString("tip",TIP);
                 intent.putExtras(bundle);
@@ -150,7 +145,7 @@ public class SettingActivity extends Activity implements View.OnClickListener {
                 PreferenceDao.saveLoadName(getApplicationContext(), "");//清除登录信息
                 finish();
             } else if (resultCode == MyExitDialog.RESULT_EXIT_APP) {//退出应用
-                ExitListApplication.getInstance().exit();
+                ExitAppUtil.getInstance().exit();
             }
         }
     }

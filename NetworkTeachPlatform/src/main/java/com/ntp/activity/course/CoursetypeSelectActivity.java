@@ -17,7 +17,7 @@ import com.ntp.activity.R;
 import com.ntp.dao.PathConstant;
 import com.ntp.dao.CourseTypeDao;
 import com.ntp.util.HttpUtil;
-import com.ntp.util.NetworkState;
+import com.ntp.util.NetworkStateUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,7 +58,7 @@ public class CoursetypeSelectActivity extends Activity implements View.OnClickLi
      * 获取网络数据并缓存到数据库
      */
     public String[] getData() {
-        if (NetworkState.isNetworkConnected(getApplicationContext())) {//网络可用
+        if (NetworkStateUtil.isNetworkConnected(getApplicationContext())) {//网络可用
             try {
                 JSONObject jb = HttpUtil.getDataFromInternet(new URL(PathConstant.PATH_COURSE_TYPE_LIST), null);
                 if (jb != null) {

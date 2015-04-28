@@ -121,7 +121,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
                 }
                 break;
             case R.id.myDownload://我的下载
-
+                startActivity(new Intent(getActivity().getApplicationContext(),MyDownloadActivity.class));
                 break;
             case R.id.setting://设置
                 startActivity(new Intent(getActivity(), SettingActivity.class));

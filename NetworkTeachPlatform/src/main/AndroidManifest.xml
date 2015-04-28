@@ -62,7 +62,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Anim_style2" />
         <activity
-            android:name="com.ntp.widget.MyDialog"
+            android:name="com.ntp.widget.MyConfirmDialog"
             android:screenOrientation="portrait"
             android:theme="@style/MyDialogStyle" />
         <activity
@@ -103,6 +103,10 @@
             android:theme="@style/MyDialogStyle" />
         <activity
             android:name=".me.HeadBrowseActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Anim_style2" />
+        <activity
+            android:name=".me.MyDownloadActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Anim_style2" />
 

@@ -15,7 +15,7 @@ import com.ntp.activity.course.SearchCourseActivity;
 import com.ntp.activity.me.MeFragment;
 import com.ntp.activity.notice.NoticeFragment;
 import com.ntp.adapter.FragAdapter;
-import com.ntp.util.ExitListApplication;
+import com.ntp.util.ExitAppUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ExitListApplication.getInstance().addActivity(this);
+        ExitAppUtil.getInstance().addActivity(this);
         initView();
     }
 

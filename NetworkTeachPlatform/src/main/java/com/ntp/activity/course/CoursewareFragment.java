@@ -28,7 +28,7 @@ import com.ntp.dao.PathConstant;
 import com.ntp.dao.PreferenceDao;
 import com.ntp.model.Courseware;
 import com.ntp.service.DownloadService;
-import com.ntp.util.NetworkState;
+import com.ntp.util.NetworkStateUtil;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -61,7 +61,6 @@ public class CoursewareFragment extends Fragment implements CoursewareAdapter.Ca
     private static int notificationId = 0;//通知id
 
     private static final String TAG = "CoursewareFragment";
-    private static final String SAVE_PATH = "mnt/sdcard/ntp/download/";//课件下载文件夹
     //接受更新进度表intent
     public static final String ACTION_UPDATE = "com.ntp.service.DownloadService.UPDATE";
     //接受下载完成intent
@@ -117,6 +116,10 @@ public class CoursewareFragment extends Fragment implements CoursewareAdapter.Ca
                         e.printStackTrace();
                     }
                 }
+                else{
+                        Toast.makeText(getActivity().getApplicationContext(), "加载失败", Toast.LENGTH_SHORT).show();
+                        load.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -159,12 +162,12 @@ public class CoursewareFragment extends Fragment implements CoursewareAdapter.Ca
                     download.setText(DOWNLOAD);//设置按钮为下载状态
                     this.progressBar.setVisibility(View.GONE);
                     this.tip.setVisibility(View.GONE);
-                    File file=new File(SAVE_PATH+name);//删除下载文件
+                    File file=new File(PathConstant.SAVE_PATH+name);//删除下载文件
                     file.delete();
                     return;
                 }
                 //检测网络是否可用
-                if (!NetworkState.isNetworkConnected(getActivity().getApplicationContext())) {
+                if (!NetworkStateUtil.isNetworkConnected(getActivity().getApplicationContext())) {
                     Toast.makeText(getActivity().getApplicationContext(), "当前网络不可用", Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -174,12 +177,12 @@ public class CoursewareFragment extends Fragment implements CoursewareAdapter.Ca
                     return;
                 }
                 //检查当前是否禁用了移动网络下载课件和播放视频
-                if (NetworkState.isMobileConnected(getActivity().getApplicationContext()) && !PreferenceDao.getConfig(getActivity().getApplicationContext())) {
+                if (NetworkStateUtil.isMobileConnected(getActivity().getApplicationContext()) && !PreferenceDao.getConfig(getActivity().getApplicationContext())) {
                     Toast.makeText(getActivity().getApplicationContext(), "你已经禁用移动网络下载课件和观看视频", Toast.LENGTH_LONG).show();
                 }
                 this.progressBar = progressBar;
                 this.tip = tip;
-                downloadService.startActionDownload(getActivity().getApplicationContext(), PathConstant.PATH_DOWNLOAD_COURSE_WARE + path, name, SAVE_PATH);
+                downloadService.startActionDownload(getActivity().getApplicationContext(), PathConstant.PATH_DOWNLOAD_COURSE_WARE + path, name, PathConstant.SAVE_PATH);
                 CoursewareFragment.name =name;
                 CoursewareFragment.path =path;
                 progressBar.setVisibility(View.VISIBLE);
@@ -197,7 +200,7 @@ public class CoursewareFragment extends Fragment implements CoursewareAdapter.Ca
                 int fileSize = intent.getIntExtra("fileSize", 0);
                 int downloadLength = intent.getIntExtra("downloadLength", 0);
                 CoursewareFragment.notificationId = intent.getIntExtra("notificationId", 0);
-                if (flag == 0) {
+                if (flag == 0) {//没有设置最大进度
                     progressBar.setMax(fileSize);
                     flag = -1;
                 }
@@ -207,6 +210,8 @@ public class CoursewareFragment extends Fragment implements CoursewareAdapter.Ca
                 if (isSuccess == true) {
                     tip.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.GONE);
+                    progressBar.setProgress(0);//重置进度
+                    flag=0;//下载完成，下载另一个文件，重置设置最大进度标志
                     download.setText(DOWNLOAD);
                 }
             }

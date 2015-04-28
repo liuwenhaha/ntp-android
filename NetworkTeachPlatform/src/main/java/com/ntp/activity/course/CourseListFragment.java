@@ -26,7 +26,7 @@ import com.ntp.dao.CourseTypeDao;
 import com.ntp.dao.PreferenceDao;
 import com.ntp.model.Course;
 import com.ntp.util.HttpUtil;
-import com.ntp.util.NetworkState;
+import com.ntp.util.NetworkStateUtil;
 import com.ntp.util.SDCardUtil;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -104,7 +104,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 String label = DateUtils.formatDateTime(getActivity().getApplicationContext(), System.currentTimeMillis(),
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy(true, false).setLastUpdatedLabel("更新于:" + label);
-                if (NetworkState.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
+                if (NetworkStateUtil.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
                     new GetDataTask().execute();
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
@@ -117,7 +117,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 refreshView.getLoadingLayoutProxy(false, true).setPullLabel(label);
                 refreshView.getLoadingLayoutProxy(false, true).setReleaseLabel(label);
                 refreshView.getLoadingLayoutProxy(false, true).setRefreshingLabel(label);
-                if (NetworkState.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
+                if (NetworkStateUtil.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
                     new PullUpTask().execute();
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
@@ -132,7 +132,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             loadCourseCache(courseList);
 
         } else {//本地没有缓存，请求网络数据
-            if (NetworkState.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
+            if (NetworkStateUtil.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
                 new LoadCourseThread().start();
             } else {
                 Toast.makeText(getActivity().getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();

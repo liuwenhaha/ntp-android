@@ -11,8 +11,7 @@ import com.ntp.activity.R;
 import com.ntp.dao.PreferenceDao;
 
 /**
- * 退出对话框
- *
+ * 退出对话框,退出应用，退出账号
  * @author yanxing
  */
 public class MyExitDialog extends Activity {

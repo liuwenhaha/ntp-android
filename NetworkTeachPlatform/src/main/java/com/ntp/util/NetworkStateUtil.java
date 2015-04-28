@@ -9,7 +9,7 @@ import android.util.Log;
  * @author yanxing
  *         工具类，测试手机网络是否可以用和当前网络类型
  */
-public class NetworkState {
+public class NetworkStateUtil {
 
 
     /**

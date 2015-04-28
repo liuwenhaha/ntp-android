@@ -1,7 +1,6 @@
 package com.ntp.activity.course;
 
 
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -14,7 +13,7 @@ import android.widget.Toast;
 
 import com.ntp.activity.R;
 import com.ntp.dao.PathConstant;
-import com.ntp.util.NetworkState;
+import com.ntp.util.NetworkStateUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -61,20 +60,25 @@ public class CourseOverviewFragment extends Fragment {
         load= (LinearLayout) view.findViewById(R.id.load);
         RequestParams params=new RequestParams();
         params.put("code", code);
-        if(NetworkState.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
+        if(NetworkStateUtil.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
             client.post(PathConstant.PATH_COURSE_DETAIL, params, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers,
                                       JSONObject response) {
                     super.onSuccess(statusCode, headers, response);
-                    try {
-                        String overview = response.getJSONObject("course").getString("overview");
-                        content.setText(overview.equals("null")?"无":overview);
+                    if (response != null) {
+                        try {
+                            String overview = response.getJSONObject("course").getString("overview");
+                            content.setText(overview.equals("null") ? "无" : overview);
+                            load.setVisibility(View.GONE);
+                            Log.i(TAG, overview);
+                        } catch (JSONException e) {
+                            Log.i(TAG, e.toString());
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Toast.makeText(getActivity().getApplicationContext(), "加载失败", Toast.LENGTH_SHORT).show();
                         load.setVisibility(View.GONE);
-                        Log.i(TAG, overview);
-                    } catch (JSONException e) {
-                        Log.i(TAG, e.toString());
-                        e.printStackTrace();
                     }
                 }
 
@@ -83,8 +87,6 @@ public class CourseOverviewFragment extends Fragment {
                     super.onFailure(statusCode, headers, responseString, throwable);
                     Log.i(TAG, responseString);
                     Log.i(TAG, throwable.toString());
-                    Toast.makeText(getActivity().getApplicationContext(), "加载失败", Toast.LENGTH_SHORT).show();
-                    load.setVisibility(View.GONE);
                 }
             });
         }

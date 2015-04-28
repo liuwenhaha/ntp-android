@@ -10,10 +10,10 @@ import android.widget.TextView;
 import com.ntp.activity.R;
 
 /**
- * 自定义确定取消对话框控件，通过继承Activity实现，需要设置此MyDialog为透明
+ * 确定取消对话框，通过继承Activity实现，需要设置此MyDialog为透明
  * @author  yanxing
  */
-public class MyDialog extends Activity implements View.OnClickListener{
+public class MyConfirmDialog extends Activity implements View.OnClickListener{
     private TextView tip,cancel,confirm;
 
     @Override
