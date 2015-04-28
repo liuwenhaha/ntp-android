@@ -2,6 +2,7 @@ package com.ntp.widget;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,9 @@ public class MyTitleView extends FrameLayout {
         LayoutInflater.from(context).inflate(R.layout.my_title_view, this);
         back = (ImageView) findViewById(R.id.back);
         title = (TextView) findViewById(R.id.title);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.MyTitleView);
+        CharSequence text = a.getText(0);
+        title.setText(text);
         back.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
