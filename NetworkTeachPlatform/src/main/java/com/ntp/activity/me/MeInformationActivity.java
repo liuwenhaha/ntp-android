@@ -54,7 +54,6 @@ public class MeInformationActivity extends Activity {
     private static final int REQUEST_HEAD_BROWER = 7;
     public  static final String MAIL="男";
     public  static final String FEMAIL="女";
-    private MyTitleView myTitleView;
     private TextView username;
     private AsyncHttpClient asyncHttpClient=new AsyncHttpClient();
     public static final String TAG="MeInformationActivity";
@@ -69,8 +68,6 @@ public class MeInformationActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_me_information);
-        myTitleView = (MyTitleView) findViewById(R.id.myTitleView);
-        myTitleView.setTitle("基本信息");
         sex= (TextView) findViewById(R.id.sex);
         email= (TextView) findViewById(R.id.email);
         username = (TextView) findViewById(R.id.username);

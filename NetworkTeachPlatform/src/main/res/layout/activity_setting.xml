@@ -7,7 +7,9 @@
     tools:context="com.ntp.activity.me.SettingActivity">
 
     <com.ntp.widget.MyTitleView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/myTitleView"
+        ptr:title="@string/setting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

@@ -64,5 +64,7 @@
     <string name="save">保存</string>
     <string name="tip">(已下载)</string>
     <string name="download">下载</string>
+    <string name="title">标题</string>
+    <string name="baseInfo">基本信息</string>
 
 </resources>
