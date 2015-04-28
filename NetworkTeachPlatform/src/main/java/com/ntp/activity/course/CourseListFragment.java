@@ -244,13 +244,13 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
     /**
      * 下拉刷新线程
      */
-    private class GetDataTask extends AsyncTask<Void, Void, String[]> {
-        List<Course> list = new ArrayList<Course>();//下拉刷新更新数据，最多显示20条，不显示上次上拉刷新更新的数据
+    private class GetDataTask extends AsyncTask<Void, Void, List<Course>> {
+
 
         @Override //后台耗时操作
-        protected String[] doInBackground(Void... params) {
+        protected List<Course> doInBackground(Void... params) {
+            List<Course> list = new ArrayList<Course>();//下拉刷新更新数据，最多显示20条，不显示上次上拉刷新更新的数据
             try {
-
                 JSONObject jb = HttpUtil.getDataFromInternet(new URL(PathConstant.PATH_COURSE_LIST), null);
                 if (jb != null) {
                     int currentPage = jb.getInt("currentPage");
@@ -287,11 +287,11 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 e.printStackTrace();
             }
             updateData();//下拉更新首页时同时更新所有的课程类型，保存到数据库
-            return null;
+            return list;
         }
 
         @Override //操作UI
-        protected void onPostExecute(String[] result) {
+        protected void onPostExecute(List<Course> list) {
             pullToRefreshView.onRefreshComplete();
             if (list.size() > 0) {//获取到数据，更新UI
                 load.setVisibility(View.GONE);
@@ -307,7 +307,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             } else {
                 Toast.makeText(getActivity().getApplicationContext(), "没有更新到数据，请检查网络，稍后再试", Toast.LENGTH_LONG).show();
             }
-            super.onPostExecute(result);
+            super.onPostExecute(list);
         }
 
         /**
@@ -339,15 +339,15 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
     /**
      * 上拉刷新线程
      */
-    private class PullUpTask extends AsyncTask<Void, Void, String[]> {
+    private class PullUpTask extends AsyncTask<Void, Void, List<Course>> {
 
-        List<Course> list;
         JSONObject jb;
         JSONArray ja;
 
         //后台耗时操作
         @Override
-        protected String[] doInBackground(Void... params) {
+        protected List<Course> doInBackground(Void... params) {
+            List<Course> list=null;
             try {
                 int currentPage = PreferenceDao.getCurrentPage(getActivity().getApplicationContext());
                 jb = HttpUtil.getDataFromInternet(new URL(PathConstant.PATH_COURSE_LIST + "?page=" + (currentPage + 1)), "GET");
@@ -387,12 +387,12 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return new String[0];
+            return list;
         }
 
         @Override //操作UI
-        protected void onPostExecute(String[] strings) {
-            super.onPostExecute(strings);
+        protected void onPostExecute(List<Course> list) {
+            super.onPostExecute(list);
             pullToRefreshView.onRefreshComplete();
             if (jb != null && ja.length() != 0) {//获取到数据，更新UI
                 load.setVisibility(View.GONE);
