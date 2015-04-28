@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.ntp.activity.R;
 
 /**
- * 选择对话框，两个item
+ * 选择对话框，当收到的intent参数itemNumber不为0时，2个item
  *
  * @author yanxing
  */
@@ -33,11 +33,20 @@ public class MySelectDialog extends Activity {
         setContentView(R.layout.my_select_dialog);
         firstOption = (TextView) findViewById(R.id.item1);
         secondOption= (TextView) findViewById(R.id.item2);
+        line= (ImageView) findViewById(R.id.h_line);
         Bundle bundle=getIntent().getExtras();
-        String first=bundle.getString("firstOption");
-        String second=bundle.getString("secondOption");
-        firstOption.setText(first);
-        secondOption.setText(second);
+        //两个item
+        if(getIntent().getIntExtra("itemNumber",0)==0){
+            String first=bundle.getString("firstOption");
+            String second=bundle.getString("secondOption");
+            firstOption.setText(first);
+            secondOption.setText(second);
+        }else if (getIntent().getIntExtra("itemNumber",0)==1){
+            String first=bundle.getString("firstOption");
+            firstOption.setText(first);
+            line.setVisibility(View.GONE);
+        }
+
     }
 
     /**
