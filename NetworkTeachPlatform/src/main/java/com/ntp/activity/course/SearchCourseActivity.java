@@ -61,6 +61,7 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
         search.setOnKeyListener(this);
         listView = (ListView) findViewById(R.id.history);
         tip = (TextView) findViewById(R.id.no_search_tip);
+        imageLoader = ImageLoader.getInstance();
         list = new ArrayList<Course>();
         searchHistoryDao = new SearchHistoryDao(getApplicationContext());
         courseAdapter = new CourseAdapter(list, getApplicationContext(),imageLoader);
@@ -100,8 +101,6 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
                 public void onSuccess(int statusCode, Header[] headers,
                                       JSONObject response) {
                     super.onSuccess(statusCode, headers, response);
-                    Log.i(TAG, "adfadjlsadf" + response.toString());
-//                    response.
                     try {
                         if (response != null) {
                             list.clear();

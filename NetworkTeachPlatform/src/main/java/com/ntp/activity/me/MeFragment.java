@@ -116,9 +116,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
                 }
                 break;
             case R.id.myCourse://我的课程
-                if (PreferenceDao.getLoadName(getActivity()).equals("")) {
-                    Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
-                }
+                startActivity(new Intent(getActivity().getApplicationContext(),MyCourseActivity.class));
                 break;
             case R.id.myDownload://我的下载
                 startActivity(new Intent(getActivity().getApplicationContext(),MyDownloadActivity.class));

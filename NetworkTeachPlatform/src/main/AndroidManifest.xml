@@ -109,6 +109,11 @@
             android:name=".me.MyDownloadActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Anim_style2" />
+        <activity
+            android:name=".me.MyCourseActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Anim_style2" />
+
 
         <service
             android:name="com.ntp.service.DownloadService"

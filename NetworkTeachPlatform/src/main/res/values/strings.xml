@@ -67,5 +67,6 @@
     <string name="title">标题</string>
     <string name="baseInfo">基本信息</string>
     <string name="downloadManage">下载管理</string>
+    <string name="myCourseTip">你尚未登录，无法查看你的课程</string>
 
 </resources>
