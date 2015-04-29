@@ -61,7 +61,7 @@ public class CourseDetailActivity extends FragmentActivity implements View.OnCli
         back.setOnClickListener(this);
         fragments.add(CourseOverviewFragment.getInstance(code));
         fragments.add(CoursewareFragment.getInstance(code));
-        fragments.add(CoursevideoFragment.getInstance());
+        fragments.add(CoursevideoFragment.getInstance(code));
         fragments.add(CourseForumFragment.getInstance());
         fragAdapter = new FragAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(fragAdapter);

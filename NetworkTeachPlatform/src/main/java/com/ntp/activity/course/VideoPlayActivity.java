@@ -15,7 +15,6 @@ import io.vov.vitamio.widget.VideoView;
  */
 public class VideoPlayActivity extends Activity{
     private VideoView videoView;
-    private static  final String path="http://www.modrails.com/videos/passenger_nginx.mov";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +23,7 @@ public class VideoPlayActivity extends Activity{
             return;
         }
         setContentView(R.layout.activitity_video_play);
+        String path=getIntent().getStringExtra("path");
         videoView= (VideoView) findViewById(R.id.surface_view);
         videoView.setVideoPath(path);
         videoView.setMediaController(new MediaController(this));

@@ -53,18 +53,17 @@ public class CoursevideoAdapter extends BaseAdapter implements View.OnClickListe
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        TextView id,name;
+        TextView name,path;
         ImageView imageView;
         convertView = LayoutInflater.from(context).inflate(R.layout.listview_item_coursevideo, null);
         imageView = (ImageView) convertView.findViewById(R.id.watch);
-//        imageView.setBackgroundResource(mCoursevideoList.get(position).getImageId());//拉伸图片，充满ImageView控件
         imageView.setImageResource(mCoursevideoList.get(position).getImageId());
-        imageView.setTag(position);
-        id= (TextView) convertView.findViewById(R.id.coursevideoId);
-        id.setText(mCoursevideoList.get(position).getId());
+        imageView.setTag(position);//设置标记
         name = (TextView) convertView.findViewById(R.id.coursevideoName);
         name.setText(mCoursevideoList.get(position).getName());
         name.setTag(position);
+        path= (TextView) convertView.findViewById(R.id.path);
+        path.setText(mCoursevideoList.get(position).getPath());
         name.setOnClickListener(this);
         imageView.setOnClickListener(this);
         return convertView;

@@ -51,9 +51,14 @@ public class PathConstant {
     public static String PATH_IMAGE = "http://192.168.1.103/ntp/upload/";
 
     /**
-     * 访问用户服务器端课件地址，需要拼接加上课件名称
+     * 访问用户服务器端课件地址，需要拼接加上课件path
      */
     public static String PATH_DOWNLOAD_COURSE_WARE = "http://192.168.1.103/ntp/upload/";
+
+    /**
+     * 访问用户服务器端视频地址，需要拼接加上视频path
+     */
+    public static String PATH_DOWNLOAD_COURSE_VIDEO = "http://192.168.1.103/ntp/upload/";
 
     /**
      * 获取用户详细信息地址
@@ -85,6 +90,11 @@ public class PathConstant {
      * 搜索我的课程路径
      */
     public static final String PATH_MY_COURSE = "http://192.168.1.103/ntp/phone/my_course";
+
+    /**
+     * 根据课程代码获取课程视频
+     */
+    public static final String PATH_COURSE_VIDEO = "http://192.168.1.103/ntp/phone/course_video";
 
     /**
      * 课件下载文件夹

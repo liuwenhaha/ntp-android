@@ -127,7 +127,7 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
                             tip.setVisibility(View.GONE);
                             courseAdapter.notifyDataSetChanged();
                             finishActivity(REQUEST_PROGRESS);
-                        } else {//服务器没有开启
+                        } else {
                             Toast.makeText(getApplicationContext(), "没有搜索到相关课程", Toast.LENGTH_SHORT).show();
                             finishActivity(REQUEST_PROGRESS);
                         }
@@ -137,10 +137,10 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
                 }
 
                 @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    super.onFailure(statusCode, headers, responseString, throwable);
-                    Log.i(TAG, responseString);
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
                     Log.i(TAG, throwable.toString());
+                    Toast.makeText(getApplicationContext(), "加载失败", Toast.LENGTH_SHORT).show();
                 }
             });
         }

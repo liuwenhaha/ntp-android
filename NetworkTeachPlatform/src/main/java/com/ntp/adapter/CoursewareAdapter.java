@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.ntp.activity.course.CoursewareFragment;
 import com.ntp.model.Courseware;
 import com.ntp.activity.R;

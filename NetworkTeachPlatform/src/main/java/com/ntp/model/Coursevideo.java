@@ -7,6 +7,8 @@ package com.ntp.model;
 public class Coursevideo {
     private String id;
     private String name;
+    private String path;
+    private String size;
     private int imageId;//图片资源id
 
     public String getName() {
@@ -25,24 +27,44 @@ public class Coursevideo {
         this.id = id;
     }
 
-    /**
-     * @param id
-     * @param name 视频名称
-     */
-    public Coursevideo(String id, String name) {
-        this.id = id;
-        this.name = name;
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
     }
 
     /**
-     * @param id 视频id
-     * @param name 视频名称
+     * @param name 视频显示的名称
+     * @param path 视频路径
+     * @param size  视频大小
      * @param imageId 播放图片
      */
-    public Coursevideo(String id, String name, int imageId) {
-        this.id = id;
-        this.name = name;
+    public Coursevideo(String name, String path,String size,int imageId) {
         this.imageId = imageId;
+        this.size = size;
+        this.name = name;
+        this.path = path;
+    }
+
+    /**
+     * @param name 视频显示的名称
+     * @param path 视频路径
+     * @param size  视频大小
+     */
+    public Coursevideo(String name, String path,String size) {
+        this.size = size;
+        this.name = name;
+        this.path = path;
     }
 
     public int getImageId() {
@@ -53,11 +75,4 @@ public class Coursevideo {
         this.imageId = imageId;
     }
 
-    @Override
-    public String toString() {
-        return "Coursevideo{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }

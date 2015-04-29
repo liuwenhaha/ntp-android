@@ -4,60 +4,108 @@ package com.ntp.activity.course;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.ntp.activity.R;
 import com.ntp.adapter.CoursevideoAdapter;
+import com.ntp.dao.PathConstant;
+import com.ntp.dao.PreferenceDao;
 import com.ntp.model.Coursevideo;
+import com.ntp.util.NetworkStateUtil;
+
+import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-
 /**
  * 课程教学视频
  */
-public class CoursevideoFragment extends Fragment implements CoursevideoAdapter.Callback{
+public class CoursevideoFragment extends Fragment implements CoursevideoAdapter.Callback {
 
     private static CoursevideoFragment mCoursevideoFragment;
     private ListView mCoursevideoList;
     private CoursevideoAdapter mCoursevideoAdapter;
+    private LinearLayout load;
+
+    private List<Coursevideo> list;
+    private String code;//课程代码
+
+    private static AsyncHttpClient client = new AsyncHttpClient();
+    private static final String TAG = "CourseVideoFragment";
 
     /**
      * 创建对象
      */
-    public static CoursevideoFragment getInstance() {
-        if (mCoursevideoFragment == null) {
-            mCoursevideoFragment = new CoursevideoFragment();
-        }
+    public static CoursevideoFragment getInstance(String code) {
+        mCoursevideoFragment = new CoursevideoFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("code", code);
+        mCoursevideoFragment.setArguments(bundle);
         return mCoursevideoFragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_course_video, container, false);
-        mCoursevideoList= (ListView) view.findViewById(R.id.coursevideoList);
-        mCoursevideoAdapter=new CoursevideoAdapter(getData(),getActivity().getApplicationContext(),this);
+        View view = inflater.inflate(R.layout.fragment_course_video, container, false);
+        mCoursevideoList = (ListView) view.findViewById(R.id.coursevideoList);
+        load = (LinearLayout) view.findViewById(R.id.load);
+        list = new ArrayList<Coursevideo>();
+        mCoursevideoAdapter = new CoursevideoAdapter(list, getActivity().getApplicationContext(), this);
         mCoursevideoList.setAdapter(mCoursevideoAdapter);
-        return view;
-    }
+        code = getArguments().getString("code");
+        RequestParams params = new RequestParams();
+        params.put("code", code);
+        if (NetworkStateUtil.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
+            client.post(PathConstant.PATH_COURSE_VIDEO, params, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers,
+                                      JSONObject response) {
+                    super.onSuccess(statusCode, headers, response);
+                    if (response != null) {
+                        try {
+                            JSONArray ja = response.getJSONArray("videos");
+                            for (int i = 0; i < ja.length(); i++) {
+                                JSONObject jb = ja.getJSONObject(i);
+                                Coursevideo coursevideo = new Coursevideo(jb.getString("name"), jb.getString("path"), jb.getString("size").equals("null") ? "" : jb.getString("size"));
+                                list.add(coursevideo);
+                                load.setVisibility(View.GONE);
+                            }
+                            mCoursevideoAdapter = new CoursevideoAdapter(list, getActivity().getApplicationContext(), CoursevideoFragment.this);
+                            mCoursevideoAdapter.notifyDataSetChanged();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Toast.makeText(getActivity().getApplicationContext(), "加载失败", Toast.LENGTH_SHORT).show();
+                        load.setVisibility(View.GONE);
+                    }
+                }
 
-    /**
-     * 模拟数据
-     */
-    public List<Coursevideo> getData(){
-        List<Coursevideo> list=new ArrayList<Coursevideo>();
-        for (int i = 0; i < 5; i++) {
-            Coursevideo coursevideo=new Coursevideo(""+i,"第四讲：AsyncTask运行问题的解决");
-            list.add(coursevideo);
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                    Log.i(TAG, throwable.toString());
+                    Toast.makeText(getActivity().getApplicationContext(), "加载失败", Toast.LENGTH_SHORT).show();
+                    load.setVisibility(View.GONE);
+                }
+            });
         }
-        return list;
+        return view;
     }
 
 
@@ -66,12 +114,23 @@ public class CoursevideoFragment extends Fragment implements CoursevideoAdapter.
      */
     @Override
     public void click(View v) {
-          switch (v.getId()){
-              case R.id.watch://观看视频
-                  Toast.makeText(getActivity().getApplicationContext(),"视频加载中",Toast.LENGTH_SHORT).show();
-                  Intent intent=new Intent(getActivity(),VideoPlayActivity.class);
-                  startActivity(intent);
-                  break;
-          }
+        switch (v.getId()) {
+            case R.id.watch://观看视频
+                //检测网络是否可用
+                if (!NetworkStateUtil.isNetworkConnected(getActivity().getApplicationContext())) {
+                    Toast.makeText(getActivity().getApplicationContext(), "当前网络不可用", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                //检查当前是否禁用了移动网络下载课件和播放视频
+                if (NetworkStateUtil.isMobileConnected(getActivity().getApplicationContext()) && !PreferenceDao.getConfig(getActivity().getApplicationContext())) {
+                    Toast.makeText(getActivity().getApplicationContext(), "你已经禁用移动网络下载课件和观看视频", Toast.LENGTH_LONG).show();
+                }
+                int position=Integer.parseInt(v.getTag().toString());
+                String path=list.get(position).getPath();
+                Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
+                intent.putExtra("path",PathConstant.PATH_DOWNLOAD_COURSE_VIDEO+path);
+                startActivity(intent);
+                break;
+        }
     }
 }

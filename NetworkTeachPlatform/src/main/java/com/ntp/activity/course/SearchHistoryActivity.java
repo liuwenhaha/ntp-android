@@ -53,7 +53,7 @@ public class SearchHistoryActivity extends Activity implements CoursevideoAdapte
         List<String> strList = searchHistoryDao.findAll();
         list = new ArrayList<Coursevideo>();
         for (int i = 0; i < strList.size(); i++) {
-            list.add(new Coursevideo(0 + "", strList.get(i), R.drawable.delete));
+            list.add(new Coursevideo(strList.get(i),0+"",0+"",R.drawable.delete));
         }
         coursevideoAdapter = new CoursevideoAdapter(list, getApplicationContext(), this);
         searchHistoryList.setAdapter(coursevideoAdapter);

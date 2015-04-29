@@ -13,12 +13,6 @@
         android:layout_height="40dp"
         android:layout_weight="7"
         android:orientation="horizontal">
-        <!-- 视频id-->
-        <TextView
-            android:id="@+id/coursevideoId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
 
         <!-- 视频名称-->
         <TextView
@@ -29,6 +23,13 @@
             android:gravity="center_vertical"
             android:textColor="@color/course_name"
             android:textSize="15sp" />
+
+        <!-- 视频路径-->
+        <TextView
+            android:id="@+id/path"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
     </LinearLayout>
 
     <LinearLayout
