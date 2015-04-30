@@ -1,0 +1,40 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layout_bg_pressed"
+    tools:context="com.ntp.activity.homeworkFragment">
+
+    <LinearLayout
+        android:id="@+id/load"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateDuration="500"
+            android:indeterminateBehavior="repeat"
+            android:indeterminateDrawable="@drawable/load_course_progress" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/load_course" />
+    </LinearLayout>
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/pull_to_refresh_listview"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:divider="@color/divider_line"
+        ptr:ptrHeaderTextColor="@color/menu_text_reserve"
+        android:dividerHeight="@dimen/divider_line"
+        android:scrollbarStyle="outsideOverlay"
+        android:listSelector="@color/layout_bg_pressed"
+        android:scrollbars="vertical" />
+
+</FrameLayout>
