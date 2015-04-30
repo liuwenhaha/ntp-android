@@ -19,18 +19,18 @@
 
             <ImageView
                 android:id="@+id/img"
-                android:layout_width="70dp"
-                android:layout_height="60dp"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
                 android:src="@drawable/ic_launcher"
                 android:layout_marginLeft="@dimen/my_margin_left_right"
                 android:layout_marginBottom="7dp"
-                android:layout_marginTop="9dp" />
+                android:layout_marginTop="8dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="15dp"
-                android:textSize="17sp"
+                android:layout_marginLeft="13dp"
+                android:textSize="16sp"
                 android:gravity="center"
                 android:textColor="@color/course_name"
                 android:text="@string/homeworkTitle" />
@@ -53,18 +53,18 @@
 
             <ImageView
                 android:id="@+id/reply"
-                android:layout_width="70dp"
-                android:layout_height="60dp"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
                 android:src="@drawable/ic_launcher"
                 android:layout_marginLeft="@dimen/my_margin_left_right"
                 android:layout_marginBottom="7dp"
-                android:layout_marginTop="9dp" />
+                android:layout_marginTop="8dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="15dp"
-                android:textSize="17sp"
+                android:layout_marginLeft="13dp"
+                android:textSize="16sp"
                 android:gravity="center"
                 android:textColor="@color/course_name"
                 android:text="@string/reply" />
