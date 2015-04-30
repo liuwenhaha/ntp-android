@@ -19,7 +19,6 @@
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
             android:layout_marginTop="6dp"
-            android:background="@color/translucent_h"
             android:src="@drawable/course_detail_back" />
 
         <TextView

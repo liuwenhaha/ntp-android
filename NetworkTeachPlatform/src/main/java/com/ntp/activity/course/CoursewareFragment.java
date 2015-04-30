@@ -128,7 +128,6 @@ public class CoursewareFragment extends Fragment implements CoursewareAdapter.Ca
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 Log.i(TAG, throwable.toString());
-                Toast.makeText(getActivity().getApplicationContext(), "加载失败", Toast.LENGTH_SHORT).show();
                 load.setVisibility(View.GONE);
             }
         });
