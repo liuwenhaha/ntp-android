@@ -138,8 +138,6 @@ public class DownloadService extends IntentService {
             } else {
                 Log.i(TAG, "服务器响应异常");
             }
-
-
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (ProtocolException e) {
