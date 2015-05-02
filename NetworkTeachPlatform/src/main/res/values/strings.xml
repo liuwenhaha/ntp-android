@@ -73,5 +73,11 @@
     <string name="noticeTip">你尚未登录，无法显示作业和回帖消息</string>
     <string name="homeworkTitle">作业</string>
     <string name="reply">回帖</string>
+    <string name="replyTip">回复</string>
+    <string name="detail">详情</string>
+    <string name="homeworkdetail">作业详情</string>
+    <string name="readOver">批阅:</string>
+    <string name="score">成绩：</string>
+    <string name="homework1">作业</string>
 
 </resources>

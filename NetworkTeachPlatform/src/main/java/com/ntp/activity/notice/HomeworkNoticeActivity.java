@@ -1,9 +1,12 @@
 package com.ntp.activity.notice;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -25,7 +28,7 @@ import java.util.List;
  * 作业消息
  * @author yanxing
  */
-public class HomeworkNoticeActivity extends Activity{
+public class HomeworkNoticeActivity extends Activity implements AdapterView.OnItemClickListener{
 
     private PullToRefreshListView pullToRefreshView;
     private NoticeAdapter noticeAdapter;
@@ -39,6 +42,7 @@ public class HomeworkNoticeActivity extends Activity{
         noticeList=new ArrayList<Notice>();
         noticeAdapter=new NoticeAdapter(getApplicationContext(),noticeList);
         load= (LinearLayout) findViewById(R.id.load);
+        load.setVisibility(View.GONE);
         pullToRefreshView = (PullToRefreshListView)findViewById(R.id.pull_to_refresh_listview);
         pullToRefreshView.setMode(PullToRefreshBase.Mode.BOTH);//同时可以下拉和上拉刷新
         pullToRefreshView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
@@ -67,6 +71,17 @@ public class HomeworkNoticeActivity extends Activity{
                 }
             }
         });
+//        Notice notice=new Notice("第一章作业","C语言","2015-5-02");
+        Notice notice=new Notice("time回复了你的问题\"C语言难吗\"？：不难","2015-5-01","");
+        noticeList.add(notice);
+        noticeAdapter=new NoticeAdapter(getApplicationContext(),noticeList);
+        pullToRefreshView.setOnItemClickListener(this);
+        pullToRefreshView.setAdapter(noticeAdapter);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        startActivity(new Intent(getApplicationContext(),HomeworkDetailActivity.class));
     }
 
     /**----------------------------------------- 下拉刷新线程-------------------------------------------------**/

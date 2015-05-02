@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layout_bg_pressed"
+    android:orientation="vertical">
+
+    <com.ntp.widget.MyTitleView
+        android:id="@+id/myTitleView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        ptr:title="@string/homeworkdetail"
+        android:background="@color/nav_bg" />
+
+    <ImageView
+        android:id="@+id/h_line"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/myTitleView"
+        android:background="@drawable/list_top_line" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:layout_marginLeft="@dimen/my_margin_left"
+        android:layout_marginRight="@dimen/my_margin_left"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/homeworkTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/course_name"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/course_name"
+            android:text="@string/readOver"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/course_name"
+            android:text="@string/score"/>
+    </LinearLayout>
+
+
+</LinearLayout>

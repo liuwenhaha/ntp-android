@@ -117,6 +117,14 @@
             android:name=".notice.HomeworkNoticeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Anim_style2" />
+        <activity
+            android:name=".course.CourseForumReplyActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Anim_style2" />
+        <activity
+            android:name=".notice.HomeworkDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Anim_style2" />
 
 
         <service

@@ -8,8 +8,8 @@ package com.ntp.model;
 public class Notice {
 
     private int imageId;//图片id
-    private int title;//标题
-    private int content;//所属课程
+    private String title;//标题
+    private String content;//所属课程
     private String time;//时间
 
     /**
@@ -18,21 +18,43 @@ public class Notice {
      * @param title 标题
      * @param time 回复时间
      */
-    public Notice(int imageId,int title, String time) {
+    public Notice(int imageId,String title, String time) {
         this.title = title;
         this.imageId = imageId;
         this.time = time;
     }
 
     /**
+     * 回复消息
+     * @param title 标题
+     * @param time 回复时间
+     */
+    public Notice(String title, String time) {
+        this.title = title;
+        this.time = time;
+    }
+
+    /**
      * 作业消息
      * @param imageId 图片资源id
-     * @param title 标题所属
+     * @param title 标题
      * @param content 所属课程
      * @param time 作业布置时间
      */
-    public Notice(int imageId, int title,int content, String time) {
+    public Notice(int imageId, String title,String content, String time) {
         this.imageId = imageId;
+        this.time = time;
+        this.content = content;
+        this.title = title;
+    }
+
+    /**
+     * 作业消息
+     * @param title 标题
+     * @param content 所属课程
+     * @param time 作业布置时间
+     */
+    public Notice(String title,String content, String time) {
         this.time = time;
         this.content = content;
         this.title = title;
@@ -54,19 +76,19 @@ public class Notice {
         this.time = time;
     }
 
-    public int getContent() {
+    public String getContent() {
         return content;
     }
 
-    public void setContent(int content) {
+    public void setContent(String content) {
         this.content = content;
     }
 
-    public int getTitle() {
+    public String getTitle() {
         return title;
     }
 
-    public void setTitle(int title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 }

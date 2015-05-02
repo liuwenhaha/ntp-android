@@ -1,9 +1,23 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/layout_bg_pressed"
+    android:orientation="vertical"
     tools:context="com.ntp.activity.homeworkFragment">
+
+    <com.ntp.widget.MyTitleView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        ptr:title="@string/homework1"
+        android:background="@color/nav_bg" />
+
+    <ImageView
+        android:id="@+id/h_line"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/list_top_line" />
 
     <LinearLayout
         android:id="@+id/load"
@@ -37,4 +51,4 @@
         android:listSelector="@color/layout_bg_pressed"
         android:scrollbars="vertical" />
 
-</FrameLayout>
+</LinearLayout>

@@ -1,11 +1,13 @@
 package com.ntp.activity.course;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.SimpleAdapter;
 
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -19,7 +21,7 @@ import java.util.Map;
 /**
  * 课程跟帖
  */
-public class CourseForumFragment extends Fragment {
+public class CourseForumFragment extends Fragment implements AdapterView.OnItemClickListener{
     private static CourseForumFragment mCourseForumFragment;
     private static PullToRefreshListView pullToRefreshListView;
 
@@ -40,6 +42,7 @@ public class CourseForumFragment extends Fragment {
         SimpleAdapter adapter = new SimpleAdapter(getActivity().getApplicationContext(), getData(),
                 R.layout.listview_item_courseforum, new String[]{"content", "name", "time", "reply"},
                 new int[]{R.id.content, R.id.name, R.id.time, R.id.reply});
+        pullToRefreshListView.setOnItemClickListener(this);
         pullToRefreshListView.setAdapter(adapter);
         return view;
     }
@@ -49,16 +52,20 @@ public class CourseForumFragment extends Fragment {
      */
     private List<Map<String, String>> getData() {
         List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
             Map<String, String> map = new HashMap<String, String>();
-            map.put("content", "创业团队做手机客户端，应该先做 Android 还是 iOS？为什么？");
+            map.put("content", "C语言难学吗?");
             map.put("name", "yanxing");
-            map.put("time", "2015-02-02");
-            map.put("reply", "回复数");
+            map.put("time", "2015-05-01");
+            map.put("reply", "1人回复");
             list.add(map);
         }
         return list;
     }
 
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        startActivity(new Intent(getActivity().getApplicationContext(),CourseForumReplyActivity.class));
+    }
 }

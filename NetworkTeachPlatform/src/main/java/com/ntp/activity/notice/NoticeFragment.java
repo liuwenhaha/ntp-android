@@ -1,5 +1,6 @@
 package com.ntp.activity.notice;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -75,11 +76,12 @@ public class NoticeFragment extends Fragment implements View.OnClickListener{
         switch (v.getId()){
             //查看作业消息
             case R.id.homeworkNotice:
-
+                startActivity(new Intent(getActivity().getApplicationContext(),HomeworkNoticeActivity.class));
                 break;
             //查看回帖消息
             case R.id.replyNotice:
-
+                //模拟
+                startActivity(new Intent(getActivity().getApplicationContext(),HomeworkNoticeActivity.class));
                 break;
 
         }
