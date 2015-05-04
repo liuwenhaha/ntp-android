@@ -47,7 +47,7 @@ public class CourseOverviewFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         code=getArguments().getString("code");
     }
@@ -93,12 +93,9 @@ public class CourseOverviewFragment extends Fragment {
                     }
                     load.setVisibility(View.GONE);
                 }
-
-
             });
         }
         return view;
     }
-
 
 }

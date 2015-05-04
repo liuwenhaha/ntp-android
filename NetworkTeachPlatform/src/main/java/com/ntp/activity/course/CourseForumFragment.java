@@ -2,16 +2,34 @@ package com.ntp.activity.course;
 
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.ntp.activity.R;
+import com.ntp.activity.notice.HomeworkDetailActivity;
+import com.ntp.dao.PathConstant;
+import com.ntp.model.Notice;
+import com.ntp.util.NetworkStateUtil;
+
+import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,51 +39,153 @@ import java.util.Map;
 /**
  * 课程跟帖
  */
-public class CourseForumFragment extends Fragment implements AdapterView.OnItemClickListener{
+public class CourseForumFragment extends Fragment implements AdapterView.OnItemClickListener {
+
+    private static PullToRefreshListView pullToRefreshView;
+    private static AsyncHttpClient asyncHttpClient=new AsyncHttpClient();
+
     private static CourseForumFragment mCourseForumFragment;
-    private static PullToRefreshListView pullToRefreshListView;
+    private SimpleAdapter adapter;
+
+    private String code;
+    private int currentPage=1;
+    private List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+    private static final String TAG="CourseForumFragment";
 
     /**
      * 创建对象
      */
-    public static CourseForumFragment getInstance() {
+    public static CourseForumFragment getInstance(String code) {
         mCourseForumFragment = new CourseForumFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("code", code);
+        mCourseForumFragment.setArguments(bundle);
         return mCourseForumFragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        code=getArguments().getString("code");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_course_forum, container, false);
-        pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.pull_to_refresh_listview);
-        String str[] = new String[]{};
-        SimpleAdapter adapter = new SimpleAdapter(getActivity().getApplicationContext(), getData(),
+        pullToRefreshView = (PullToRefreshListView) view.findViewById(R.id.pull_to_refresh_listview);
+        pullToRefreshView.setOnItemClickListener(this);
+        adapter = new SimpleAdapter(getActivity().getApplicationContext(), list,
                 R.layout.listview_item_courseforum, new String[]{"content", "name", "time", "reply"},
                 new int[]{R.id.content, R.id.name, R.id.time, R.id.reply});
-        pullToRefreshListView.setOnItemClickListener(this);
-        pullToRefreshListView.setAdapter(adapter);
+        pullToRefreshView.setAdapter(adapter);
+        RequestParams requestParams=new RequestParams();
+        requestParams.put("code",code);
+        //获取课程讨论问题
+        asyncHttpClient.post(PathConstant.PATH_COURSE_FORUM,requestParams,new JsonHttpResponseHandler(){
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                if (response != null) {
+                    try {
+                        JSONArray ja = response.getJSONArray("forums");
+                        currentPage= response.getInt("currentPage");
+                        Log.i(TAG,currentPage+"");
+                        for (int i = 0; i < ja.length(); i++) {
+                            JSONObject jb = ja.getJSONObject(i);
+                            Map<String,String> map=new HashMap<String, String>();
+                            map.put("content", jb.getString("content"));
+                            map.put("name", jb.get("user").equals(null)?"":jb.getJSONObject("user").getString("name"));
+                            String time=jb.getString("time");
+                            map.put("time", time.substring(0, time.lastIndexOf("T")));
+                            map.put("reply", jb.get("replyNumber").equals(null)?"0人回复":jb.getString("replyNumber")+"人回复");
+                            list.add(map);
+                        }
+                        adapter.notifyDataSetChanged();//更新数据
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                Log.i(TAG, throwable.toString());
+            }
+        });
+        pullToRefreshView.setMode(PullToRefreshBase.Mode.BOTH);//同时可以下拉和上拉刷新
+        pullToRefreshView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override //下拉刷新
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                String label = DateUtils.formatDateTime(getActivity().getApplicationContext(), System.currentTimeMillis(),
+                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+                refreshView.getLoadingLayoutProxy(true, false).setLastUpdatedLabel("更新于:" + label);
+                if (NetworkStateUtil.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
+                    new GetDataTask().execute();
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override  //下拉刷新
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                String label = "正在加载...";
+                refreshView.getLoadingLayoutProxy(false, true).setPullLabel(label);
+                refreshView.getLoadingLayoutProxy(false, true).setReleaseLabel(label);
+                refreshView.getLoadingLayoutProxy(false, true).setRefreshingLabel(label);
+                if (NetworkStateUtil.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
+                    new PullUpTask().execute();
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         return view;
     }
 
     /**
-     * 模拟数据
+     * ----------------------------------------- 下拉刷新线程-------------------------------------------------*
      */
-    private List<Map<String, String>> getData() {
-        List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-        for (int i = 0; i < 1; i++) {
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("content", "C语言难学吗?");
-            map.put("name", "yanxing");
-            map.put("time", "2015-05-01");
-            map.put("reply", "1人回复");
-            list.add(map);
+    private class GetDataTask extends AsyncTask<Void, Void, List<Map<String, String>>> {
+
+
+        @Override //后台耗时操作
+        protected List<Map<String, String>> doInBackground(Void... params) {
+            return list;
         }
-        return list;
+
+        @Override //操作UI
+        protected void onPostExecute(List<Map<String, String>> list) {
+            pullToRefreshView.onRefreshComplete();
+            super.onPostExecute(list);
+        }
+    }
+
+
+    /**
+     * ---------------------------------------------- 上拉刷新线程-----------------------------------------------*
+     */
+    private class PullUpTask extends AsyncTask<Void, Void, List<Map<String, String>>> {
+
+        JSONObject jb;
+        JSONArray ja;
+
+        //后台耗时操作
+        @Override
+        protected List<Map<String, String>> doInBackground(Void... params) {
+            return list;
+        }
+
+        @Override //操作UI
+        protected void onPostExecute(List<Map<String, String>> list) {
+            super.onPostExecute(list);
+            pullToRefreshView.onRefreshComplete();
+        }
     }
 
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        startActivity(new Intent(getActivity().getApplicationContext(),CourseForumReplyActivity.class));
+        startActivity(new Intent(getActivity().getApplicationContext(), CourseForumReplyActivity.class));
     }
 }

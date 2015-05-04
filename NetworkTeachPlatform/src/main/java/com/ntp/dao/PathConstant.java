@@ -97,6 +97,11 @@ public class PathConstant {
     public static final String PATH_COURSE_VIDEO = "http://10.255.92.152/ntp/phone/course_video";
 
     /**
+     * 根据课程代码获取课程讨论
+     */
+    public static final String PATH_COURSE_FORUM = "http://10.255.92.152/ntp/phone/course_forum";
+
+    /**
      * 课件下载文件夹
      */
     public static final String SAVE_PATH = "mnt/sdcard/ntp/download/";
