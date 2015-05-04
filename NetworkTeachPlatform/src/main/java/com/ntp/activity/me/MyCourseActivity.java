@@ -179,7 +179,6 @@ public class MyCourseActivity extends Activity implements AdapterView.OnItemClic
             }else {
                 courseAdapter = new CourseAdapter(list, getApplicationContext(),imageLoader);
                 load.setVisibility(View.GONE);
-//                courseAdapter.notifyDataSetChanged();
                 pullToRefreshView.setAdapter(courseAdapter);
                 Toast.makeText(getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
             }

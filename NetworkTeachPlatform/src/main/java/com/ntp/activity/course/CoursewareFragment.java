@@ -110,8 +110,8 @@ public class CoursewareFragment extends Fragment implements CoursewareAdapter.Ca
                             JSONObject jb = ja.getJSONObject(i);
                             Courseware courseware = new Courseware(null, jb.getString("name"), jb.getString("path"), jb.getString("size").equals("null") ? "" : jb.getString("size"));
                             list.add(courseware);
-                            load.setVisibility(View.GONE);
                         }
+                        load.setVisibility(View.GONE);
                         mCoursewareAdapter = new CoursewareAdapter(list, getActivity().getApplicationContext(),CoursewareFragment.this);
                         mCoursewareAdapter.notifyDataSetChanged();
                     } catch (JSONException e) {

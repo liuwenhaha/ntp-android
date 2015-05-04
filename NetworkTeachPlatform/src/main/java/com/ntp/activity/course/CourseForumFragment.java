@@ -24,6 +24,7 @@ import com.ntp.activity.R;
 import com.ntp.activity.notice.HomeworkDetailActivity;
 import com.ntp.dao.PathConstant;
 import com.ntp.model.Notice;
+import com.ntp.util.HttpUtil;
 import com.ntp.util.NetworkStateUtil;
 
 import org.apache.http.Header;
@@ -31,13 +32,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * 课程跟帖
+ * 课程讨论
  */
 public class CourseForumFragment extends Fragment implements AdapterView.OnItemClickListener {
 
@@ -48,7 +51,7 @@ public class CourseForumFragment extends Fragment implements AdapterView.OnItemC
     private SimpleAdapter adapter;
 
     private String code;
-    private int currentPage=1;
+    private int currentPage=1;//默认加载第一页问题
     private List<Map<String, String>> list = new ArrayList<Map<String, String>>();
     private static final String TAG="CourseForumFragment";
 
@@ -67,6 +70,7 @@ public class CourseForumFragment extends Fragment implements AdapterView.OnItemC
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         code=getArguments().getString("code");
+        currentPage=1;
     }
 
     @Override
@@ -79,40 +83,7 @@ public class CourseForumFragment extends Fragment implements AdapterView.OnItemC
                 R.layout.listview_item_courseforum, new String[]{"content", "name", "time", "reply"},
                 new int[]{R.id.content, R.id.name, R.id.time, R.id.reply});
         pullToRefreshView.setAdapter(adapter);
-        RequestParams requestParams=new RequestParams();
-        requestParams.put("code",code);
-        //获取课程讨论问题
-        asyncHttpClient.post(PathConstant.PATH_COURSE_FORUM,requestParams,new JsonHttpResponseHandler(){
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                if (response != null) {
-                    try {
-                        JSONArray ja = response.getJSONArray("forums");
-                        currentPage= response.getInt("currentPage");
-                        Log.i(TAG,currentPage+"");
-                        for (int i = 0; i < ja.length(); i++) {
-                            JSONObject jb = ja.getJSONObject(i);
-                            Map<String,String> map=new HashMap<String, String>();
-                            map.put("content", jb.getString("content"));
-                            map.put("name", jb.get("user").equals(null)?"":jb.getJSONObject("user").getString("name"));
-                            String time=jb.getString("time");
-                            map.put("time", time.substring(0, time.lastIndexOf("T")));
-                            map.put("reply", jb.get("replyNumber").equals(null)?"0人回复":jb.getString("replyNumber")+"人回复");
-                            list.add(map);
-                        }
-                        adapter.notifyDataSetChanged();//更新数据
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                Log.i(TAG, throwable.toString());
-            }
-        });
+        loadForumData();
         pullToRefreshView.setMode(PullToRefreshBase.Mode.BOTH);//同时可以下拉和上拉刷新
         pullToRefreshView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override //下拉刷新
@@ -144,6 +115,46 @@ public class CourseForumFragment extends Fragment implements AdapterView.OnItemC
     }
 
     /**
+     * 加载课程讨论问题
+     */
+
+    private void loadForumData() {
+        RequestParams requestParams=new RequestParams();
+        requestParams.put("code", code);
+        asyncHttpClient.post(PathConstant.PATH_COURSE_FORUM, requestParams, new JsonHttpResponseHandler() {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                if (response != null) {
+                    try {
+                        JSONArray ja = response.getJSONArray("forums");
+                        currentPage = response.getInt("currentPage");
+                        Log.i(TAG, currentPage + "");
+                        for (int i = 0; i < ja.length(); i++) {
+                            JSONObject jb = ja.getJSONObject(i);
+                            Map<String, String> map = new HashMap<String, String>();
+                            map.put("content", jb.getString("content"));
+                            map.put("name", jb.get("user").equals(null) ? "" : jb.getJSONObject("user").getString("name"));
+                            String time = jb.getString("time");
+                            map.put("time", time.substring(0, time.lastIndexOf("T")));
+                            map.put("reply", jb.get("replyNumber").equals(null) ? "0人回复" : jb.getString("replyNumber") + "人回复");
+                            list.add(map);
+                        }
+                        adapter.notifyDataSetChanged();//更新数据
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                Log.i(TAG, throwable.toString());
+            }
+        });
+    }
+
+    /**
      * ----------------------------------------- 下拉刷新线程-------------------------------------------------*
      */
     private class GetDataTask extends AsyncTask<Void, Void, List<Map<String, String>>> {
@@ -151,12 +162,39 @@ public class CourseForumFragment extends Fragment implements AdapterView.OnItemC
 
         @Override //后台耗时操作
         protected List<Map<String, String>> doInBackground(Void... params) {
+            try {
+                JSONObject response = HttpUtil.getDataFromInternet(new URL(PathConstant.PATH_COURSE_FORUM + "?code=" + code), "GET");
+                if (response != null) {
+                    list.clear();//清空数据
+                    JSONArray ja = response.getJSONArray("forums");
+                    currentPage = response.getInt("currentPage");
+                    Log.i(TAG, currentPage + "");
+                    for (int i = 0; i < ja.length(); i++) {
+                        JSONObject jb = ja.getJSONObject(i);
+                        Map<String, String> map = new HashMap<String, String>();
+                        map.put("content", jb.getString("content"));
+                        map.put("name", jb.get("user").equals(null) ? "" : jb.getJSONObject("user").getString("name"));
+                        String time = jb.getString("time");
+                        map.put("time", time.substring(0, time.lastIndexOf("T")));
+                        map.put("reply", jb.get("replyNumber").equals(null) ? "0人回复" : jb.getString("replyNumber") + "人回复");
+                        list.add(map);
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
             return list;
         }
 
         @Override //操作UI
         protected void onPostExecute(List<Map<String, String>> list) {
             pullToRefreshView.onRefreshComplete();
+            if (list.size()!=0){
+                adapter.notifyDataSetChanged();//更新数据
+                Toast.makeText(getActivity().getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
+            }
             super.onPostExecute(list);
         }
     }
@@ -167,12 +205,37 @@ public class CourseForumFragment extends Fragment implements AdapterView.OnItemC
      */
     private class PullUpTask extends AsyncTask<Void, Void, List<Map<String, String>>> {
 
-        JSONObject jb;
-        JSONArray ja;
+        private boolean loadComplete;
 
         //后台耗时操作
         @Override
         protected List<Map<String, String>> doInBackground(Void... params) {
+            try {
+                JSONObject response = HttpUtil.getDataFromInternet(new URL(PathConstant.PATH_COURSE_FORUM + "?code=" + code+"&page="+(currentPage+1)), "GET");
+                if (response != null) {
+                    JSONArray ja = response.getJSONArray("forums");
+                    if(ja.length()!=0){//获取到了数据，则增加页数
+                        currentPage = response.getInt("currentPage");
+                    }else {
+                        loadComplete=true;//分页加载完服务器端数据
+                    }
+                    Log.i(TAG, currentPage + "");
+                    for (int i = 0; i < ja.length(); i++) {
+                        JSONObject jb = ja.getJSONObject(i);
+                        Map<String, String> map = new HashMap<String, String>();
+                        map.put("content", jb.getString("content"));
+                        map.put("name", jb.get("user").equals(null) ? "" : jb.getJSONObject("user").getString("name"));
+                        String time = jb.getString("time");
+                        map.put("time", time.substring(0, time.lastIndexOf("T")));
+                        map.put("reply", jb.get("replyNumber").equals(null) ? "0人回复" : jb.getString("replyNumber") + "人回复");
+                        list.add(map);//追加数据
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
             return list;
         }
 
@@ -180,6 +243,11 @@ public class CourseForumFragment extends Fragment implements AdapterView.OnItemC
         protected void onPostExecute(List<Map<String, String>> list) {
             super.onPostExecute(list);
             pullToRefreshView.onRefreshComplete();
+            if (loadComplete){
+                Toast.makeText(getActivity().getApplicationContext(), "服务器端数据已经加载完", Toast.LENGTH_SHORT).show();
+            }else {
+                adapter.notifyDataSetChanged();
+            }
         }
     }
 

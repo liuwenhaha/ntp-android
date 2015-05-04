@@ -83,8 +83,8 @@ public class CoursevideoFragment extends Fragment implements CoursevideoAdapter.
                                 JSONObject jb = ja.getJSONObject(i);
                                 Coursevideo coursevideo = new Coursevideo(jb.getString("name"), jb.getString("path"), jb.getString("size").equals("null") ? "" : jb.getString("size"));
                                 list.add(coursevideo);
-                                load.setVisibility(View.GONE);
                             }
+                            load.setVisibility(View.GONE);
                             mCoursevideoAdapter = new CoursevideoAdapter(list, getActivity().getApplicationContext(), CoursevideoFragment.this);
                             mCoursevideoAdapter.notifyDataSetChanged();
                         } catch (JSONException e) {
