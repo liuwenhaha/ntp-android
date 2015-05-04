@@ -2,6 +2,7 @@ package com.ntp.activity.me;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -21,14 +24,19 @@ import com.ntp.adapter.CourseAdapter;
 import com.ntp.dao.PathConstant;
 import com.ntp.dao.PreferenceDao;
 import com.ntp.model.Course;
+import com.ntp.util.HttpUtil;
+import com.ntp.util.NetworkStateUtil;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 我的课程(已选学)
@@ -36,28 +44,39 @@ import java.util.List;
  */
 public class MyCourseActivity extends Activity implements AdapterView.OnItemClickListener{
 
-    private ListView myCourse;
     private LinearLayout load;//提示加载
     private CourseAdapter courseAdapter;
     private TextView tip;
 
     private AsyncHttpClient client=new AsyncHttpClient();
+    private static PullToRefreshListView pullToRefreshView;
     private ImageLoader imageLoader;
 
     private List<Course> list=new ArrayList<Course>();
     private static final String TAG="MyCourseActivity";
+    private String username;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_course);
-        myCourse= (ListView) findViewById(R.id.myCourse);
+        pullToRefreshView= (PullToRefreshListView) findViewById(R.id.pull_to_refresh_listview);
         load= (LinearLayout) findViewById(R.id.load);
         tip= (TextView) findViewById(R.id.tip);
-        myCourse.setOnItemClickListener(this);
+        pullToRefreshView.setOnItemClickListener(this);
+        pullToRefreshView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
+            @Override
+            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+                if (NetworkStateUtil.isNetworkConnected(getApplicationContext())) {//网络可用
+                    new GetDataTask().execute();
+                } else {
+                    Toast.makeText(getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         imageLoader = ImageLoader.getInstance();
-        String username= PreferenceDao.getLoadName(getApplicationContext());
+        username= PreferenceDao.getLoadName(getApplicationContext());
         if (!username.equals("")){
             tip.setVisibility(View.GONE);
             loadMyCourse(username);
@@ -80,12 +99,13 @@ public class MyCourseActivity extends Activity implements AdapterView.OnItemClic
                     if (response != null) {
                         JSONArray ja = response.getJSONArray("list");
                         if (ja.length() == 0) {
-                            Toast.makeText(getApplicationContext(), "没有搜索到相关课程", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "您还没有选学课程", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         for (int i = 0; i < ja.length(); i++) {
                             JSONObject j = ja.getJSONObject(i);
-                            Course course = new Course(j.getString("code"), j.getString("name"),j.getString("image").equals("null")?"":j.getString("image"),j.getJSONObject("coursetype").getString("type"), j.getJSONObject("user").getString("name"));
+                            Course course = new Course(j.getString("code"), j.getString("name"),j.getString("image").equals("null")?"":j.getString("image"),
+                                    j.get("coursetype").equals(null)?"":j.getJSONObject("coursetype").getString("type"), j.get("user").equals(null)?"":j.getJSONObject("user").getString("name"));
                             list.add(course);
                         }
                         for (Course course:list){
@@ -96,7 +116,7 @@ public class MyCourseActivity extends Activity implements AdapterView.OnItemClic
                         }
                         courseAdapter = new CourseAdapter(list, getApplicationContext(),imageLoader);
                         load.setVisibility(View.GONE);
-                        myCourse.setAdapter(courseAdapter);
+                        pullToRefreshView.setAdapter(courseAdapter);
                     } else {//服务器没有开启
                         Toast.makeText(getApplicationContext(), "加载失败,稍后再试", Toast.LENGTH_SHORT).show();
                     }
@@ -112,6 +132,59 @@ public class MyCourseActivity extends Activity implements AdapterView.OnItemClic
                 Log.i(TAG, throwable.toString());
             }
         });
+    }
+
+    /**
+     * ----------------------------------------- 下拉刷新线程-------------------------------------------------*
+     */
+    private class GetDataTask extends AsyncTask<Void, Void, List<Course>> {
+
+
+        @Override //后台耗时操作
+        protected List<Course> doInBackground(Void... params) {
+            try {
+                JSONObject response = HttpUtil.getDataFromInternet(new URL(PathConstant.PATH_MY_COURSE+"?username=" + username), "GET");
+                list.clear();
+                if (response != null) {
+                    JSONArray ja = response.getJSONArray("list");
+                    if (ja.length() == 0) {
+                        return list;
+                    }
+                    for (int i = 0; i < ja.length(); i++) {
+                        JSONObject j = ja.getJSONObject(i);
+                        Course course = new Course(j.getString("code"), j.getString("name"),j.getString("image").equals("null")?"":j.getString("image"),
+                                j.get("coursetype").equals(null)?"":j.getJSONObject("coursetype").getString("type"), j.get("user").equals(null)?"":j.getJSONObject("user").getString("name"));
+                        list.add(course);
+                    }
+                    for (Course course:list){
+                        //有图片加上网址前缀
+                        if (!course.getImageUri().equals("")){
+                            course.setImageUri(PathConstant.PATH_IMAGE+course.getImageUri());
+                        }
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            return list;
+        }
+
+        @Override //操作UI
+        protected void onPostExecute(List<Course> list) {
+            pullToRefreshView.onRefreshComplete();
+            if (list.size()==0){
+                Toast.makeText(getApplicationContext(), "您还没有选学课程", Toast.LENGTH_SHORT).show();
+            }else {
+                courseAdapter = new CourseAdapter(list, getApplicationContext(),imageLoader);
+                load.setVisibility(View.GONE);
+//                courseAdapter.notifyDataSetChanged();
+                pullToRefreshView.setAdapter(courseAdapter);
+                Toast.makeText(getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
+            }
+            super.onPostExecute(list);
+        }
     }
 
     @Override
