@@ -19,6 +19,6 @@
         android:listSelector="@android:color/transparent"
         android:cacheColorHint="#0000"
         android:background="@null"
-        android:scrollbars="horizontal" />
+        android:scrollbars="none" />
 
 </LinearLayout>

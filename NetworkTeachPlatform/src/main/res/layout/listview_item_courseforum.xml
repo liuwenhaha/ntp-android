@@ -11,7 +11,15 @@
         android:layout_marginTop="13dp"
         android:layout_marginBottom="@dimen/my_margin_left_right"
         android:paddingLeft="@dimen/my_margin_left"
-        android:paddingRight="@dimen/my_margin_left">
+        android:paddingRight="@dimen/my_margin_left"
+        android:orientation="horizontal">
+
+        <!-- 帖子id，不作显示-->
+        <TextView
+            android:id="@+id/id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/content"

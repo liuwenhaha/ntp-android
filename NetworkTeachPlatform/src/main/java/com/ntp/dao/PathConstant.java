@@ -102,6 +102,16 @@ public class PathConstant {
     public static final String PATH_COURSE_FORUM = "http://10.255.92.152/ntp/phone/course_forum";
 
     /**
+     * 根据帖子id获取所有的回复
+     */
+    public static final String PATH_COURSE_FORUM_ALL = "http://10.255.92.152/ntp/phone/course_forum_all";
+
+    /**
+     * 评论帖子
+     */
+    public static final String PATH_COURSE_FORUM_REPLY = "http://10.255.92.152/ntp/phone/course_forum_reply";
+
+    /**
      * 课件下载文件夹
      */
     public static final String SAVE_PATH = "mnt/sdcard/ntp/download/";

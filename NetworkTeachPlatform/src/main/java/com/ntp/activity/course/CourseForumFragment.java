@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -54,6 +55,7 @@ public class CourseForumFragment extends Fragment implements AdapterView.OnItemC
     private int currentPage=1;//默认加载第一页问题
     private List<Map<String, String>> list = new ArrayList<Map<String, String>>();
     private static final String TAG="CourseForumFragment";
+    private static final int REQUEST =207;
 
     /**
      * 创建对象
@@ -80,8 +82,8 @@ public class CourseForumFragment extends Fragment implements AdapterView.OnItemC
         pullToRefreshView = (PullToRefreshListView) view.findViewById(R.id.pull_to_refresh_listview);
         pullToRefreshView.setOnItemClickListener(this);
         adapter = new SimpleAdapter(getActivity().getApplicationContext(), list,
-                R.layout.listview_item_courseforum, new String[]{"content", "name", "time", "reply"},
-                new int[]{R.id.content, R.id.name, R.id.time, R.id.reply});
+                R.layout.listview_item_courseforum, new String[]{"id","content", "name", "time", "reply"},
+                new int[]{R.id.id,R.id.content, R.id.name, R.id.time, R.id.reply});
         pullToRefreshView.setAdapter(adapter);
         loadForumData();
         pullToRefreshView.setMode(PullToRefreshBase.Mode.BOTH);//同时可以下拉和上拉刷新
@@ -132,6 +134,7 @@ public class CourseForumFragment extends Fragment implements AdapterView.OnItemC
                         for (int i = 0; i < ja.length(); i++) {
                             JSONObject jb = ja.getJSONObject(i);
                             Map<String, String> map = new HashMap<String, String>();
+                            map.put("id", jb.getString("id"));
                             map.put("content", jb.getString("content"));
                             map.put("name", jb.get("user").equals(null) ? "" : jb.getJSONObject("user").getString("name"));
                             String time = jb.getString("time");
@@ -172,6 +175,7 @@ public class CourseForumFragment extends Fragment implements AdapterView.OnItemC
                     for (int i = 0; i < ja.length(); i++) {
                         JSONObject jb = ja.getJSONObject(i);
                         Map<String, String> map = new HashMap<String, String>();
+                        map.put("id", jb.getString("id"));
                         map.put("content", jb.getString("content"));
                         map.put("name", jb.get("user").equals(null) ? "" : jb.getJSONObject("user").getString("name"));
                         String time = jb.getString("time");
@@ -223,6 +227,7 @@ public class CourseForumFragment extends Fragment implements AdapterView.OnItemC
                     for (int i = 0; i < ja.length(); i++) {
                         JSONObject jb = ja.getJSONObject(i);
                         Map<String, String> map = new HashMap<String, String>();
+                        map.put("id", jb.getString("id"));
                         map.put("content", jb.getString("content"));
                         map.put("name", jb.get("user").equals(null) ? "" : jb.getJSONObject("user").getString("name"));
                         String time = jb.getString("time");
@@ -254,6 +259,31 @@ public class CourseForumFragment extends Fragment implements AdapterView.OnItemC
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        startActivity(new Intent(getActivity().getApplicationContext(), CourseForumReplyActivity.class));
+
+        //提问用户
+        String name=((TextView)view.findViewById(R.id.name)).getText().toString();
+        //问题id
+        String forumId=((TextView)view.findViewById(R.id.id)).getText().toString();
+        //内容
+        String content=((TextView)view.findViewById(R.id.content)).getText().toString();
+        //时间
+        String time=((TextView)view.findViewById(R.id.time)).getText().toString();
+        //数量
+        String reply=((TextView)view.findViewById(R.id.reply)).getText().toString();
+        Intent intent=new Intent(getActivity().getApplicationContext(), CourseForumReplyActivity.class);
+        intent.putExtra("name",name);
+        intent.putExtra("forumId", forumId);
+        intent.putExtra("content",content);
+        intent.putExtra("time",time);
+        intent.putExtra("reply",reply);
+        startActivityForResult(intent, REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==REQUEST&&resultCode==CourseForumReplyActivity.RESULT_OK){
+            pullToRefreshView.setRefreshing(true);
+        }
     }
 }
