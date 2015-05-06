@@ -1,13 +1,11 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/layout_bg_normal"
+    android:orientation="vertical"
     tools:context="com.ntp.activity.course.CourseForumFragment">
 
-    <!-- 自定义样式，PullToRefresh样式属性文件attrs.xml,加入命名空间
-         xmlns:ptr="http://schemas.android.com/apk/res-auto" ，ptr:加上
-         attrs.xml文件中的属性-->
     <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/pull_to_refresh_listview"
         android:layout_height="fill_parent"
@@ -20,5 +18,33 @@
         android:cacheColorHint="#0000"
         android:background="@null"
         android:scrollbars="none" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <RelativeLayout
+        android:id="@+id/relative"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pull_to_refresh_listview">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="7"/>
+            <ImageView
+                android:id="@+id/reply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginBottom="4dp"
+                android:clickable="true"
+                android:src="@drawable/forum_reply"/>
+        </LinearLayout>
+    </RelativeLayout>
+    </FrameLayout>
 
-</LinearLayout>
+</RelativeLayout>

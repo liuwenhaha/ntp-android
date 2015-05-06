@@ -81,7 +81,7 @@
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:background="@color/nav_bg1"
-        android:layout_height="47dp">
+        android:layout_height="46dp">
 
         <!--课程功能-->
         <LinearLayout

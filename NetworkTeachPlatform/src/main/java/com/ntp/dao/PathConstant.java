@@ -112,6 +112,11 @@ public class PathConstant {
     public static final String PATH_COURSE_FORUM_REPLY = "http://10.255.92.152/ntp/phone/course_forum_reply";
 
     /**
+     * 参加课程讨论，发问题
+     */
+    public static final String PATH_COURSE_FORUM_COMMENT = "http://10.255.92.152/ntp/phone/course_forum_comment";
+
+    /**
      * 课件下载文件夹
      */
     public static final String SAVE_PATH = "mnt/sdcard/ntp/download/";

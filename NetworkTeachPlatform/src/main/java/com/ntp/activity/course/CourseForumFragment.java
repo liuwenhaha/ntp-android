@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import com.loopj.android.http.RequestParams;
 import com.ntp.activity.R;
 import com.ntp.activity.notice.HomeworkDetailActivity;
 import com.ntp.dao.PathConstant;
+import com.ntp.dao.PreferenceDao;
 import com.ntp.model.Notice;
 import com.ntp.util.HttpUtil;
 import com.ntp.util.NetworkStateUtil;
@@ -43,19 +45,21 @@ import java.util.Map;
 /**
  * 课程讨论
  */
-public class CourseForumFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class CourseForumFragment extends Fragment implements AdapterView.OnItemClickListener,View.OnClickListener{
 
     private static PullToRefreshListView pullToRefreshView;
     private static AsyncHttpClient asyncHttpClient=new AsyncHttpClient();
 
     private static CourseForumFragment mCourseForumFragment;
     private SimpleAdapter adapter;
+    private ImageView reply;
 
     private String code;
     private int currentPage=1;//默认加载第一页问题
     private List<Map<String, String>> list = new ArrayList<Map<String, String>>();
     private static final String TAG="CourseForumFragment";
     private static final int REQUEST =207;
+    private static final int REQUEST_COMMENT =208;
 
     /**
      * 创建对象
@@ -79,6 +83,8 @@ public class CourseForumFragment extends Fragment implements AdapterView.OnItemC
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_course_forum, container, false);
+        reply= (ImageView) view.findViewById(R.id.reply);
+        reply.setOnClickListener(this);
         pullToRefreshView = (PullToRefreshListView) view.findViewById(R.id.pull_to_refresh_listview);
         pullToRefreshView.setOnItemClickListener(this);
         adapter = new SimpleAdapter(getActivity().getApplicationContext(), list,
@@ -155,6 +161,23 @@ public class CourseForumFragment extends Fragment implements AdapterView.OnItemC
                 Log.i(TAG, throwable.toString());
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.reply://发帖
+                //检查有没有登录
+                if(PreferenceDao.getLoadName(getActivity().getApplicationContext()).equals("")){
+                    Toast.makeText(getActivity().getApplicationContext(),"你尚未登录，不能评论",Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                Intent intent=new Intent(getActivity().getApplicationContext(),CourseForumCommentActivity.class);
+                intent.putExtra("name",PreferenceDao.getLoadName(getActivity().getApplicationContext()));
+                intent.putExtra("code",code);
+                startActivityForResult(intent,REQUEST_COMMENT);
+                break;
+        }
     }
 
     /**
@@ -282,8 +305,14 @@ public class CourseForumFragment extends Fragment implements AdapterView.OnItemC
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //针对帖子评论
         if (requestCode==REQUEST&&resultCode==CourseForumReplyActivity.RESULT_OK){
             pullToRefreshView.setRefreshing(true);
         }
+        //参加课程讨论，发帖
+        else if (requestCode==REQUEST_COMMENT&&resultCode==CourseForumCommentActivity.RESULT_OK){
+            pullToRefreshView.setRefreshing();
+        }
+
     }
 }
