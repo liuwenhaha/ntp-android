@@ -61,6 +61,9 @@ public class MeFragment extends Fragment implements View.OnClickListener {
             username.setText("");
             login.setImageDrawable(getResources().getDrawable(R.drawable.default_head));
         }
+        if (userDao==null){
+            userDao = new UserDao(getActivity().getApplicationContext());
+        }
         Log.i(TAG, "onResume");
     }
 

@@ -58,7 +58,6 @@ public class CoursewareFragment extends Fragment implements CoursewareAdapter.Ca
     private static String path;//文件路径
     private TextView tip;
     private static int flag = 0;
-    private static int notificationId = 0;//通知id
 
     private static final String TAG = "CoursewareFragment";
     //接受更新进度表intent
@@ -156,11 +155,7 @@ public class CoursewareFragment extends Fragment implements CoursewareAdapter.Ca
                 download = (Button) view;
                 //取消下载
                 if (download.getText().equals(DOWNLOAD_CANCEL)) {
-                    NotificationManager manager = (NotificationManager) getActivity().getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-                    Log.i(TAG,"取消通知id="+notificationId+"");
-                    downloadService.stopSelf();
-                    //没有取消掉？？？？？？
-                    manager.cancel(notificationId);
+                    downloadService.setDownloadPause(true);
                     download.setText(DOWNLOAD);//设置按钮为下载状态
                     this.progressBar.setVisibility(View.GONE);
                     this.tip.setVisibility(View.GONE);
@@ -201,7 +196,6 @@ public class CoursewareFragment extends Fragment implements CoursewareAdapter.Ca
             if (intent.getAction().equals(ACTION_UPDATE)) {
                 int fileSize = intent.getIntExtra("fileSize", 0);
                 int downloadLength = intent.getIntExtra("downloadLength", 0);
-                CoursewareFragment.notificationId = intent.getIntExtra("notificationId", 0);
                 if (flag == 0) {//没有设置最大进度
                     progressBar.setMax(fileSize);
                     flag = -1;

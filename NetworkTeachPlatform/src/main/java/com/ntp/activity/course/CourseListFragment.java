@@ -80,7 +80,6 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 //需要此句，不然无法显示
                 pullToRefreshView.setAdapter(adapter);
                 load.setVisibility(View.GONE);
-                Toast.makeText(getActivity().getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
             }
         }
     };

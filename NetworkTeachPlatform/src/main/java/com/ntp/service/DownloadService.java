@@ -12,6 +12,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.ntp.activity.R;
+import com.ntp.activity.course.CourseDetailActivity;
 import com.ntp.activity.course.CoursewareFragment;
 import com.ntp.dao.PathConstant;
 import com.ntp.util.SDCardUtil;
@@ -37,12 +38,12 @@ public class DownloadService extends IntentService {
     private static final String EXTRA_PARAM3 = "com.ntp.extra.PARAM3";
     private static final String TAG = "DownLoadService";
     private File saveFile;// 下载的数据保存到的文件
-    private boolean downloadPause;//暂停下载标识
+    private static boolean downloadPause;//暂停下载标识
     private int fileSize;//文件大小
     private int downloadLength;//已经下载的文件大小
     private String fileName;//文件名
     private static int id=1;
-    private NotificationManager manager;
+    private   NotificationManager manager;
     private NotificationCompat.Builder builder;
 
     /**
@@ -74,7 +75,7 @@ public class DownloadService extends IntentService {
                 final String downloadPath = intent.getStringExtra(EXTRA_PARAM1);
                 final String newFileName = intent.getStringExtra(EXTRA_PARAM2);
                 final String fileSaveDir = intent.getStringExtra(EXTRA_PARAM3);
-                handllerActionDownload(downloadPath, newFileName, fileSaveDir);
+                handlerActionDownload(downloadPath, newFileName, fileSaveDir);
             }
         }
     }
@@ -84,7 +85,7 @@ public class DownloadService extends IntentService {
      * @param newFileName  文件新名称。如果为null，将采用URL文件名称
      * @param fileSaveDir  下载保存路径保存
      */
-    private void handllerActionDownload(String downloadPath, String newFileName, String fileSaveDir) {
+    private void handlerActionDownload(String downloadPath, String newFileName, String fileSaveDir) {
         if (!SDCardUtil.checkSDCard()) {
             Log.i(TAG, "SD不存在");
             return;
@@ -94,6 +95,7 @@ public class DownloadService extends IntentService {
             manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             builder = new NotificationCompat.Builder(
                     getApplicationContext());
+            Log.d(TAG,manager.toString());
             URL url = new URL(downloadPath);// 根据下载路径实例化URL
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setConnectTimeout(5 * 1000);
@@ -112,6 +114,7 @@ public class DownloadService extends IntentService {
                 RandomAccessFile randomAccessFile = new RandomAccessFile(
                         this.saveFile, "rwd");
                 randomAccessFile.seek(0);
+                Log.d(TAG,downloadPause+"");
                 // 当用户没有要求停止下载，同时没有到达请求数据的末尾时候会一直循环读取数据
                 while (!isDownloadPause()
                         && (offset = inStream.read(buffer, 0, 1024)) != -1) {
@@ -122,16 +125,21 @@ public class DownloadService extends IntentService {
                     Intent sendIntent = new Intent(CoursewareFragment.ACTION_UPDATE);
                     //下载进度
                     sendIntent.putExtra("fileSize",fileSize);
-                    sendIntent.putExtra("downloadLength",downloadLength);
-                    Log.i(TAG,"DownloadService id="+id);
-                    sendIntent.putExtra("notificationId",id);
+                    sendIntent.putExtra("downloadLength", downloadLength);
+                    Log.i(TAG, "DownloadService id=" + id);
                     sendBroadcast(sendIntent);
                     showProgressBar(fileSize,downloadLength);
                 }
-                // 发送下载完成广播
-                Intent sendIntent = new Intent(CoursewareFragment.ACTION_FINISH);
-                sendIntent.putExtra("success", true);
-                sendBroadcast(sendIntent);
+                if (isDownloadPause()){
+                    builder.setTicker(fileName + "取消下载");
+                    manager.notify(id, builder.build());
+                    manager.cancel(id);
+                }else {
+                    // 发送下载完成广播
+                    Intent sendIntent = new Intent(CoursewareFragment.ACTION_FINISH);
+                    sendIntent.putExtra("success", true);
+                    sendBroadcast(sendIntent);
+                }
                 randomAccessFile.close();
                 inStream.close();
 
@@ -154,9 +162,9 @@ public class DownloadService extends IntentService {
      */
     private void showProgressBar(final int  fileSize, final int downloadLength) {
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher)).setSmallIcon(R.drawable.download)
-                .setTicker(fileName+"开始下载...").setContentInfo((downloadLength * 100 / fileSize) + "%")
+                .setTicker(fileName + "开始下载...").setContentInfo((downloadLength * 100 / fileSize) + "%")
                 .setOngoing(true).setContentTitle("ntp")
-                .setContentText(fileName+"正在下载").setAutoCancel(true)
+                .setContentText(fileName + "正在下载").setAutoCancel(true)
                 //点击通知栏取消
                 .setContentIntent(PendingIntent.getActivity(getApplicationContext(), 0, new Intent(), 0));
         if (fileSize==downloadLength){//下载完成
@@ -170,18 +178,19 @@ public class DownloadService extends IntentService {
     /**
      * 获取当前下载状态
      *
-     * @return true 暂停，false不暂停
+     * @return true 取消，false不取消
      */
     public boolean isDownloadPause() {
         return downloadPause;
     }
 
     /**
-     * 设置暂停下载，false不暂停，true暂停
+     * 设置暂停下载，false不取消，true取消
      *
      * @param downloadPause
      */
     public void setDownloadPause(boolean downloadPause) {
         this.downloadPause = downloadPause;
     }
+
 }
