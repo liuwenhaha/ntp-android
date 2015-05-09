@@ -1,39 +1,14 @@
 package com.ntp.activity.notice;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.Toast;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.ntp.activity.GlobalVariable;
 import com.ntp.activity.R;
-import com.ntp.adapter.CourseAdapter;
-import com.ntp.adapter.NoticeAdapter;
-import com.ntp.dao.PathConstant;
-import com.ntp.dao.PreferenceDao;
-import com.ntp.model.Course;
-import com.ntp.model.Notice;
-import com.ntp.util.HttpUtil;
-import com.ntp.util.NetworkStateUtil;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**

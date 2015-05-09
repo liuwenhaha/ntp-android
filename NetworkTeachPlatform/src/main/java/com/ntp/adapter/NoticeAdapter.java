@@ -9,32 +9,32 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ntp.activity.R;
-import com.ntp.model.Notice;
+import com.ntp.model.HomeworkNotice;
 
 import java.util.List;
 
 /**
- * 作业和回贴消息适配器
+ * 作业消息适配器，图片暂时不用
  * @author yanxing
  */
 public class NoticeAdapter extends BaseAdapter{
 
-    private List<Notice> noticeList;
+    private List<HomeworkNotice> homeworkNoticeList;
     private Context context;
 
-    public NoticeAdapter(Context context,List<Notice> noticeList) {
-        this.noticeList = noticeList;
+    public NoticeAdapter(Context context,List<HomeworkNotice> homeworkNoticeList) {
+        this.homeworkNoticeList = homeworkNoticeList;
         this.context = context;
     }
 
     @Override
     public int getCount() {
-        return noticeList.size();
+        return homeworkNoticeList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return noticeList.get(position);
+        return homeworkNoticeList.get(position);
     }
 
     @Override
@@ -48,15 +48,15 @@ public class NoticeAdapter extends BaseAdapter{
         TextView id,title,content,time;
         convertView = LayoutInflater.from(context).inflate(R.layout.listview_item_notice, null);
         imageView= (ImageView) convertView.findViewById(R.id.img);
-        imageView.setImageResource(noticeList.get(position).getImageId());
+        imageView.setImageResource(homeworkNoticeList.get(position).getImageId());
         id= (TextView) convertView.findViewById(R.id.id);
-        id.setText(noticeList.get(position).getId());
+        id.setText(homeworkNoticeList.get(position).getId());
         title= (TextView) convertView.findViewById(R.id.title);
-        title.setText(noticeList.get(position).getTitle());
+        title.setText(homeworkNoticeList.get(position).getTitle());
         content= (TextView) convertView.findViewById(R.id.courseName);
-        content.setText(noticeList.get(position).getContent());
+        content.setText(homeworkNoticeList.get(position).getContent());
         time= (TextView) convertView.findViewById(R.id.time);
-        time.setText(noticeList.get(position).getTime());
+        time.setText(homeworkNoticeList.get(position).getTime());
         return convertView;
     }
 }

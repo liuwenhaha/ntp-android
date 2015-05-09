@@ -23,10 +23,8 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.ntp.activity.R;
-import com.ntp.activity.notice.HomeworkDetailActivity;
 import com.ntp.dao.PathConstant;
 import com.ntp.dao.PreferenceDao;
-import com.ntp.model.Notice;
 import com.ntp.util.HttpUtil;
 import com.ntp.util.NetworkStateUtil;
 
