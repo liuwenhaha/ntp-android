@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ntp.activity.R;
-import com.ntp.adapter.NoticeAdapter;
+import com.ntp.adapter.HomeworkNoticeAdapter;
 import com.ntp.dao.PathConstant;
 import com.ntp.dao.PreferenceDao;
 import com.ntp.model.HomeworkNotice;
@@ -38,7 +38,7 @@ import java.util.List;
 public class HomeworkNoticeActivity extends Activity implements AdapterView.OnItemClickListener{
 
     private PullToRefreshListView pullToRefreshView;
-    private NoticeAdapter noticeAdapter;
+    private HomeworkNoticeAdapter homeworkNoticeAdapter;
     private TextView tip;
 
     private static final String TAG ="HomeworkNoticeActivity";
@@ -52,7 +52,7 @@ public class HomeworkNoticeActivity extends Activity implements AdapterView.OnIt
         setContentView(R.layout.activity_homework_notice);
         tip= (TextView) findViewById(R.id.tip);
         homeworkNoticeList =new ArrayList<HomeworkNotice>();
-        noticeAdapter=new NoticeAdapter(getApplicationContext(), homeworkNoticeList);
+        homeworkNoticeAdapter =new HomeworkNoticeAdapter(getApplicationContext(), homeworkNoticeList);
         pullToRefreshView = (PullToRefreshListView)findViewById(R.id.pull_to_refresh_listview);
         name=PreferenceDao.getLoadName(getApplicationContext());
         //没有登录
@@ -87,9 +87,9 @@ public class HomeworkNoticeActivity extends Activity implements AdapterView.OnIt
                 }
             }
         });
-        noticeAdapter=new NoticeAdapter(getApplicationContext(), homeworkNoticeList);
+        homeworkNoticeAdapter =new HomeworkNoticeAdapter(getApplicationContext(), homeworkNoticeList);
         pullToRefreshView.setOnItemClickListener(this);
-        pullToRefreshView.setAdapter(noticeAdapter);
+        pullToRefreshView.setAdapter(homeworkNoticeAdapter);
         pullToRefreshView.setRefreshing(true);//自动刷新
     }
 
@@ -147,8 +147,8 @@ public class HomeworkNoticeActivity extends Activity implements AdapterView.OnIt
             if (list.size()==0){
                 Toast.makeText(getApplicationContext(), "您还没有作业", Toast.LENGTH_SHORT).show();
             }else {
-                noticeAdapter = new NoticeAdapter(getApplicationContext(),list);
-                pullToRefreshView.setAdapter(noticeAdapter);
+                homeworkNoticeAdapter = new HomeworkNoticeAdapter(getApplicationContext(),list);
+                pullToRefreshView.setAdapter(homeworkNoticeAdapter);
             }
             super.onPostExecute(list);
         }
@@ -206,7 +206,7 @@ public class HomeworkNoticeActivity extends Activity implements AdapterView.OnIt
             if (loadComplete){
                 Toast.makeText(getApplicationContext(), "服务器端数据已经加载完", Toast.LENGTH_SHORT).show();
             }else {
-                noticeAdapter.notifyDataSetChanged();
+                homeworkNoticeAdapter.notifyDataSetChanged();
             }
 
         }
