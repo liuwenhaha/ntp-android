@@ -70,13 +70,13 @@
     <string name="myCourseTip">你尚未登录，无法查看你的课程</string>
     <string name="homeworkTest">C语言第一章作业</string>
     <string name="homeworkCourseTest">所属课程:C语言</string>
-    <string name="noticeTip">你尚未登录，无法显示作业和回帖消息</string>
+    <string name="noticeTip">你尚未登录，无法显示消息</string>
     <string name="homeworkTitle">作业</string>
     <string name="reply">回帖</string>
     <string name="replyTip">你的回复</string>
     <string name="detail">详情</string>
     <string name="homeworkdetail">作业详情</string>
-    <string name="readOver">批阅:</string>
+    <string name="readOver">批语:</string>
     <string name="score">成绩：</string>
     <string name="homework1">作业</string>
     <string name="question">的问题</string>
@@ -84,5 +84,7 @@
     <string name="forumComment">发送</string>
     <string name="courseForumComment">参加讨论</string>
     <string name="replyComment">你想说些什么...</string>
+    <string name="register_name_digits">_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
+
 
 </resources>

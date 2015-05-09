@@ -92,6 +92,11 @@ public class PathConstant {
     public static final String PATH_MY_COURSE = "http://10.255.92.152/ntp/phone/my_course";
 
     /**
+     * 获取我的作业
+     */
+    public static final String PATH_MY_HOMEWORK = "http://10.255.92.152/ntp/phone/my_homework";
+
+    /**
      * 根据课程代码获取课程视频
      */
     public static final String PATH_COURSE_VIDEO = "http://10.255.92.152/ntp/phone/course_video";
@@ -115,6 +120,11 @@ public class PathConstant {
      * 参加课程讨论，发问题
      */
     public static final String PATH_COURSE_FORUM_COMMENT = "http://10.255.92.152/ntp/phone/course_forum_comment";
+
+    /**
+     * 获取作业详情
+     */
+    public static final String PATH_COURSE_SCORE = "http://10.255.92.152/ntp/phone/my_score";
 
     /**
      * 课件下载文件夹

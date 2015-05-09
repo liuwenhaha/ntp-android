@@ -8,6 +8,7 @@ package com.ntp.model;
 public class Notice {
 
     private int imageId;//图片id
+    private String id;
     private String title;//标题
     private String content;//所属课程
     private String time;//时间
@@ -18,7 +19,8 @@ public class Notice {
      * @param title 标题
      * @param time 回复时间
      */
-    public Notice(int imageId,String title, String time) {
+    public Notice(int imageId,String id,String title, String time) {
+        this.id=id;
         this.title = title;
         this.imageId = imageId;
         this.time = time;
@@ -29,7 +31,8 @@ public class Notice {
      * @param title 标题
      * @param time 回复时间
      */
-    public Notice(String title, String time) {
+    public Notice(String id,String title, String time) {
+        this.id=id;
         this.title = title;
         this.time = time;
     }
@@ -41,7 +44,8 @@ public class Notice {
      * @param content 所属课程
      * @param time 作业布置时间
      */
-    public Notice(int imageId, String title,String content, String time) {
+    public Notice(int imageId,String id, String title,String content, String time) {
+        this.id=id;
         this.imageId = imageId;
         this.time = time;
         this.content = content;
@@ -54,10 +58,19 @@ public class Notice {
      * @param content 所属课程
      * @param time 作业布置时间
      */
-    public Notice(String title,String content, String time) {
+    public Notice(String id,String title,String content, String time) {
+        this.id=id;
         this.time = time;
         this.content = content;
         this.title = title;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public int getImageId() {

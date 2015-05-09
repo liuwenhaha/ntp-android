@@ -30,9 +30,11 @@
             android:id="@+id/homeworkTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:textColor="@color/course_name"/>
 
         <TextView
+            android:id="@+id/readOver"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -40,9 +42,10 @@
             android:text="@string/readOver"/>
 
         <TextView
+            android:id="@+id/score"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="40dp"
             android:textColor="@color/course_name"
             android:text="@string/score"/>
     </LinearLayout>

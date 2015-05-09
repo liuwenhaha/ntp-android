@@ -45,10 +45,12 @@ public class NoticeAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
-        TextView title,content,time;
+        TextView id,title,content,time;
         convertView = LayoutInflater.from(context).inflate(R.layout.listview_item_notice, null);
         imageView= (ImageView) convertView.findViewById(R.id.img);
         imageView.setImageResource(noticeList.get(position).getImageId());
+        id= (TextView) convertView.findViewById(R.id.id);
+        id.setText(noticeList.get(position).getId());
         title= (TextView) convertView.findViewById(R.id.title);
         title.setText(noticeList.get(position).getTitle());
         content= (TextView) convertView.findViewById(R.id.courseName);
