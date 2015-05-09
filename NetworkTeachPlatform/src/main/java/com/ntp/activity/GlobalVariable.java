@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 
 import com.ntp.model.Course;
-import com.ntp.util.ImageNameGenerator;
 import com.ntp.util.SDCardUtil;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.core.ImageLoader;

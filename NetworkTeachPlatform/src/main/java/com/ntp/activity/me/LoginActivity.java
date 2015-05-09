@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ntp.activity.R;
-import com.ntp.dao.PathConstant;
+import com.ntp.activity.PathConstant;
 import com.ntp.dao.PreferenceDao;
 import com.ntp.util.MD5Util;
 import com.ntp.widget.MyProgress;

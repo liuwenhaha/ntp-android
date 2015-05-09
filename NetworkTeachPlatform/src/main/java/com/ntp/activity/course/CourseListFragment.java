@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.ntp.activity.GlobalVariable;
 import com.ntp.activity.R;
 import com.ntp.adapter.CourseAdapter;
-import com.ntp.dao.PathConstant;
+import com.ntp.activity.PathConstant;
 import com.ntp.dao.CourseDao;
 import com.ntp.dao.CourseTypeDao;
 import com.ntp.dao.PreferenceDao;

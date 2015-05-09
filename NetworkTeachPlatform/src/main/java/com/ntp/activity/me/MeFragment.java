@@ -10,10 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ntp.activity.R;
-import com.ntp.dao.PathConstant;
+import com.ntp.activity.PathConstant;
 import com.ntp.dao.PreferenceDao;
 import com.ntp.dao.UserDao;
 import com.ntp.model.User;

@@ -21,7 +21,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.ntp.activity.R;
 import com.ntp.activity.course.CourseDetailActivity;
 import com.ntp.adapter.CourseAdapter;
-import com.ntp.dao.PathConstant;
+import com.ntp.activity.PathConstant;
 import com.ntp.dao.PreferenceDao;
 import com.ntp.model.Course;
 import com.ntp.util.HttpUtil;
@@ -36,7 +36,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 我的课程(已选学)

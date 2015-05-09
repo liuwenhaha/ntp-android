@@ -1,7 +1,6 @@
 package com.ntp.activity.course;
 
 
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +23,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.ntp.activity.R;
 import com.ntp.adapter.CoursewareAdapter;
-import com.ntp.dao.PathConstant;
+import com.ntp.activity.PathConstant;
 import com.ntp.dao.PreferenceDao;
 import com.ntp.model.Courseware;
 import com.ntp.service.DownloadService;

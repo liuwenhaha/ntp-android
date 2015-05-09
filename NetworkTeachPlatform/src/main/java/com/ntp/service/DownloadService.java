@@ -1,7 +1,6 @@
 package com.ntp.service;
 
 import android.app.IntentService;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -9,12 +8,9 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.ntp.activity.R;
-import com.ntp.activity.course.CourseDetailActivity;
 import com.ntp.activity.course.CoursewareFragment;
-import com.ntp.dao.PathConstant;
 import com.ntp.util.SDCardUtil;
 
 import java.io.File;

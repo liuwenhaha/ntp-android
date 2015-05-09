@@ -17,7 +17,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.ntp.activity.R;
 import com.ntp.adapter.CoursevideoAdapter;
-import com.ntp.dao.PathConstant;
+import com.ntp.activity.PathConstant;
 import com.ntp.dao.PreferenceDao;
 import com.ntp.model.Coursevideo;
 import com.ntp.util.NetworkStateUtil;
