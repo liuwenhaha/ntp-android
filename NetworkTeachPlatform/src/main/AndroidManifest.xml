@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ntp.activity"
-    android:installLocation="preferExternal" >
+    package="com.ntp.activity">
 
-    <!-- To access Google+ APIs: -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--
- To retrieve OAuth 2.0 tokens or invalidate tokens to disconnect a user. This disconnect
-     option is required to comply with the Google+ Sign-In developer policies
-    -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-    <!-- To retrieve the account name (email) as part of sign-in: -->
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="getui.permission.GetuiService"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE" />
+
+    <!--自定义权限-->
+    <permission
+        android:name="getui.permission.GetuiService"
+        android:protectionLevel="normal">
+    </permission>
 
     <application
         android:name=".GlobalVariable"
@@ -130,12 +136,92 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustPan"
             android:theme="@style/Anim_style2" />
-
-
+        <!-- 下载服务-->
         <service
             android:name="com.ntp.service.DownloadService"
             android:exported="false" >
         </service>
+
+        <!--个推SDK配置开始-->
+        <!--置的第三方参数属性-->
+        <meta-data
+            android:name="PUSH_APPKEY"
+            android:value="ZXnociPrPF7NUTtZlGPt59"/>
+        <meta-data
+            android:name="PUSH_APPID"
+            android:value="dRtAXra119AwF3QgiThBV1"/>
+        <meta-data
+            android:name="PUSH_APPSECRET"
+            android:value="aAPVHeVfW09716LHaKkf59"/>
+        <meta-data
+            android:name="PUSH_GROUPID"
+            android:value=""/>
+        <!-- 配置SDK核心服务 -->
+        <service
+            android:name="com.igexin.sdk.PushService"
+            android:process=":pushservice"
+            android:exported="true"
+            android:label="NotificationCenter" >
+        </service>
+
+        <receiver android:name="com.igexin.sdk.PushReceiver" >
+            <intent-filter>
+                <action  android:name="com.igexin.sdk.action.pushmanager" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="com.igexin.sdk.action.refreshls" />
+            </intent-filter>
+        </receiver>
+        <!--<receiver
+            android:name="com.igexin.sdk.PushReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action  android:name="com.igexin.sdk.action.pushmanager" />
+            </intent-filter>
+        </receiver>-->
+
+        <activity
+            android:name="com.igexin.sdk.PushActivity"
+            android:process=":pushservice"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:taskAffinity="com.igexin.sdk.PushActivityTask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+
+        <service android:name="com.igexin.download.DownloadService" android:process=":pushservice" />
+        <receiver android:name="com.igexin.download.DownloadReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+        <provider
+            android:process=":pushservice"
+            android:name="com.igexin.download.DownloadProvider"
+            android:authorities="downloads.com.ntp.activity"	/>
+        <!-- android:authorities="downloads.第三方包名" -->
+
+        <activity android:name="com.igexin.getuiext.activity.GetuiExtActivity"
+            android:configChanges="orientation|keyboard|keyboardHidden"
+            android:excludeFromRecents="true"
+            android:process=":pushservice"
+            android:taskAffinity="android.task.myServicetask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:exported="false" />
+
+        <receiver android:name="com.igexin.getuiext.service.PayloadReceiver" android:exported="false" >
+            <intent-filter>
+                <!-- 这个com.igexin.sdk.action.7fjUl2Z3LH6xYy7NQK4ni4固定，不能修改 -->
+                <action android:name="com.igexin.sdk.action.7fjUl2Z3LH6xYy7NQK4ni4" />
+                <!-- android:name="com.igexin.sdk.action.第三方的appId" -->
+                <action android:name="com.igexin.sdk.action.dRtAXra119AwF3QgiThBV1" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name="com.igexin.getuiext.service.GetuiExtService" android:process=":pushservice" />
+
+        <!-- 个推SDK配置结束 -->
     </application>
 
 </manifest>
