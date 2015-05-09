@@ -9,7 +9,7 @@
         android:id="@+id/myTitleView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/nav_bg" />
+        android:background="@color/nav_bg1" />
 
     <ImageView
     android:layout_width="match_parent"

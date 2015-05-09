@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layout_bg_normal"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/my_margin_left_right"
+        android:layout_marginTop="13dp"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/my_margin_left"
+        android:paddingRight="@dimen/my_margin_left">
+
+        <!-- 帖子id，不作显示-->
+        <TextView
+            android:id="@+id/id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+        <!-- 回帖人-->
+        <TextView
+            android:id="@+id/commentName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:text="@string/testName"
+            android:textColor="@color/course_name" />
+        <!--回帖时间-->
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/name"
+            android:layout_weight="1"
+            android:text="@string/testTime"
+            android:textColor="@color/menu_text_reserve"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/my_margin_left"
+        android:paddingRight="@dimen/my_margin_left">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/course_name"
+            android:text="@string/reply1" />
+
+        <!-- 回复谁的，即原发帖人-->
+        <TextView
+            android:id="@+id/forumUsernameRe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/comment"
+            android:textColor="@color/green" />
+
+        <!-- 回复内容-->
+        <TextView
+            android:id="@+id/commentContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/course_name"
+            android:text="@string/commentContent" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="@dimen/my_margin_left"
+        android:layout_marginRight="@dimen/my_margin_left"
+        android:layout_marginTop="7dp"
+        android:background="@color/forum_bg"
+        android:orientation="horizontal"
+        android:paddingBottom="6dp"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:paddingTop="6dp">
+
+        <!-- 原发帖人姓名-->
+        <TextView
+            android:id="@+id/forumUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nameTest"
+            android:textColor="@color/green" />
+
+        <!--原发帖内容-->
+        <TextView
+            android:id="@+id/forumContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/menu_text_reserve"
+            android:text="@string/commentContent" />
+    </RelativeLayout>
+
+
+</LinearLayout>

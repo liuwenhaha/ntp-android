@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         xmlns:ptr="http://schemas.android.com/apk/res-auto"
         ptr:title="@string/homeworkdetail"
-        android:background="@color/nav_bg" />
+        android:background="@color/nav_bg1" />
 
     <ImageView
         android:id="@+id/h_line"

@@ -56,7 +56,7 @@ public class NoticeFragment extends Fragment implements View.OnClickListener{
             //查看回帖消息
             case R.id.replyNotice:
                 //模拟
-                startActivity(new Intent(getActivity().getApplicationContext(),HomeworkNoticeActivity.class));
+                startActivity(new Intent(getActivity().getApplicationContext(),CommentNoticeActivity.class));
                 break;
 
         }

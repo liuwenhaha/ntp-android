@@ -127,6 +127,11 @@ public class PathConstant {
     public static final String PATH_COURSE_SCORE = "http://10.255.92.152/ntp/phone/my_score";
 
     /**
+     * 获取回帖
+     */
+    public static final String PATH_FORUM_COMMENT = "http://10.255.92.152/ntp/phone/forum_comment_notice";
+
+    /**
      * 课件下载文件夹
      */
     public static final String SAVE_PATH = "mnt/sdcard/ntp/download/";

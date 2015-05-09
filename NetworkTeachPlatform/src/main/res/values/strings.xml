@@ -80,11 +80,16 @@
     <string name="score">成绩：</string>
     <string name="homework1">作业</string>
     <string name="question">的问题</string>
-    <string name="comment">评论</string>
+    <string name="commentNotice">评论</string>
+    <string name="comment">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;yanxing</string>
+    <string name="nameTest">yanxing</string>
     <string name="forumComment">发送</string>
     <string name="courseForumComment">参加讨论</string>
     <string name="replyComment">你想说些什么...</string>
     <string name="register_name_digits">_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
+    <string name="commentContent">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;:不难
+                 创业团队做手机客户端，应该先做 Android 还是 iOS？为什么？</string>
+    <string name="reply1">回复</string>
 
 
 </resources>

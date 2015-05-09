@@ -166,7 +166,6 @@ public class HomeworkNoticeActivity extends Activity implements AdapterView.OnIt
 
             try {
                 JSONObject response = HttpUtil.getDataFromInternet(new URL(PathConstant.PATH_MY_HOMEWORK + "?username=" +name+"&page="+(currentPage+1)), "GET");
-                homeworkNoticeList.clear();
                 if (response != null) {
                     JSONArray ja = response.getJSONArray("scores");
                     if(ja.length()!=0){//获取到了数据，则增加页数
