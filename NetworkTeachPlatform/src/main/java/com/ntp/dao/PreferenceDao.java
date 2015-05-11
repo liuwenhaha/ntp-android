@@ -22,6 +22,16 @@ public class PreferenceDao {
     private static final String CURRENT_PAGE = "current_page";
     private static final String PAGE = "page";
 
+    //消息图标是否有红点
+    private static final String NOTICE_RED = "notice_red";
+    private static final String RED = "red";
+
+    //作业图标是否有红点
+    private static final String HOMEWORK_RED = "homework_red";
+
+    //回帖图标是否有红点
+    private static final String COMMENT_RED = "COMMENT_red";
+
     /**
      * 以私有操作方式保存用户登录信息，此种方式只能保存一个用户信息
      *
@@ -91,6 +101,72 @@ public class PreferenceDao {
     public static int getCurrentPage(Context context) {
         preferences = context.getSharedPreferences(CURRENT_PAGE, Context.MODE_PRIVATE);
         return preferences.getInt(PAGE, 1);
+    }
+
+    /**
+     * 保存消息图标有红点
+     *
+     * @param context
+     */
+    public static void setNoticeRed(Context context, boolean red) {
+        preferences = context.getSharedPreferences(NOTICE_RED, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(RED, red);
+        editor.commit();
+    }
+
+    /**
+     * 获取消息图标是否有红点,false没有
+     *
+     * @param context
+     */
+    public static Boolean isNoticeRed(Context context) {
+        preferences = context.getSharedPreferences(NOTICE_RED, Context.MODE_PRIVATE);
+        return preferences.getBoolean(RED, false);
+    }
+
+    /**
+     * 保存作业图标有红点
+     *
+     * @param context
+     */
+    public static void setHomeworkRed(Context context, boolean red) {
+        preferences = context.getSharedPreferences(HOMEWORK_RED, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(RED, red);
+        editor.commit();
+    }
+
+    /**
+     * 获取作业图标是否有红点,false没有
+     *
+     * @param context
+     */
+    public static Boolean isHomeworkRed(Context context) {
+        preferences = context.getSharedPreferences(HOMEWORK_RED, Context.MODE_PRIVATE);
+        return preferences.getBoolean(RED, false);
+    }
+
+    /**
+     * 保存回帖图标有红点
+     *
+     * @param context
+     */
+    public static void setCommentRed(Context context, boolean red) {
+        preferences = context.getSharedPreferences(COMMENT_RED, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(RED, red);
+        editor.commit();
+    }
+
+    /**
+     * 获取回帖图标是否有红点,false没有
+     *
+     * @param context
+     */
+    public static Boolean isCommentRed(Context context) {
+        preferences = context.getSharedPreferences(COMMENT_RED, Context.MODE_PRIVATE);
+        return preferences.getBoolean(RED, false);
     }
 
 

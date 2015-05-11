@@ -136,4 +136,9 @@ public class PathConstant {
      */
     public static final String SAVE_PATH = "mnt/sdcard/ntp/download/";
 
+    /**
+     * 上传<UID,CID>
+     */
+    public static final String PATH_UID_CID = "http://10.255.92.152/ntp/phone/cid";
+
 }

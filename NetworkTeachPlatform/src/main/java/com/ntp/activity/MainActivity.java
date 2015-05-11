@@ -10,11 +10,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.igexin.sdk.PushManager;
 import com.ntp.activity.course.CourseListFragment;
 import com.ntp.activity.course.SearchCourseActivity;
 import com.ntp.activity.me.MeFragment;
 import com.ntp.activity.notice.NoticeFragment;
 import com.ntp.adapter.FragAdapter;
+import com.ntp.dao.PreferenceDao;
 import com.ntp.util.ExitAppUtil;
 
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     //底部功能导航图片和文字课程,消息（作业），我
     private ImageView allCourse, homework, me;
     private TextView courseTxt, homeworkTxt, meTxt;
+    public static ImageView noticeRed;//消息红点
     //所有课程及其背景
     private TextView courseType, tip;
     private LinearLayout navigateMore, search;
@@ -46,6 +49,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        PushManager.getInstance().initialize(getApplicationContext());//初始化个推SDK
         ExitAppUtil.getInstance().addActivity(this);
         initView();
     }
@@ -55,6 +59,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
      */
     private void initView() {
         viewPager = (ViewPager) findViewById(R.id.viewPager);
+        noticeRed= (ImageView) findViewById(R.id.noticeRed);
+        if (PreferenceDao.isNoticeRed(getApplicationContext())){
+            noticeRed.setVisibility(View.VISIBLE);
+        }
         allCourse = (ImageView) findViewById(R.id.allCourse);
         homework = (ImageView) findViewById(R.id.homework);
         me = (ImageView) findViewById(R.id.me);
@@ -78,6 +86,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         viewPager.setAdapter(fragAdapter);
         viewPager.setCurrentItem(0);//设置默认显示CourseListFragment界面
         viewPager.setOnPageChangeListener(new MyViewPagerChangeListener());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (PreferenceDao.isNoticeRed(getApplicationContext())){
+            noticeRed.setVisibility(View.VISIBLE);
+        }else {
+            noticeRed.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override

@@ -60,7 +60,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
             username.setText("");
             login.setImageDrawable(getResources().getDrawable(R.drawable.default_head));
         }
-        if (userDao==null){
+        if (null==userDao){
             userDao = new UserDao(getActivity().getApplicationContext());
         }
         Log.i(TAG, "onResume");
@@ -153,6 +153,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
                             User user = new User();
                             user.setUsername(username.getText().toString());
                             user.setHead(BitmapUtil.getBitmapByte(bitmap1));
+                            Log.e(TAG,user.toString());
                             userDao.update(user);
                         }
                     }

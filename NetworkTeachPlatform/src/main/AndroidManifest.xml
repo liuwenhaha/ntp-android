@@ -160,6 +160,16 @@
         <meta-data
             android:name="PUSH_GROUPID"
             android:value=""/>
+        <!-- 配置第三方Receiver -->
+        <receiver
+            android:name="com.ntp.activity.notice.PushBroadcastReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <!-- 替换为action android:name="com.igexin.sdk.action.第三方应用APPID" -->
+                <action android:name="com.igexin.sdk.action.dRtAXra119AwF3QgiThBV1" />
+            </intent-filter>
+        </receiver>
+
         <!-- 配置SDK核心服务 -->
         <service
             android:name="com.igexin.sdk.PushService"

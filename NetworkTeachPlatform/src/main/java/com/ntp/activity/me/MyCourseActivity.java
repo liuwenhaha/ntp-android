@@ -99,6 +99,7 @@ public class MyCourseActivity extends Activity implements AdapterView.OnItemClic
                         JSONArray ja = response.getJSONArray("list");
                         if (ja.length() == 0) {
                             Toast.makeText(getApplicationContext(), "您还没有选学课程", Toast.LENGTH_SHORT).show();
+                            load.setVisibility(View.GONE);
                             return;
                         }
                         for (int i = 0; i < ja.length(); i++) {
