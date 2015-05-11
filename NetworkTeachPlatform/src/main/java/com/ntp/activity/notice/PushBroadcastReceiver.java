@@ -47,7 +47,7 @@ public class PushBroadcastReceiver extends BroadcastReceiver {
 
                 // smartPush第三方回执调用接口，actionid范围为90000-90999，可根据业务场景执行
                 boolean result = PushManager.getInstance().sendFeedbackMessage(context, taskId, messageId, 90001);
-                Log.d(TAG,"第三方回执接口调用" + (result ? "成功" : "失败"));
+                System.out.println("第三方回执接口调用" + (result ? "成功" : "失败"));
 
                 if (payload != null) {
                     String data = new String(payload);
