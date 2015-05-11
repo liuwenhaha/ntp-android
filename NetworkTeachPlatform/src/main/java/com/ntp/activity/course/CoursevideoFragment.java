@@ -118,11 +118,12 @@ public class CoursevideoFragment extends Fragment implements CoursevideoAdapter.
                 //检测网络是否可用
                 if (!NetworkStateUtil.isNetworkConnected(getActivity().getApplicationContext())) {
                     Toast.makeText(getActivity().getApplicationContext(), "当前网络不可用", Toast.LENGTH_LONG).show();
-                    return;
+                    break;
                 }
                 //检查当前是否禁用了移动网络下载课件和播放视频
                 if (NetworkStateUtil.isMobileConnected(getActivity().getApplicationContext()) && !PreferenceDao.getConfig(getActivity().getApplicationContext())) {
                     Toast.makeText(getActivity().getApplicationContext(), "你已经禁用移动网络下载课件和观看视频", Toast.LENGTH_LONG).show();
+                    break;
                 }
                 int position=Integer.parseInt(v.getTag().toString());
                 String path=list.get(position).getPath();

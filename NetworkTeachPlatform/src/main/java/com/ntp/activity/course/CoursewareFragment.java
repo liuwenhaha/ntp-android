@@ -160,21 +160,22 @@ public class CoursewareFragment extends Fragment implements CoursewareAdapter.Ca
                     this.tip.setVisibility(View.GONE);
                     File file=new File(PathConstant.SAVE_PATH+name);//删除下载文件
                     file.delete();
-                    return;
+                    break;
                 }
                 //检测网络是否可用
                 if (!NetworkStateUtil.isNetworkConnected(getActivity().getApplicationContext())) {
                     Toast.makeText(getActivity().getApplicationContext(), "当前网络不可用", Toast.LENGTH_LONG).show();
-                    return;
+                    break;
                 }
                 //如果用户没有登录，不可下载课件
                 if (PreferenceDao.getLoadName(getActivity().getApplicationContext()).equals("")) {
                     Toast.makeText(getActivity().getApplicationContext(), "该操作需要先登录", Toast.LENGTH_LONG).show();
-                    return;
+                    break;
                 }
                 //检查当前是否禁用了移动网络下载课件和播放视频
                 if (NetworkStateUtil.isMobileConnected(getActivity().getApplicationContext()) && !PreferenceDao.getConfig(getActivity().getApplicationContext())) {
                     Toast.makeText(getActivity().getApplicationContext(), "你已经禁用移动网络下载课件和观看视频", Toast.LENGTH_LONG).show();
+                    break;
                 }
                 this.progressBar = progressBar;
                 this.tip = tip;
