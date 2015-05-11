@@ -56,11 +56,6 @@ public class CommentNoticeActivity extends Activity{
         simpleAdapter = new SimpleAdapter(getApplicationContext(), list,
                 R.layout.listview_item_comment_notice, new String[]{"commentName","time", "forumUsernameRe", "commentContent", "forumUsername","forumContent"},
                 new int[]{R.id.commentName,R.id.time, R.id.forumUsernameRe, R.id.commentContent, R.id.forumUsername,R.id.forumContent});
-        //没有登录
-        if (name.equals("")){
-            pullToRefreshView.setVisibility(View.GONE);
-            tip.setVisibility(View.VISIBLE);
-        }
         pullToRefreshView.setMode(PullToRefreshBase.Mode.BOTH);//同时可以下拉和上拉刷新
         pullToRefreshView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override //下拉刷新
@@ -69,10 +64,16 @@ public class CommentNoticeActivity extends Activity{
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy(true, false).setLastUpdatedLabel("更新于:" + label);
                 if (NetworkStateUtil.isNetworkConnected(getApplicationContext())) {//网络可用
-                    new GetDataTask().execute();
+                    if (!name.equals("")){//没有登录
+                        new GetDataTask().execute();
+                    }else {
+                        pullToRefreshView.setVisibility(View.GONE);
+                        tip.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     Toast.makeText(getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
                 }
+
             }
 
             @Override  //下拉刷新
@@ -82,7 +83,9 @@ public class CommentNoticeActivity extends Activity{
                 refreshView.getLoadingLayoutProxy(false, true).setReleaseLabel(label);
                 refreshView.getLoadingLayoutProxy(false, true).setRefreshingLabel(label);
                 if (NetworkStateUtil.isNetworkConnected(getApplicationContext())) {//网络可用
-                    new PullUpTask().execute();
+                    if (!name.equals("")){
+                        new PullUpTask().execute();
+                    }
                 } else {
                     Toast.makeText(getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
                 }
@@ -100,8 +103,9 @@ public class CommentNoticeActivity extends Activity{
         protected List<Map<String, String>> doInBackground(Void... params) {
             try {
                 JSONObject response = HttpUtil.getDataFromInternet(new URL(PathConstant.PATH_FORUM_COMMENT + "?username=" +name), "GET");
-                Log.d(TAG,response.toString());
+                list.clear();
                 if (response != null) {
+                    Log.d(TAG,response.toString());
                     JSONArray ja = response.getJSONArray("forumUsers");
                     if (ja.length() == 0) {
                         return list;

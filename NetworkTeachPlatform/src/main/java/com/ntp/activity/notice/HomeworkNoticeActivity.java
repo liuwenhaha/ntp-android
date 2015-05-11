@@ -55,11 +55,6 @@ public class HomeworkNoticeActivity extends Activity implements AdapterView.OnIt
         homeworkNoticeAdapter =new HomeworkNoticeAdapter(getApplicationContext(), homeworkNoticeList);
         pullToRefreshView = (PullToRefreshListView)findViewById(R.id.pull_to_refresh_listview);
         name=PreferenceDao.getLoadName(getApplicationContext());
-        //没有登录
-        if (name.equals("")){
-            pullToRefreshView.setVisibility(View.GONE);
-            tip.setVisibility(View.VISIBLE);
-        }
         pullToRefreshView.setMode(PullToRefreshBase.Mode.BOTH);//同时可以下拉和上拉刷新
         pullToRefreshView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override //下拉刷新
@@ -68,7 +63,12 @@ public class HomeworkNoticeActivity extends Activity implements AdapterView.OnIt
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy(true, false).setLastUpdatedLabel("更新于:" + label);
                 if (NetworkStateUtil.isNetworkConnected(getApplicationContext())) {//网络可用
-                    new GetDataTask().execute();
+                    if (!name.equals("")){//没有登录
+                        new GetDataTask().execute();
+                    }else {
+                        pullToRefreshView.setVisibility(View.GONE);
+                        tip.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     Toast.makeText(getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
                 }
@@ -109,9 +109,9 @@ public class HomeworkNoticeActivity extends Activity implements AdapterView.OnIt
         protected List<HomeworkNotice> doInBackground(Void... params) {
             try {
                 JSONObject response = HttpUtil.getDataFromInternet(new URL(PathConstant.PATH_MY_HOMEWORK + "?username=" +name), "GET");
-                Log.d(TAG,response.toString());
                 homeworkNoticeList.clear();
                 if (response != null) {
+                    Log.d(TAG,response.toString());
                     JSONArray ja = response.getJSONArray("scores");
                     if (ja.length() == 0) {
                         return homeworkNoticeList;
