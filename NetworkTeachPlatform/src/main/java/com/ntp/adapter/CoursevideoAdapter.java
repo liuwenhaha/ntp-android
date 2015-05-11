@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * @author yanxing
- * 课程课件适配器
+ * 课程视频适配器
  */
 public class CoursevideoAdapter extends BaseAdapter implements View.OnClickListener {
     private List<Coursevideo> mCoursevideoList;

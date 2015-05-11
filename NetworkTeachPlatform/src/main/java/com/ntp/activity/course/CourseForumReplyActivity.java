@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 某个帖子详情界面
+ * 帖子详情界面，可以评论
  * @author yanxing
  */
 public class CourseForumReplyActivity extends Activity {

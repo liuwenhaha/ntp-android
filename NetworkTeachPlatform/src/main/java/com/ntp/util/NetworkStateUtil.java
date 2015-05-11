@@ -6,8 +6,8 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 /**
+ * 工具类，检测手机网络是否可用和当前网络类型
  * @author yanxing
- *         工具类，测试手机网络是否可以用和当前网络类型
  */
 public class NetworkStateUtil {
 

@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.ntp.model.User;
 
 /**
+ * 用户
  * @author yanxing
  */
 public class UserDao {

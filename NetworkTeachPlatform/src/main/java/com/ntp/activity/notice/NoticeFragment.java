@@ -14,7 +14,7 @@ import com.ntp.dao.PreferenceDao;
 
 
 /**
- * 通知界面，学生在此界面查看需要完成的作业和回帖提醒
+ * 通知界面，学生在此界面可以查看作业和回帖消息
  */
 public class NoticeFragment extends Fragment implements View.OnClickListener{
 

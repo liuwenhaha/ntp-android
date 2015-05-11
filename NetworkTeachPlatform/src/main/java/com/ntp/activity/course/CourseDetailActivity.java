@@ -17,7 +17,7 @@ import java.util.List;
 
 
 /**
- * 课程详细
+ * 课程详细:简介、课件、视频、讨论
  */
 public class CourseDetailActivity extends FragmentActivity implements View.OnClickListener {
 

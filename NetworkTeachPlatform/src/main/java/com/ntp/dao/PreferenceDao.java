@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 /**
+ *  保存用户配置操作类，登录状态、是否允许使用2G3G4G网络播放视频或下载课件（其他的联网操作默认可以使用移动网络）
+ *  ListView当前显示的页数（分页显示数据）
  * @author yanxing
- *         保存用户配置操作类，登录状态、是否允许使用2G3G4G网络播放视频或下载课件（其他的联网操作默认可以使用移动网络）
- *         ListView当前显示的页数（分页显示数据）
  */
 public class PreferenceDao {
     //登录状态配置

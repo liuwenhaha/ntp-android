@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 课程搜索历史dao
+ * 课程搜索历史
  *
  * @author yanxing
  */

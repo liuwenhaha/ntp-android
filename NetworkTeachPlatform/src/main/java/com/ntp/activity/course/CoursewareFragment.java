@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 课程课件
+ * 课程课件、课件进度表
  */
 public class CoursewareFragment extends Fragment implements CoursewareAdapter.Callback {
 
