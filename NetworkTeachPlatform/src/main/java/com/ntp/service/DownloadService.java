@@ -102,7 +102,10 @@ public class DownloadService extends IntentService {
                 fileSize = conn.getContentLength();// 根据相应获取文件大小
                 fileName = newFileName == null ? downloadPath.substring(downloadPath
                         .lastIndexOf('/') + 1) : newFileName;
+                File file=new File(fileSaveDir);
+                file.mkdir();
                 saveFile = new File(fileSaveDir, fileName);
+                saveFile.createNewFile();
                 Log.i(TAG, saveFile.toString());
                 InputStream inStream = conn.getInputStream();// 获取远程连接的输入流
                 byte[] buffer = new byte[1024];
