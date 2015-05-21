@@ -92,6 +92,14 @@ public class MeInformationActivity extends Activity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (null==userDao){
+            userDao = new UserDao(getApplicationContext());
+        }
+    }
+
     /**
      * 从服务器获取用户详细信息
      */
@@ -119,6 +127,7 @@ public class MeInformationActivity extends Activity {
                         user.setUsername(username.getText().toString());
                         user.setEmail(emailStr);
                         user.setSex(sexStr);
+                        Log.e(TAG,userDao.toString());
                         userDao.save(user);
                     } catch (JSONException e) {
                         e.printStackTrace();
