@@ -77,7 +77,7 @@ public class MyDownloadActivity extends Activity implements AdapterView.OnItemCl
         bundle.putString("firstOption","删除");
         intent.putExtras(bundle);
         startActivityForResult(intent, REQUEST);
-        return false;
+        return true;
     }
 
     /**
