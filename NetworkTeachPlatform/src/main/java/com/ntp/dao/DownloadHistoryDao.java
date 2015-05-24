@@ -68,11 +68,9 @@ public class DownloadHistoryDao {
     public void close() {
         if (dbOpenHelper != null) {
             dbOpenHelper.close();
-            dbOpenHelper = null;
         }
         if (sqLiteDB != null) {
             sqLiteDB.close();
-            sqLiteDB = null;
         }
     }
 }

@@ -83,11 +83,9 @@ public class SearchHistoryDao {
     public void close() {
         if (dbOpenHelper != null) {
             dbOpenHelper.close();
-            dbOpenHelper = null;
         }
         if (sqLiteDatabase != null) {
             sqLiteDatabase.close();
-            sqLiteDatabase = null;
         }
     }
 

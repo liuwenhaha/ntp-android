@@ -91,9 +91,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "email='" + email + '\'' +
                 ", username='" + username + '\'' +
-                ", sex='" + sex + '\'' +
                 ", head=" + Arrays.toString(head) +
                 '}';
     }

@@ -116,12 +116,6 @@ public class MeInformationActivity extends Activity {
                         String emailStr = jb.getString("email").equals("null")?"":jb.getString("email");
                         sex.setText(sexStr);
                         email.setText(emailStr);
-                        //缓存到本地
-                        User user = new User();
-                        user.setUsername(username.getText().toString());
-                        user.setEmail(emailStr);
-                        user.setSex(sexStr);
-                        userDao.update(user);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -203,10 +197,6 @@ public class MeInformationActivity extends Activity {
                                 String result = response.getString("result");
                                 if (result.equals("success")){
                                     email.setText(emailStr);
-                                    User user=new User();
-                                    user.setUsername(username.getText().toString());
-                                    user.setEmail(emailStr);
-                                    userDao.update(user);//修改本地邮箱缓存
                                 }else {
                                     Toast.makeText(getApplicationContext(),"修改失败",Toast.LENGTH_SHORT).show();
                                 }
@@ -252,7 +242,7 @@ public class MeInformationActivity extends Activity {
             }
         } else if (requestCode == REQUEST_MODIFY_SEX) {
             switch (resultCode) {
-                case MySelectDialog.RESULT_ITEM1:
+                case MySelectDialog.RESULT_ITEM1://选择男时
                     if (sex.getText().toString().trim().equals(MAIL)) {//如果选择项和原来的相等，不作改变
                         break;
                     } else {//改变性别
@@ -273,10 +263,6 @@ public class MeInformationActivity extends Activity {
                                         if (result.equals("success")) {
 //                                            Toast.makeText(getApplicationContext(),"修改成功",Toast.LENGTH_SHORT).show();
                                             sex.setText(MAIL);
-                                            User user = new User();
-                                            user.setUsername(username.getText().toString());
-                                            user.setSex(MAIL);
-                                            userDao.update(user);//修改本地性别缓存
                                         } else {
                                             Toast.makeText(getApplicationContext(), "修改失败", Toast.LENGTH_SHORT).show();
                                         }
@@ -288,10 +274,10 @@ public class MeInformationActivity extends Activity {
                         });
                     }
                     break;
-                case MySelectDialog.RESULT_ITEM2:
+                case MySelectDialog.RESULT_ITEM2://选择女时
                     if (sex.getText().toString().trim().equals(FEMAIL)) {//如果选择项和原来的相等，不作改变
                         break;
-                    } else {//修改性别，无论用户选择哪个item，都先视作修改性别
+                    } else {
                         RequestParams requestParams = new RequestParams();
                         requestParams.put("sex", FEMAIL);
                         requestParams.put("username", username.getText().toString());
@@ -309,10 +295,6 @@ public class MeInformationActivity extends Activity {
                                         if (result.equals("success")) {
 //                                            Toast.makeText(getApplicationContext(),"修改成功",Toast.LENGTH_SHORT).show();
                                             sex.setText(FEMAIL);
-                                            User user = new User();
-                                            user.setUsername(username.getText().toString());
-                                            user.setSex(FEMAIL);
-                                            userDao.update(user);//修改本地性别缓存
                                         } else {
                                             Toast.makeText(getApplicationContext(), "修改失败", Toast.LENGTH_SHORT).show();
                                         }

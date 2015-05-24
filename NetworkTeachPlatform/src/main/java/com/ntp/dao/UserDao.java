@@ -28,8 +28,6 @@ public class UserDao {
     public void save(User user) {
         ContentValues values = new ContentValues();
         values.put("name", user.getUsername());
-        values.put("email", user.getEmail());
-        values.put("sex", user.getSex());
         if (user.getHead() != null) {
             values.put("head", user.getHead());
         }
@@ -44,12 +42,13 @@ public class UserDao {
     public User findByName(String name) {
         Cursor cursor = sqLiteDB.rawQuery("select * from user where name=?",
                 new String[]{name});
+        if (cursor.getCount()<=0){
+            return null;
+        }
         User user = new User();
         while (cursor.moveToNext()) {
             user.setUsername(cursor.getString(1));
-            user.setEmail(cursor.getString(2));
-            user.setSex(cursor.getString(3));
-            user.setHead(cursor.getBlob(4));
+            user.setHead(cursor.getBlob(2));
         }
         cursor.close();
         return user;
@@ -60,12 +59,6 @@ public class UserDao {
      */
     public void update(User user) {
         ContentValues values = new ContentValues();
-        if (user.getEmail() != null) {
-            values.put("email", user.getEmail());
-        }
-        if (user.getSex() != null) {
-            values.put("sex", user.getSex());
-        }
         if (user.getHead() != null) {
             values.put("head", user.getHead());
         }
@@ -78,11 +71,9 @@ public class UserDao {
     public void close() {
         if (dbOpenHelper != null) {
             dbOpenHelper.close();
-            dbOpenHelper = null;
         }
         if (sqLiteDB != null) {
             sqLiteDB.close();
-            sqLiteDB = null;
         }
     }
 }

@@ -26,7 +26,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         //搜索历史
         String sqlSearch = "create table search_history(_id integer primary key,content varchar(20))";
         //缓存用户信息
-        String sqlUser = "create table user(_id integer primary key,name varchar(20),email varchar(20),sex varchar(20),head blob)";
+        String sqlUser = "create table user(_id integer primary key,name varchar(20),head blob)";
         //下载课件记录表
         String sqlDownload = "create table download_history(_id integer primary key,name varchar(20))";
         db.execSQL(sql);
