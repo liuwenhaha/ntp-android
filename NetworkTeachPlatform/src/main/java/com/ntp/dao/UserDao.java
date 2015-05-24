@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.ntp.model.User;
 
@@ -14,11 +15,11 @@ import com.ntp.model.User;
 public class UserDao {
 
     private static DBOpenHelper dbOpenHelper;
-    private static SQLiteDatabase SQLiteDB;
+    private static SQLiteDatabase sqLiteDB;
 
     public UserDao(Context context) {
         dbOpenHelper = new DBOpenHelper(context);
-        SQLiteDB = dbOpenHelper.getWritableDatabase();
+        sqLiteDB = dbOpenHelper.getWritableDatabase();
     }
 
     /**
@@ -32,7 +33,7 @@ public class UserDao {
         if (user.getHead() != null) {
             values.put("head", user.getHead());
         }
-        SQLiteDB.insert("user", null, values);
+        sqLiteDB.insert("user", null, values);
     }
 
     /**
@@ -41,7 +42,7 @@ public class UserDao {
      * @param name
      */
     public User findByName(String name) {
-        Cursor cursor = SQLiteDB.rawQuery("select * from user where name=?",
+        Cursor cursor = sqLiteDB.rawQuery("select * from user where name=?",
                 new String[]{name});
         User user = new User();
         while (cursor.moveToNext()) {
@@ -68,7 +69,7 @@ public class UserDao {
         if (user.getHead() != null) {
             values.put("head", user.getHead());
         }
-        SQLiteDB.update("user", values, "name=?", new String[]{user.getUsername()});
+        sqLiteDB.update("user", values, "name=?", new String[]{user.getUsername()});
     }
 
     /**
@@ -79,9 +80,9 @@ public class UserDao {
             dbOpenHelper.close();
             dbOpenHelper = null;
         }
-        if (SQLiteDB != null) {
-            SQLiteDB.close();
-            SQLiteDB = null;
+        if (sqLiteDB != null) {
+            sqLiteDB.close();
+            sqLiteDB = null;
         }
     }
 }

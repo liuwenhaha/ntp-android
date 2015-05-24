@@ -24,10 +24,12 @@ import com.loopj.android.http.RequestParams;
 import com.ntp.activity.R;
 import com.ntp.adapter.CoursewareAdapter;
 import com.ntp.activity.PathConstant;
+import com.ntp.dao.DownloadHistoryDao;
 import com.ntp.dao.PreferenceDao;
 import com.ntp.model.Courseware;
 import com.ntp.service.DownloadService;
 import com.ntp.util.NetworkStateUtil;
+import com.ntp.util.SDCardUtil;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -46,6 +48,7 @@ public class CoursewareFragment extends Fragment implements CoursewareAdapter.Ca
     private static CoursewareFragment mCoursewareFragment;
     private static AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
     private DownloadService downloadService;//文件下载服务
+    private DownloadHistoryDao downloadHistoryDao;
     private ListView mCourseWareList;
     private List<Courseware> list;
     private CoursewareAdapter mCoursewareAdapter;
@@ -162,6 +165,11 @@ public class CoursewareFragment extends Fragment implements CoursewareAdapter.Ca
                     file.delete();
                     break;
                 }
+                //检测是否有SD卡
+                if (!SDCardUtil.checkSDCard()) {
+                    Toast.makeText(getActivity().getApplicationContext(), "请插入SD卡", Toast.LENGTH_LONG).show();
+                    break;
+                }
                 //检测网络是否可用
                 if (!NetworkStateUtil.isNetworkConnected(getActivity().getApplicationContext())) {
                     Toast.makeText(getActivity().getApplicationContext(), "当前网络不可用", Toast.LENGTH_LONG).show();
@@ -203,12 +211,17 @@ public class CoursewareFragment extends Fragment implements CoursewareAdapter.Ca
                 progressBar.setProgress(downloadLength);
             } else if (intent.getAction().equals(ACTION_FINISH)) {
                 boolean isSuccess = intent.getBooleanExtra("success", false);
-                if (isSuccess == true) {
+                if (isSuccess) {//如果下载成功
                     tip.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.GONE);
                     progressBar.setProgress(0);//重置进度
                     flag=0;//下载完成，下载另一个文件，重置设置最大进度标志
                     download.setText(DOWNLOAD);
+                    String fileName=intent.getStringExtra("fileName");
+                    downloadHistoryDao=new DownloadHistoryDao(context);
+                    //在数据库中添加下载记录
+                    downloadHistoryDao.save(fileName);
+                    downloadHistoryDao.close();
                 }
             }
         }

@@ -4,58 +4,62 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 对课程类型操作，缓存所有的课程类型到数据库
- * Created by yanxing on 2015/2/22.
+ * 课件下载记录
+ * @author yanxing
  */
-public class CourseTypeDao {
+public class DownloadHistoryDao {
 
     private static DBOpenHelper dbOpenHelper;
     private static SQLiteDatabase sqLiteDB;
 
-    public CourseTypeDao(Context context) {
+    public DownloadHistoryDao(Context context){
         dbOpenHelper = new DBOpenHelper(context);
         sqLiteDB = dbOpenHelper.getWritableDatabase();
     }
 
     /**
-     * 获取所有课程类型名称
+     * 获取所有的下载记录
+     * @return
      */
-    public String[] getAllCourseType() {
-        Cursor cursor = sqLiteDB.rawQuery("select * from coursetype_table", null);
+    public List<String> findAll(){
+
+        Cursor cursor = sqLiteDB.rawQuery("select * from download_history", null);
         List<String> list = new ArrayList<String>();
-        Log.i("TAG", String.valueOf(cursor.getCount()));
         while (cursor.moveToNext()) {
             list.add(cursor.getString(1));
         }
-        String st[] = new String[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            st[i] = list.get(i);
-        }
         cursor.close();
-        return st;
+        return list;
     }
 
     /**
-     * 保存课程类型
+     * 保存下载记录
+     * @param fileName
+     * @return
      */
-    public void save(String type) {
+    public boolean save(String fileName){
+        Cursor cursor = sqLiteDB.rawQuery("select * from download_history where name=?", new String[]{fileName});
+        if (cursor.getCount()>0){//已经存在
+            cursor.close();
+            return false;
+        }
         ContentValues values = new ContentValues();
-        values.put("type", type);
-        sqLiteDB.insert("coursetype_table", null, values);
+        values.put("name", fileName);
+        sqLiteDB.insert("download_history", null, values);
+        return true;
     }
 
     /**
-     * 清空coursetype_table
+     * 删除下载记录
+     * @param fileName
      */
-    public void delete() {
-        sqLiteDB.delete("coursetype_table", null, null);
+    public void delete(String fileName){
+        sqLiteDB.delete("download_history", "name=?", new String[]{fileName});
     }
 
     /**
@@ -71,5 +75,4 @@ public class CourseTypeDao {
             sqLiteDB = null;
         }
     }
-
 }

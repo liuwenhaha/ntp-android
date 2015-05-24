@@ -22,6 +22,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
@@ -91,11 +92,13 @@ public class MeFragment extends Fragment implements View.OnClickListener {
      * 显示本地缓存头像
      */
     private void displayHead() {
-        User user = userDao.findByName(PreferenceDao.getLoadName(getActivity().getApplicationContext()));
+        User user = userDao.findByName(PreferenceDao.getLoadName(getActivity().getApplicationContext()).trim());
+        Log.d(TAG,user.toString());
         if (user.getHead() != null) {//数据库有缓存头像
             Bitmap bitmap = BitmapFactory.decodeByteArray(user.getHead(), 0, user.getHead().length);
             login.setImageBitmap(bitmap);
         } else {//没有显示默认应用默认头像
+            Log.d(TAG,"头像为空");
             login.setImageDrawable(getResources().getDrawable(R.drawable.head_default));
         }
     }
@@ -143,18 +146,20 @@ public class MeFragment extends Fragment implements View.OnClickListener {
                 }
                 login.setImageDrawable(getResources().getDrawable(R.drawable.default_head_loading));
                 String imageUri = PathConstant.PATH_IMAGE + head;
-                asyncHttpClient.get(imageUri, new AsyncHttpResponseHandler() {
+                asyncHttpClient.post(imageUri, new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                         if (statusCode == 200) {
                             Bitmap bitmap = BitmapFactory.decodeByteArray(responseBody, 0, responseBody.length);
                             Bitmap bitmap1 = BitmapUtil.createBitmapZoop(bitmap, 70, 70);
-                            login.setImageBitmap(bitmap1);
                             User user = new User();
                             user.setUsername(username.getText().toString());
                             user.setHead(BitmapUtil.getBitmapByte(bitmap1));
-                            Log.e(TAG,user.toString());
-                            userDao.update(user);
+                            if (null == userDao) {
+                                userDao = new UserDao(getActivity().getApplicationContext());
+                            }
+                            userDao.save(user);
+                            login.setImageBitmap(bitmap1);
                         }
                     }
 

@@ -137,6 +137,7 @@ public class DownloadService extends IntentService {
                     // 发送下载完成广播
                     Intent sendIntent = new Intent(CoursewareFragment.ACTION_FINISH);
                     sendIntent.putExtra("success", true);
+                    sendIntent.putExtra("fileName",fileName);
                     sendBroadcast(sendIntent);
                 }
                 randomAccessFile.close();

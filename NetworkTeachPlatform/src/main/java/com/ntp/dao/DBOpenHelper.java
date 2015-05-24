@@ -27,10 +27,13 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         String sqlSearch = "create table search_history(_id integer primary key,content varchar(20))";
         //缓存用户信息
         String sqlUser = "create table user(_id integer primary key,name varchar(20),email varchar(20),sex varchar(20),head blob)";
+        //下载课件记录表
+        String sqlDownload = "create table download_history(_id integer primary key,name varchar(20))";
         db.execSQL(sql);
         db.execSQL(sqlType);
         db.execSQL(sqlSearch);
         db.execSQL(sqlUser);
+        db.execSQL(sqlDownload);
     }
 
     // 更新数据库，当版本变化时系统会调用该回调方法

@@ -154,6 +154,10 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             if (!course.getImageUri().equals("")) {
                 course.setImageUri(IMAGE_URI + course.getImageUri());
             }
+            //如果SD卡不存在，则显示默认图片
+            if (!SDCardUtil.checkSDCard()){
+                course.setImageUri("");
+            }
         }
         GlobalVariable globalVariable = (GlobalVariable) getActivity().getApplication();
         globalVariable.setList(courseList);

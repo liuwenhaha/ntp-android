@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.ntp.activity.R;
 import com.ntp.activity.PathConstant;
+import com.ntp.dao.PreferenceDao;
 import com.ntp.dao.UserDao;
 import com.ntp.model.User;
 import com.ntp.util.BitmapUtil;
@@ -73,21 +74,14 @@ public class MeInformationActivity extends Activity {
         head = (CircleImageView) findViewById(R.id.head);
         String name = getIntent().getExtras().getString("username");
         username.setText(name);
+        getUser();
         userDao = new UserDao(getApplicationContext());
         User user = userDao.findByName(name);
         head.setClickable(false);//暂时不能换头像
-        if (user.getUsername() != null) {
-            Log.i(TAG, "本地有缓存信息");
-            sex.setText((user.getSex().equals("null")?"":user.getSex()));
-            email.setText((user.getEmail().equals("null")?"":user.getEmail()));
-            if (user.getHead() != null) {
-                head.setImageBitmap(BitmapFactory.decodeByteArray(user.getHead(), 0, user.getHead().length));
-            } else {
-                head.setImageDrawable(getResources().getDrawable(R.drawable.head_default));
-            }
-
+        if (user.getHead() != null) {
+            head.setImageBitmap(BitmapFactory.decodeByteArray(user.getHead(), 0, user.getHead().length));
         } else {
-            getUser();
+            head.setImageDrawable(getResources().getDrawable(R.drawable.head_default));
         }
 
     }
@@ -118,8 +112,8 @@ public class MeInformationActivity extends Activity {
                 if (response != null) {
                     try {
                         JSONObject jb = response.getJSONObject("user");
-                        String sexStr = jb.getString("sex");
-                        String emailStr = jb.getString("email");
+                        String sexStr = jb.getString("sex").equals("null")?"":jb.getString("sex");
+                        String emailStr = jb.getString("email").equals("null")?"":jb.getString("email");
                         sex.setText(sexStr);
                         email.setText(emailStr);
                         //缓存到本地
@@ -127,8 +121,7 @@ public class MeInformationActivity extends Activity {
                         user.setUsername(username.getText().toString());
                         user.setEmail(emailStr);
                         user.setSex(sexStr);
-                        Log.e(TAG,userDao.toString());
-                        userDao.save(user);
+                        userDao.update(user);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

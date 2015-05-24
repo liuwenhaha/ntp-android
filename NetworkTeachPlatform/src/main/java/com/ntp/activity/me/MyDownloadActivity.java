@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.ntp.activity.R;
 import com.ntp.activity.PathConstant;
+import com.ntp.dao.DownloadHistoryDao;
 import com.ntp.util.OpenFileUtil;
 import com.ntp.widget.MySelectDialog;
 
@@ -29,6 +30,7 @@ public class MyDownloadActivity extends Activity implements AdapterView.OnItemCl
 
     private ListView myDownload;
     private ArrayAdapter<String> arrayAdapter;
+    private DownloadHistoryDao downloadHistoryDao;
     private List<String> list=new ArrayList<String>();
     private static final String TAG="MyDownloadActivity";
     private static final int REQUEST=1;
@@ -45,6 +47,7 @@ public class MyDownloadActivity extends Activity implements AdapterView.OnItemCl
         myDownload= (ListView) findViewById(R.id.myDownload);
         arrayAdapter=new ArrayAdapter<String>(this, R.layout.listview_item_mydownload,list);
         myDownload.setAdapter(arrayAdapter);
+        downloadHistoryDao=new DownloadHistoryDao(getApplicationContext());
         myDownload.setOnItemClickListener(this);
         myDownload.setOnItemLongClickListener(this);
         new LoadFileTask().execute();
@@ -132,12 +135,19 @@ public class MyDownloadActivity extends Activity implements AdapterView.OnItemCl
 
         @Override
         protected List<String> doInBackground(Void... params) {
-            File file=new File(PathConstant.SAVE_PATH);
-            if (file.exists()&&file.isDirectory()){
-                for (File courseWareFile:file.listFiles()){
-                    list.add(courseWareFile.getName());
-                }
+            if (null==downloadHistoryDao){
+                downloadHistoryDao=new DownloadHistoryDao(getApplicationContext());
             }
+            List<String> downloadHistoryList=downloadHistoryDao.findAll();
+            for (String str:downloadHistoryList){
+                File file=new File(PathConstant.SAVE_PATH+str);
+                if (!file.exists()){//如果下载目录文件已经不存在，则删除数据库中的记录
+                    downloadHistoryDao.delete(str);
+                    continue;
+                }
+                list.add(file.getName());
+            }
+            downloadHistoryDao.close();
             return list;
         }
 

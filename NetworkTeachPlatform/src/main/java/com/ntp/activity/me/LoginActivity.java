@@ -83,6 +83,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                     String result = response.getString("result");
                                     Log.i(TAG, result);
                                     if (result.equals("success")) {//登陆成功
+                                        //如果服务端没有头像，返回的head是error字符串，如果有则是头像名称
                                         String head = response.getString("head");
                                         Log.i(TAG, head);
                                         PreferenceDao.saveLoadName(getApplicationContext(), nameString);

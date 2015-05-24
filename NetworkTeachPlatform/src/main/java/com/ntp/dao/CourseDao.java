@@ -16,18 +16,18 @@ import java.util.List;
  */
 public class CourseDao {
     private static DBOpenHelper dbOpenHelper;
-    private static SQLiteDatabase SQLiteDB;
+    private static SQLiteDatabase sqLiteDB;
 
     public CourseDao(Context context) {
         dbOpenHelper = new DBOpenHelper(context);
-        SQLiteDB = dbOpenHelper.getWritableDatabase();
+        sqLiteDB = dbOpenHelper.getWritableDatabase();
     }
 
     /**
      * 获取所有课程信息
      */
     public List<Course> getAllCourse() {
-        Cursor cursor = SQLiteDB.rawQuery("select * from course_table", null);
+        Cursor cursor = sqLiteDB.rawQuery("select * from course_table", null);
         List<Course> list = new ArrayList<Course>();
         while (cursor.moveToNext()) {
             Course course = new Course(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4),cursor.getString(5));
@@ -47,14 +47,14 @@ public class CourseDao {
         values.put("imageUri",course.getImageUri());
         values.put("type", course.getType());
         values.put("username", course.getTeacher());
-        SQLiteDB.insert("course_table", null, values);
+        sqLiteDB.insert("course_table", null, values);
     }
 
     /**
      * 清空course_table
      */
     public void delete() {
-        SQLiteDB.delete("course_table", null, null);
+        sqLiteDB.delete("course_table", null, null);
     }
 
     /**
@@ -65,9 +65,9 @@ public class CourseDao {
             dbOpenHelper.close();
             dbOpenHelper = null;
         }
-        if (SQLiteDB != null) {
-            SQLiteDB.close();
-            SQLiteDB = null;
+        if (sqLiteDB != null) {
+            sqLiteDB.close();
+            sqLiteDB = null;
         }
     }
 
