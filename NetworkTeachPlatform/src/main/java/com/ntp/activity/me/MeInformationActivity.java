@@ -78,7 +78,7 @@ public class MeInformationActivity extends Activity {
         userDao = new UserDao(getApplicationContext());
         User user = userDao.findByName(name);
         head.setClickable(false);//暂时不能换头像
-        if (user.getHead() != null) {
+        if (user!=null&&user.getHead() != null) {
             head.setImageBitmap(BitmapFactory.decodeByteArray(user.getHead(), 0, user.getHead().length));
         } else {
             head.setImageDrawable(getResources().getDrawable(R.drawable.head_default));

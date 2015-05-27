@@ -82,7 +82,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
         myDownload.setOnClickListener(this);
         setting.setOnClickListener(this);
         userDao = new UserDao(getActivity().getApplicationContext());
-        if (!PreferenceDao.getLoadName(getActivity()).equals("")) {//已有用户登陆
+        if (!PreferenceDao.getLoadName(getActivity().getApplicationContext()).equals("")) {//已有用户登陆
             displayHead();
         }
         return view;
@@ -93,7 +93,9 @@ public class MeFragment extends Fragment implements View.OnClickListener {
      */
     private void displayHead() {
         User user = userDao.findByName(PreferenceDao.getLoadName(getActivity().getApplicationContext()).trim());
-        Log.d(TAG,user.toString());
+        if (null==user){
+            return;
+        }
         if (user.getHead() != null) {//数据库有缓存头像
             Bitmap bitmap = BitmapFactory.decodeByteArray(user.getHead(), 0, user.getHead().length);
             login.setImageBitmap(bitmap);
@@ -107,7 +109,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login://登录
-                String name = PreferenceDao.getLoadName(getActivity());
+                String name = PreferenceDao.getLoadName(getActivity().getApplicationContext());
                 //检查是否有登录
                 if (!name.equals("")) {//已登录
                     Intent intent = new Intent(getActivity(), MeInformationActivity.class);
@@ -142,6 +144,13 @@ public class MeFragment extends Fragment implements View.OnClickListener {
                 String head = data.getExtras().getString("head");
                 if (head.equals("error")) {//用户没有服务器没有头像
                     login.setImageDrawable(getResources().getDrawable(R.drawable.head_default));
+                    User user = new User();
+                    user.setUsername(name);
+                    if (userDao.findByName(name)!=null){
+                        userDao.update(user);
+                    }else {
+                        userDao.save(user);
+                    }
                     return;
                 }
                 login.setImageDrawable(getResources().getDrawable(R.drawable.default_head_loading));
@@ -149,7 +158,6 @@ public class MeFragment extends Fragment implements View.OnClickListener {
                 asyncHttpClient.post(imageUri, new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                        if (statusCode == 200) {
                             Bitmap bitmap = BitmapFactory.decodeByteArray(responseBody, 0, responseBody.length);
                             Bitmap bitmap1 = BitmapUtil.createBitmapZoop(bitmap, 70, 70);
                             User user = new User();
@@ -167,7 +175,6 @@ public class MeFragment extends Fragment implements View.OnClickListener {
                                 userDao.save(user);
                             }
                             login.setImageBitmap(bitmap1);
-                        }
                     }
 
                     @Override
