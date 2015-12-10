@@ -64,7 +64,7 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
         imageLoader = ImageLoader.getInstance();
         list = new ArrayList<Course>();
         searchHistoryDao = new SearchHistoryDao(getApplicationContext());
-        courseAdapter = new CourseAdapter(list, getApplicationContext(),imageLoader);
+        courseAdapter = new CourseAdapter(list, getApplicationContext());
         listView.setAdapter(courseAdapter);
         listView.setOnItemClickListener(this);
 //        Intent intent=new Intent(getApplicationContext(),SearchHistoryActivity.class);
@@ -122,7 +122,7 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
                                     course.setImageUri(PathConstant.PATH_IMAGE+course.getImageUri());
                                 }
                             }
-                            courseAdapter = new CourseAdapter(list, getApplicationContext(),imageLoader);
+                            courseAdapter = new CourseAdapter(list, getApplicationContext());
                             listView.setVisibility(View.VISIBLE);//设置listView可见
                             tip.setVisibility(View.GONE);
                             courseAdapter.notifyDataSetChanged();
@@ -154,7 +154,7 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
         if (requestCode == REQUEST) {
             if (resultCode == RESULT_OK) {//如果用户利用搜索历史搜索课程，如果搜索成功
                 list = (List<Course>) data.getExtras().getSerializable("list");
-                courseAdapter = new CourseAdapter(list, getApplicationContext(),imageLoader);
+                courseAdapter = new CourseAdapter(list, getApplicationContext());
                 listView.setAdapter(courseAdapter);
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(getApplicationContext(), "没有搜索到相关课程", Toast.LENGTH_SHORT).show();

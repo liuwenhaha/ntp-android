@@ -1,20 +1,16 @@
 package com.ntp.activity;
 
-import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.igexin.sdk.PushManager;
 import com.ntp.activity.course.CourseListFragment;
 import com.ntp.activity.course.SearchCourseActivity;
 import com.ntp.activity.me.MeFragment;
@@ -24,28 +20,56 @@ import com.ntp.base.BaseActivity;
 import com.ntp.dao.PreferenceDao;
 import com.ntp.util.AppUtil;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 主程序
  */
+@EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
-    private static final int ACTION_DESTORY = 1;
-    private static final String TAG = "mActivity";
-    private ViewPager viewPager;
-    private FragAdapter fragAdapter;//ViewPager适配器
-    private List<Fragment> fragments;
-    private Fragment loadCourse;//加载课程Fragemnt
+    @ViewById
+    ViewPager viewPager;
 
     //底部功能导航图片和文字课程,消息（作业），我
-    private ImageView allCourse, homework, me;
-    private TextView courseTxt, homeworkTxt, meTxt;
-    public static ImageView noticeRed;//消息红点
-    //所有课程及其背景
-    private TextView courseType, tip;
-    private LinearLayout navigateMore, search;
+    @ViewById
+    ImageView allCourse;
+
+    @ViewById
+    ImageView homework;
+
+    @ViewById
+    ImageView me;
+
+    @ViewById
+    TextView courseTxt;
+
+    @ViewById
+    TextView homeworkTxt;
+
+    @ViewById
+    TextView meTxt;
+
+    //消息红点
+    @ViewById
+    ImageView noticeRed;
+
+    @ViewById
+    TextView tip;
+
+    @ViewById
+    LinearLayout search;
+
+    private FragAdapter fragAdapter;
+    //课程、消息、我三个fragment
+    private List<Fragment> fragments;
+
     private static final String COURSE = "课程";
     private static final String NOTICE = "消息";
     private static final String ME = "我";
@@ -54,42 +78,25 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      */
     public static final String EXIT_ACTION = "com.ntp.exit.action";
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        AppUtil.setStatusBarDarkMode(true, this);
-        initView();
-    }
+    /**
+     * 显示消息红点
+     */
+    public static final String SHOW_NOTICE_ACTION = "com.ntp.notice.action";
 
     /**
-     * 初始化控件,设置控件监听
+     * 设置底部导航
+     * 以下代码不能在onCreate写，因为View注入在onCreate之后
      */
-    private void initView() {
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
-        noticeRed= (ImageView) findViewById(R.id.noticeRed);
+    @AfterViews
+    void afterInitView() {
+        AppUtil.setStatusBarDarkMode(true, this);
         if (PreferenceDao.isNoticeRed(getApplicationContext())){
             noticeRed.setVisibility(View.VISIBLE);
         }
-        allCourse = (ImageView) findViewById(R.id.allCourse);
-        homework = (ImageView) findViewById(R.id.homework);
-        me = (ImageView) findViewById(R.id.me);
-        courseTxt = (TextView) findViewById(R.id.courseTxt);
-        homeworkTxt = (TextView) findViewById(R.id.homeworkTxt);
-        meTxt = (TextView) findViewById(R.id.meTxt);
-//        navigateMore = (LinearLayout) findViewById(R.id.navigateMore);
-        courseType = (TextView) findViewById(R.id.courseType);
-        search = (LinearLayout) findViewById(R.id.search);
-        tip = (TextView) findViewById(R.id.tip);
-        allCourse.setOnClickListener(this);
-        homework.setOnClickListener(this);
-        me.setOnClickListener(this);
-        search.setOnClickListener(this);
-//        navigateMore.setOnClickListener(this);
         fragments = new ArrayList<Fragment>();
-        fragments.add(CourseListFragment.getInstance());
-        fragments.add(NoticeFragment.getInstance());
-        fragments.add(MeFragment.getInstance());
+        fragments.add(new CourseListFragment());
+        fragments.add(new NoticeFragment());
+        fragments.add(new MeFragment());
         fragAdapter = new FragAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(fragAdapter);
         viewPager.setCurrentItem(0);//设置默认显示CourseListFragment界面
@@ -106,20 +113,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         IntentFilter filter = new IntentFilter();
         filter.addAction(EXIT_ACTION);
+        filter.addAction(SHOW_NOTICE_ACTION);
         registerReceiver(mBroadcastReceiver, filter);
     }
 
+    //广播处理
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(EXIT_ACTION)) {
                 finish();
+            } else if (intent.getAction().equals(SHOW_NOTICE_ACTION)) {
+                noticeRed.setVisibility(View.VISIBLE);
             }
         }
     };
 
 
-    @Override
+    @Click({R.id.allCourse, R.id.homework, R.id.me, R.id.search})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.allCourse:
@@ -131,10 +142,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.me:
                 viewPager.setCurrentItem(2);
                 break;
-//            case R.id.navigateMore:
-//                Intent intent = new Intent(this, CoursetypeSelectActivity.class);
-//                startActivity(intent);
-//                break;
             case R.id.search:
                 Intent searchIntent = new Intent(this, SearchCourseActivity.class);
                 startActivity(searchIntent);

@@ -26,7 +26,6 @@ import java.util.List;
  */
 public class CourseAdapter extends BaseAdapter {
 
-    private ImageLoader imageLoader;//UIL加载图片类
     private DisplayImageOptions options;//UIL显示图片的配置
     private List<Course> mCourseList;
     private Context context;
@@ -34,10 +33,9 @@ public class CourseAdapter extends BaseAdapter {
     private static final String TYPE="类型：";
     private static final String TEACHER="老师：";
 
-    public CourseAdapter(List<Course> mCourseList, Context context,ImageLoader imageLoader) {
+    public CourseAdapter(List<Course> mCourseList, Context context) {
         this.mCourseList = mCourseList;
         this.context = context;
-        this.imageLoader=imageLoader;
         options = new DisplayImageOptions.Builder()
                 .cacheOnDisk(true)
                 .showImageForEmptyUri(R.drawable.course_default)//设置图片URI为空时默认显示图片
@@ -81,11 +79,11 @@ public class CourseAdapter extends BaseAdapter {
         holder.courseType.setText(TYPE + mCourseList.get(position).getType());
         holder.teacher.setText(TEACHER + mCourseList.get(position).getTeacher());
         //加载图片
-        imageLoader.loadImage(mCourseList.get(position).getImageUri(),options,new SimpleImageLoadingListener(){
+        ImageLoader.getInstance().loadImage(mCourseList.get(position).getImageUri(), options, new SimpleImageLoadingListener() {
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                 super.onLoadingComplete(imageUri, view, loadedImage);
-                holder.imageView.setImageBitmap(BitmapUtil.createBitmapZoop(loadedImage,120,70));
+                holder.imageView.setImageBitmap(BitmapUtil.createBitmapZoop(loadedImage, 120, 70));
                 FadeInBitmapDisplayer.animate(imageView, 500);
             }
         });

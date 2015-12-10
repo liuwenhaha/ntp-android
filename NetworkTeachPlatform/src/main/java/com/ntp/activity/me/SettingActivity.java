@@ -92,7 +92,7 @@ public class SettingActivity extends Activity implements View.OnClickListener {
                 startActivityForResult(intent,REQUEST);
                 break;
             case R.id.about://关于
-                Intent intent1 = new Intent(this, AboutActivity.class);
+                Intent intent1 = new Intent(this, AboutActivity_.class);
                 startActivity(intent1);
                 break;
             case R.id.exit://退出

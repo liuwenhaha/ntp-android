@@ -46,28 +46,18 @@ import java.util.List;
  */
 public class CourseListFragment extends Fragment implements AdapterView.OnItemClickListener {
 
-    private ImageLoader imageLoader;//Universal Image Loader加载图片类
-    private PullToRefreshListView pullToRefreshView;//Android-PullToRefresh中的ListView控件，具有下拉刷新、上拉刷新特征
+    private PullToRefreshListView pullToRefreshView;
 
-    private static CourseListFragment courseListFragment;
-    private static CourseAdapter adapter;//课程适配器
+    private CourseAdapter adapter;//课程适配器
     private CourseDao courseDao;
     private CourseTypeDao courseTypeDao;
     private LinearLayout load;
+    private List<Course> courses = new ArrayList<Course>();
 
     private static final int RESULT = 1;//发送消息成功标识
     private static final String IMAGE_URI = "file:///mnt/sdcard/ntp/";//缓存图片文件夹
     public static final String TAG = "down_json";//下拉日志标识
     public static final String TAG1 = "up_json";//下拉日志标识
-
-
-    //创建对象
-    public static CourseListFragment getInstance() {
-        if (courseListFragment == null) {
-            courseListFragment = new CourseListFragment();
-        }
-        return courseListFragment;
-    }
 
     //加载课程成功后更新界面
     Handler handler = new Handler() {
@@ -75,7 +65,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
         public void handleMessage(Message msg) {
             if (msg.what == RESULT) {
                 ArrayList<Course> list = (ArrayList<Course>) msg.getData().getSerializable("list");
-                adapter = new CourseAdapter(list, getActivity(), imageLoader);
+                adapter = new CourseAdapter(list, getActivity());
                 adapter.notifyDataSetChanged();
                 //需要此句，不然无法显示
                 pullToRefreshView.setAdapter(adapter);
@@ -125,7 +115,6 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
         });
         courseDao = new CourseDao(getActivity().getApplicationContext());
         courseTypeDao = new CourseTypeDao(getActivity().getApplicationContext());
-        imageLoader = ImageLoader.getInstance();
         List<Course> courseList = courseDao.getAllCourse();
         if (courseList.size() > 0) {//如果本地有缓存,隐藏"提示正在加载课程中"视图
             loadCourseCache(courseList);
@@ -159,9 +148,8 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 course.setImageUri("");
             }
         }
-        MyApplication myApplication = (MyApplication) getActivity().getApplication();
-        myApplication.setList(courseList);
-        adapter = new CourseAdapter(courseList, getActivity(), imageLoader);
+        courses = courseList;
+        adapter = new CourseAdapter(courseList, getActivity());
         pullToRefreshView.setAdapter(adapter);
     }
 
@@ -197,7 +185,6 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 int currentPage = jb.getInt("currentPage");
                 PreferenceDao.saveCurrentPage(getActivity().getApplicationContext(), currentPage);//保存当前页数
                 JSONArray ja = jb.getJSONArray("list");
-                MyApplication myApplication = (MyApplication) getActivity().getApplication();
                 for (int i = 0; i < ja.length(); i++) {
                     JSONObject j = ja.getJSONObject(i);
                     Object courseTypeJS = j.get("coursetype");//先视为对象，防止空指针
@@ -229,7 +216,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 }
                 bundle.putSerializable("list", (java.io.Serializable) list);
                 msg.setData(bundle);
-                myApplication.setList(list);
+                courses = list;
             } catch (MalformedURLException e) {
                 Log.i(TAG, e.toString());
                 e.printStackTrace();
@@ -282,7 +269,6 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                         courseDao.save(course);//缓存到数据库
                         Log.i(TAG1, course.toString());
                     }
-                    myApplication.setList(list);
                 }
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -304,7 +290,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                         course.setImageUri(PathConstant.PATH_IMAGE + course.getImageUri());
                     }
                 }
-                adapter = new CourseAdapter(list, getActivity(), imageLoader);
+                adapter = new CourseAdapter(list, getActivity());
                 pullToRefreshView.setAdapter(adapter);
                 Toast.makeText(getActivity().getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
             } else {
@@ -360,8 +346,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                         int page = jb.getInt("currentPage");
                         PreferenceDao.saveCurrentPage(getActivity().getApplicationContext(), page);//保存当前页数
                     }
-                    MyApplication myApplication = (MyApplication) getActivity().getApplication();
-                    list = myApplication.getList();
+                    list = courses;
                     Log.d(TAG1 + " list size=", list.size() + "");
                     for (int i = 0; i < ja.length(); i++) {
                         JSONObject j = ja.getJSONObject(i);
@@ -383,7 +368,6 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                         list.add(course);
                         Log.i(TAG, course.toString());
                     }
-                    myApplication.setList(list);
                 }
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -405,7 +389,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                         course.setImageUri(PathConstant.PATH_IMAGE + course.getImageUri());
                     }
                 }
-                adapter = new CourseAdapter(list, getActivity(), imageLoader);
+                adapter = new CourseAdapter(list, getActivity());
                 adapter.notifyDataSetChanged();
                 Toast.makeText(getActivity().getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
             } else if (jb == null) {

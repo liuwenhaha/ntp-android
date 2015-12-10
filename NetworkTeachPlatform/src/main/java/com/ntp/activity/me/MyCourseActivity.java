@@ -114,7 +114,7 @@ public class MyCourseActivity extends Activity implements AdapterView.OnItemClic
                                 course.setImageUri(PathConstant.PATH_IMAGE+course.getImageUri());
                             }
                         }
-                        courseAdapter = new CourseAdapter(list, getApplicationContext(),imageLoader);
+                        courseAdapter = new CourseAdapter(list, getApplicationContext());
                         load.setVisibility(View.GONE);
                         pullToRefreshView.setAdapter(courseAdapter);
                     } else {//服务器没有开启
@@ -177,7 +177,7 @@ public class MyCourseActivity extends Activity implements AdapterView.OnItemClic
             if (list.size()==0){
                 Toast.makeText(getApplicationContext(), "您还没有选学课程", Toast.LENGTH_SHORT).show();
             }else {
-                courseAdapter = new CourseAdapter(list, getApplicationContext(),imageLoader);
+                courseAdapter = new CourseAdapter(list, getApplicationContext());
                 load.setVisibility(View.GONE);
                 pullToRefreshView.setAdapter(courseAdapter);
                 Toast.makeText(getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();

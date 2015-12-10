@@ -32,7 +32,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name=".MainActivity_"
             android:label="@string/app_name"
             android:theme="@style/Anim_style2" >
             <intent-filter>
@@ -57,12 +57,10 @@
             android:theme="@style/AnimLogin" />
         <activity
             android:name=".me.SettingActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Anim_style2" />
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".me.AboutActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Anim_style2" />
+            android:name=".me.AboutActivity_"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".course.CourseDetailActivity"
             android:screenOrientation="portrait" />
@@ -79,8 +77,7 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".me.RegisterActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Anim_style2" />
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.ntp.view.MyProgress"
             android:screenOrientation="portrait"
@@ -95,12 +92,10 @@
             android:theme="@style/MyDialogStyle" />
         <activity
             android:name=".me.MeInformationActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Anim_style2" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".me.ModifyUserInfoActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Anim_style2"
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
             android:name="com.ntp.view.MySelectDialog"
@@ -108,28 +103,22 @@
             android:theme="@style/MyDialogStyle" />
         <activity
             android:name=".me.HeadBrowseActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Anim_style2" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".me.MyDownloadActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Anim_style2" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".me.MyCourseActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Anim_style2" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".notice.HomeworkNoticeActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Anim_style2" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".course.CourseForumReplyActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Anim_style2" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".notice.HomeworkDetailActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Anim_style2" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".course.CourseForumCommentActivity"
             android:screenOrientation="portrait"
@@ -137,8 +126,7 @@
             android:theme="@style/Anim_style2" />
         <activity
             android:name=".notice.CommentNoticeActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Anim_style2" />
+            android:screenOrientation="portrait" />
         <!-- 下载服务-->
         <service
             android:name="com.ntp.service.DownloadService"

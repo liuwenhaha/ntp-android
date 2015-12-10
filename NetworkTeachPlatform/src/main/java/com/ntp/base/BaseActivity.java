@@ -11,6 +11,11 @@ import android.view.WindowManager;
  */
 public class BaseActivity extends FragmentActivity {
 
+    /**
+     * 使用子类包名+类名打印日志,如果只用类名getClass().getSimpleName()
+     */
+    protected String TAG = getClass().getName();
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initImmersionStatus();

@@ -12,6 +12,12 @@ import java.lang.reflect.Method;
  */
 public class AppUtil {
 
+    /**
+     * MIUI6以上设置状态栏字体为灰色
+     *
+     * @param darkMode
+     * @param activity
+     */
     public static void setStatusBarDarkMode(boolean darkMode, Activity activity) {
         Class<? extends Window> clazz = activity.getWindow().getClass();
         try {

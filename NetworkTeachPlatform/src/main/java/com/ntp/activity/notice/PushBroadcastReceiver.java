@@ -52,12 +52,7 @@ public class PushBroadcastReceiver extends BroadcastReceiver {
                     String data = new String(payload);
                     Log.d("GeTuiSdk", "Got Payload:" + data);
                     PreferenceDao.setNoticeRed(context, true);
-
-                    if (MainActivity.noticeRed!=null){
-                        MainActivity.noticeRed.setVisibility(View.VISIBLE);
-                    }else {
-                        Log.d(TAG,"MainActivity.noticeRed is null");
-                    }
+                    context.sendBroadcast(new Intent(MainActivity.SHOW_NOTICE_ACTION));
                     if (data.equals(HOMEWORK)){//作业消息
                        PreferenceDao.setHomeworkRed(context,true);
                         if (NoticeFragment.homeworkRed!=null){

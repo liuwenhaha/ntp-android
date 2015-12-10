@@ -12,20 +12,6 @@
         android:layout_height="44dp"
         android:background="@color/nav_bg">
 
-        <!--<LinearLayout
-            android:id="@+id/navigateMore"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:clickable="true"
-            android:background="@drawable/layout_selector_bg"
-            android:layout_alignParentRight="true">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/main_activity_navigate_more" />
-        </LinearLayout>-->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">

@@ -18,18 +18,8 @@ import com.ntp.dao.PreferenceDao;
  */
 public class NoticeFragment extends Fragment implements View.OnClickListener{
 
-
-    private static NoticeFragment noticeFragment;
     private LinearLayout homeworkNotice,replyNotice;//作业消息、回帖消息
     public static ImageView homeworkRed,commentRed;
-
-    //创建对象
-    public static NoticeFragment getInstance() {
-        if (noticeFragment == null) {
-            noticeFragment = new NoticeFragment();
-        }
-        return noticeFragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

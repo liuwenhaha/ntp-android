@@ -23,17 +23,6 @@ import java.util.List;
  */
 public class MyApplication extends Application {
 
-    private List<Course> list = new ArrayList<Course>();
-
-    public List<Course> getList() {
-        return list;
-    }
-
-    public void setList(List<Course> list) {
-        this.list = list;
-    }
-
-
     public void onCreate() {
         super.onCreate();
         initImageLoader(getApplicationContext());

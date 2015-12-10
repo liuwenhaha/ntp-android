@@ -29,7 +29,6 @@ import org.apache.http.Header;
  */
 public class MeFragment extends Fragment implements View.OnClickListener {
 
-    private static MeFragment meFragment;
     private TextView myCourse, myDownload, setting;//我的课程、我的下载、设置
     private CircleImageView login;
     private TextView username;
@@ -37,14 +36,6 @@ public class MeFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "MeFragment";
     private UserDao userDao;
     private AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
-
-     //创建对象
-    public static MeFragment getInstance() {
-        if (meFragment == null) {
-            meFragment = new MeFragment();
-        }
-        return meFragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
