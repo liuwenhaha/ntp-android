@@ -12,10 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ntp.activity.R;
-import com.ntp.activity.PathConstant;
+import com.ntp.util.PathConstant;
 import com.ntp.dao.PreferenceDao;
 import com.ntp.util.MD5Util;
-import com.ntp.widget.MyProgress;
+import com.ntp.view.MyProgress;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;

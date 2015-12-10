@@ -14,9 +14,8 @@ import android.widget.Toast;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ntp.activity.R;
-import com.ntp.activity.PathConstant;
+import com.ntp.util.PathConstant;
 import com.ntp.dao.PreferenceDao;
-import com.ntp.model.HomeworkNotice;
 import com.ntp.util.HttpUtil;
 import com.ntp.util.NetworkStateUtil;
 

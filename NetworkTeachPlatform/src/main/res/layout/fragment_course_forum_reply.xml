@@ -4,7 +4,7 @@
     android:background="@color/layout_bg_pressed"
     android:orientation="vertical">
 
-    <com.ntp.widget.MyTitleView xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    <com.ntp.view.MyTitleView xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/myTitleView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

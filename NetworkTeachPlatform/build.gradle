@@ -1,13 +1,15 @@
 apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
+def AAVersion = '3.3.2'
 
 android {
-    compileSdkVersion 15
+    compileSdkVersion 21
     buildToolsVersion '21.1.2'
 
     defaultConfig {
         applicationId "com.ntp.activity"
         minSdkVersion 15
-        targetSdkVersion 19
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }
@@ -17,16 +19,33 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main() {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':library')
-    compile files('libs/android-async-http-1.4.5.jar')
+    compile project(':pulltorefreshlibrary')
     compile 'com.android.support:support-v4:21.0.3'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
-    compile project(':vitamio')
-    compile project(':circleimageview')
-    compile files('libs/GetuiExt_2.0.2.jar')
-    compile files('libs/GetuiSdk-2.2.5.2.jar')
+    compile project(':vitamiolibrary')
+    apt "org.androidannotations:androidannotations:$AAVersion"
+    compile "org.androidannotations:androidannotations-api:$AAVersion"
+}
+
+apt {
+    arguments {
+        androidManifestFile variant.outputs[0]?.processResources?.manifestFile
+        // if you have multiple outputs (when using splits), you may want to have other index than 0
+
+        // you should set your package name here if you are using different application IDs
+        // resourcePackageName "your.package.name"
+
+        // You can set optional annotation processing options here, like these commented options:
+        // logLevel 'INFO'
+        // logFile '/var/log/aa.log'
+    }
 }

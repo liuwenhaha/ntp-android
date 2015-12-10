@@ -12,18 +12,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ntp.activity.R;
-import com.ntp.activity.PathConstant;
+import com.ntp.util.PathConstant;
 import com.ntp.dao.PreferenceDao;
 import com.ntp.dao.UserDao;
 import com.ntp.model.User;
 import com.ntp.util.BitmapUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.ntp.view.CircleImageView;
 
 import org.apache.http.Header;
-
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 
 /**

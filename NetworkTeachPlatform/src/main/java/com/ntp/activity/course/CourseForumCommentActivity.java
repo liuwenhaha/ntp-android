@@ -11,7 +11,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.ntp.activity.R;
-import com.ntp.activity.PathConstant;
+import com.ntp.util.PathConstant;
 
 import org.apache.http.Header;
 import org.json.JSONException;

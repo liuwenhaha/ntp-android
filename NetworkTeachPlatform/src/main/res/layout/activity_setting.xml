@@ -6,7 +6,7 @@
     android:orientation="vertical"
     tools:context="com.ntp.activity.me.SettingActivity">
 
-    <com.ntp.widget.MyTitleView
+    <com.ntp.view.MyTitleView
         xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/myTitleView"
         ptr:title="@string/setting"

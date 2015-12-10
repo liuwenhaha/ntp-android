@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/layout_bg_pressed">
 
-    <com.ntp.widget.MyTitleView xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    <com.ntp.view.MyTitleView xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         ptr:title="@string/myCourse"

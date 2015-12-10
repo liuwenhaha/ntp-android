@@ -14,11 +14,11 @@ import android.widget.TextView;
 
 import com.ntp.activity.R;
 import com.ntp.adapter.CoursevideoAdapter;
-import com.ntp.activity.PathConstant;
+import com.ntp.util.PathConstant;
 import com.ntp.dao.SearchHistoryDao;
 import com.ntp.model.Course;
 import com.ntp.model.Coursevideo;
-import com.ntp.widget.MyProgress;
+import com.ntp.view.MyProgress;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;

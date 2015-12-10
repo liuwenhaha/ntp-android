@@ -11,14 +11,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ntp.activity.R;
-import com.ntp.activity.PathConstant;
-import com.ntp.dao.PreferenceDao;
+import com.ntp.util.PathConstant;
 import com.ntp.dao.UserDao;
 import com.ntp.model.User;
 import com.ntp.util.BitmapUtil;
 import com.ntp.util.MD5Util;
 import com.ntp.util.NetworkStateUtil;
-import com.ntp.widget.MySelectDialog;
+import com.ntp.view.CircleImageView;
+import com.ntp.view.MySelectDialog;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -26,8 +26,6 @@ import com.loopj.android.http.RequestParams;
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * 个人信息

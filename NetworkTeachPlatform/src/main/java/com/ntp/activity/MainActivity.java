@@ -1,6 +1,10 @@
 package com.ntp.activity;
 
+import android.app.Application;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -16,8 +20,9 @@ import com.ntp.activity.course.SearchCourseActivity;
 import com.ntp.activity.me.MeFragment;
 import com.ntp.activity.notice.NoticeFragment;
 import com.ntp.adapter.FragAdapter;
+import com.ntp.base.BaseActivity;
 import com.ntp.dao.PreferenceDao;
-import com.ntp.util.ExitAppUtil;
+import com.ntp.util.AppUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +30,7 @@ import java.util.List;
 /**
  * 主程序
  */
-public class MainActivity extends FragmentActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private static final int ACTION_DESTORY = 1;
     private static final String TAG = "mActivity";
@@ -44,13 +49,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private static final String COURSE = "课程";
     private static final String NOTICE = "消息";
     private static final String ME = "我";
+    /**
+     * 应用退出
+     */
+    public static final String EXIT_ACTION = "com.ntp.exit.action";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        PushManager.getInstance().initialize(getApplicationContext());//初始化个推SDK
-        ExitAppUtil.getInstance().addActivity(this);
+        AppUtil.setStatusBarDarkMode(true, this);
         initView();
     }
 
@@ -96,7 +104,20 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }else {
             noticeRed.setVisibility(View.INVISIBLE);
         }
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(EXIT_ACTION);
+        registerReceiver(mBroadcastReceiver, filter);
     }
+
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(EXIT_ACTION)) {
+                finish();
+            }
+        }
+    };
+
 
     @Override
     public void onClick(View v) {
@@ -181,4 +202,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mBroadcastReceiver);
+    }
 }

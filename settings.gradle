@@ -1,2 +1,2 @@
-include ':NetworkTeachPlatform', ':', ':vitamio', ':circleimageview'
-include ':library'
+include ':NetworkTeachPlatform', ':vitamiolibrary'
+include ':pulltorefreshlibrary'

@@ -23,7 +23,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.ntp.activity.R;
 import com.ntp.adapter.CoursewareAdapter;
-import com.ntp.activity.PathConstant;
+import com.ntp.util.PathConstant;
 import com.ntp.dao.DownloadHistoryDao;
 import com.ntp.dao.PreferenceDao;
 import com.ntp.model.Courseware;

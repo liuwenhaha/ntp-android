@@ -13,10 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ntp.activity.R;
-import com.ntp.activity.PathConstant;
+import com.ntp.util.PathConstant;
 import com.ntp.dao.DownloadHistoryDao;
 import com.ntp.util.OpenFileUtil;
-import com.ntp.widget.MySelectDialog;
+import com.ntp.view.MySelectDialog;
 
 import java.io.File;
 import java.util.ArrayList;

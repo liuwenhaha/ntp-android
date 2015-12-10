@@ -5,7 +5,7 @@
     android:background="@color/layout_bg_pressed"
     android:orientation="vertical">
 
-    <com.ntp.widget.MyTitleView
+    <com.ntp.view.MyTitleView
         android:id="@+id/myTitleView"
         xmlns:ptr="http://schemas.android.com/apk/res-auto"
         ptr:title="@string/login"

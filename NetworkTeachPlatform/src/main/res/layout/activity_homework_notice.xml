@@ -6,7 +6,7 @@
     android:orientation="vertical"
     tools:context="com.ntp.activity.homeworkFragment">
 
-    <com.ntp.widget.MyTitleView
+    <com.ntp.view.MyTitleView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         xmlns:ptr="http://schemas.android.com/apk/res-auto"

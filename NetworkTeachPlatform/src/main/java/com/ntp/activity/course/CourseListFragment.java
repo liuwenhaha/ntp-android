@@ -17,10 +17,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ntp.activity.GlobalVariable;
+import com.ntp.base.MyApplication;
 import com.ntp.activity.R;
 import com.ntp.adapter.CourseAdapter;
-import com.ntp.activity.PathConstant;
+import com.ntp.util.PathConstant;
 import com.ntp.dao.CourseDao;
 import com.ntp.dao.CourseTypeDao;
 import com.ntp.dao.PreferenceDao;
@@ -159,8 +159,8 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 course.setImageUri("");
             }
         }
-        GlobalVariable globalVariable = (GlobalVariable) getActivity().getApplication();
-        globalVariable.setList(courseList);
+        MyApplication myApplication = (MyApplication) getActivity().getApplication();
+        myApplication.setList(courseList);
         adapter = new CourseAdapter(courseList, getActivity(), imageLoader);
         pullToRefreshView.setAdapter(adapter);
     }
@@ -197,7 +197,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 int currentPage = jb.getInt("currentPage");
                 PreferenceDao.saveCurrentPage(getActivity().getApplicationContext(), currentPage);//保存当前页数
                 JSONArray ja = jb.getJSONArray("list");
-                GlobalVariable globalVariable = (GlobalVariable) getActivity().getApplication();
+                MyApplication myApplication = (MyApplication) getActivity().getApplication();
                 for (int i = 0; i < ja.length(); i++) {
                     JSONObject j = ja.getJSONObject(i);
                     Object courseTypeJS = j.get("coursetype");//先视为对象，防止空指针
@@ -229,7 +229,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 }
                 bundle.putSerializable("list", (java.io.Serializable) list);
                 msg.setData(bundle);
-                globalVariable.setList(list);
+                myApplication.setList(list);
             } catch (MalformedURLException e) {
                 Log.i(TAG, e.toString());
                 e.printStackTrace();
@@ -259,7 +259,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                     int currentPage = jb.getInt("currentPage");
                     PreferenceDao.saveCurrentPage(getActivity().getApplicationContext(), currentPage);//保存当前页数
                     JSONArray ja = jb.getJSONArray("list");
-                    GlobalVariable globalVariable = (GlobalVariable) getActivity().getApplication();
+                    MyApplication myApplication = (MyApplication) getActivity().getApplication();
                     courseDao.delete();//先清空缓存
                     for (int i = 0; i < ja.length(); i++) {
                         JSONObject j = ja.getJSONObject(i);
@@ -282,7 +282,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                         courseDao.save(course);//缓存到数据库
                         Log.i(TAG1, course.toString());
                     }
-                    globalVariable.setList(list);
+                    myApplication.setList(list);
                 }
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -360,8 +360,8 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                         int page = jb.getInt("currentPage");
                         PreferenceDao.saveCurrentPage(getActivity().getApplicationContext(), page);//保存当前页数
                     }
-                    GlobalVariable globalVariable = (GlobalVariable) getActivity().getApplication();
-                    list = globalVariable.getList();
+                    MyApplication myApplication = (MyApplication) getActivity().getApplication();
+                    list = myApplication.getList();
                     Log.d(TAG1 + " list size=", list.size() + "");
                     for (int i = 0; i < ja.length(); i++) {
                         JSONObject j = ja.getJSONObject(i);
@@ -383,7 +383,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                         list.add(course);
                         Log.i(TAG, course.toString());
                     }
-                    globalVariable.setList(list);
+                    myApplication.setList(list);
                 }
             } catch (MalformedURLException e) {
                 e.printStackTrace();

@@ -21,7 +21,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.ntp.activity.R;
 import com.ntp.activity.course.CourseDetailActivity;
 import com.ntp.adapter.CourseAdapter;
-import com.ntp.activity.PathConstant;
+import com.ntp.util.PathConstant;
 import com.ntp.dao.PreferenceDao;
 import com.ntp.model.Course;
 import com.ntp.util.HttpUtil;

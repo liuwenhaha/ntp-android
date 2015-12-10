@@ -15,11 +15,11 @@ import android.widget.Toast;
 
 import com.ntp.activity.R;
 import com.ntp.adapter.CourseAdapter;
-import com.ntp.activity.PathConstant;
+import com.ntp.util.PathConstant;
 import com.ntp.dao.SearchHistoryDao;
 import com.ntp.model.Course;
 import com.ntp.util.NetworkStateUtil;
-import com.ntp.widget.MyProgress;
+import com.ntp.view.MyProgress;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;

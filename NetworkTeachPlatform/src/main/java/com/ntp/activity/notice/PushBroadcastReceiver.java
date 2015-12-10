@@ -9,12 +9,11 @@ import android.view.View;
 
 import com.igexin.sdk.PushConsts;
 import com.igexin.sdk.PushManager;
-import com.igexin.sdk.Tag;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.ntp.activity.MainActivity;
-import com.ntp.activity.PathConstant;
+import com.ntp.util.PathConstant;
 import com.ntp.dao.PreferenceDao;
 
 import org.apache.http.Header;

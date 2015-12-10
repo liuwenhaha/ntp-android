@@ -10,7 +10,7 @@
         android:paddingLeft="12dp"
         android:gravity="center_vertical">
 
-        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        <com.ntp.view.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/login"
             android:layout_width="69dp"
             android:layout_height="69dp"

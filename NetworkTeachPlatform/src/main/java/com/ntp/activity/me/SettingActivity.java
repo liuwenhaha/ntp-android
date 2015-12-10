@@ -9,14 +9,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ntp.activity.MainActivity;
 import com.ntp.activity.R;
 import com.ntp.dao.CourseDao;
 import com.ntp.dao.CourseTypeDao;
 import com.ntp.dao.PreferenceDao;
 import com.ntp.dao.SearchHistoryDao;
-import com.ntp.util.ExitAppUtil;
-import com.ntp.widget.MyConfirmDialog;
-import com.ntp.widget.MyExitDialog;
+import com.ntp.view.MyConfirmDialog;
+import com.ntp.view.MyExitDialog;
 
 import java.io.File;
 
@@ -145,7 +145,8 @@ public class SettingActivity extends Activity implements View.OnClickListener {
                 PreferenceDao.saveLoadName(getApplicationContext(), "");//清除登录信息
                 finish();
             } else if (resultCode == MyExitDialog.RESULT_EXIT_APP) {//退出应用
-                ExitAppUtil.getInstance().exit();
+                sendBroadcast(new Intent(MainActivity.EXIT_ACTION));
+                finish();
             }
         }
     }

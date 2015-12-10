@@ -9,9 +9,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.ntp.activity.R;
-import com.ntp.activity.me.MeInformationActivity;
 import com.ntp.model.User;
-import com.ntp.widget.MyTitleView;
+import com.ntp.view.MyTitleView;
 
 /**
  * 修改用户信息：邮箱、密码
