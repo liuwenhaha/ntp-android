@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ntp.model.Coursevideo;
-import com.ntp.activity.R;
+import com.ntp.ui.R;
 
 import java.util.List;
 

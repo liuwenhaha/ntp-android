@@ -9,8 +9,8 @@ import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.ntp.activity.R;
-import com.ntp.activity.course.CoursewareFragment;
+import com.ntp.ui.R;
+import com.ntp.ui.course.CoursewareFragment;
 import com.ntp.util.SDCardUtil;
 
 import java.io.File;

@@ -3,7 +3,7 @@ package com.ntp.view;
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.ntp.activity.R;
+import com.ntp.ui.R;
 
 /**
  * 自定义悬浮进度对话框

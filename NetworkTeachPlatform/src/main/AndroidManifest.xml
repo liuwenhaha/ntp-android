@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ntp.activity">
+    package="com.ntp.ui">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
@@ -32,7 +32,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity_"
+            android:name="com.ntp.ui.MainActivity_"
             android:label="@string/app_name"
             android:theme="@style/Anim_style2" >
             <intent-filter>
@@ -42,27 +42,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".course.SearchCourseActivity"
+            android:name="com.ntp.ui.course.SearchCourseActivity"
             android:configChanges="orientation|keyboardHidden|locale"
             android:screenOrientation="portrait"
             android:theme="@style/MyEditStyle"
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
-            android:name=".course.CoursetypeSelectActivity"
+            android:name="com.ntp.ui.course.CoursetypeSelectActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MyDialogStyleTop" />
         <activity
-            android:name=".me.LoginActivity"
+            android:name="com.ntp.ui.me.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AnimLogin" />
         <activity
-            android:name=".me.SettingActivity"
+            android:name="com.ntp.ui.me.SettingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.AboutActivity_"
+            android:name="com.ntp.ui.me.AboutActivity_"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".course.CourseDetailActivity"
+            android:name="com.ntp.ui.course.CourseDetailActivity"
             android:theme="@style/translucent"
             android:screenOrientation="portrait" />
         <activity
@@ -70,21 +70,21 @@
             android:screenOrientation="portrait"
             android:theme="@style/MyDialogStyle" />
         <activity
-            android:name=".course.VideoPlayActivity"
+            android:name="com.ntp.ui.course.VideoPlayActivity"
             android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden"
             android:launchMode="singleTop"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".me.RegisterActivity"
+            android:name="com.ntp.ui.me.RegisterActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.ntp.view.MyProgress"
             android:screenOrientation="portrait"
             android:theme="@style/MyProgressStyle" />
         <activity
-            android:name=".course.SearchHistoryActivity"
+            android:name="com.ntp.ui.course.SearchHistoryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MyDialogStyleTop" />
         <activity
@@ -92,10 +92,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/MyDialogStyle" />
         <activity
-            android:name=".me.MeInformationActivity"
+            android:name="com.ntp.ui.me.MeInformationActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.ModifyUserInfoActivity"
+            android:name="com.ntp.ui.me.ModifyUserInfoActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
@@ -103,30 +103,30 @@
             android:screenOrientation="portrait"
             android:theme="@style/MyDialogStyle" />
         <activity
-            android:name=".me.HeadBrowseActivity"
+            android:name="com.ntp.ui.me.HeadBrowseActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.MyDownloadActivity"
+            android:name="com.ntp.ui.me.MyDownloadActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".me.MyCourseActivity"
+            android:name="com.ntp.ui.me.MyCourseActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".notice.HomeworkNoticeActivity"
+            android:name="com.ntp.ui.notice.HomeworkNoticeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".course.CourseForumReplyActivity"
+            android:name="com.ntp.ui.course.CourseForumReplyActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".notice.HomeworkDetailActivity"
+            android:name="com.ntp.ui.notice.HomeworkDetailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".course.CourseForumCommentActivity"
+            android:name="com.ntp.ui.course.CourseForumCommentActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustPan"
             android:theme="@style/Anim_style2" />
         <activity
-            android:name=".notice.CommentNoticeActivity"
+            android:name="com.ntp.ui.notice.CommentNoticeActivity"
             android:screenOrientation="portrait" />
         <!-- 下载服务-->
         <service
@@ -150,7 +150,7 @@
             android:value=""/>
         <!-- 配置第三方Receiver -->
         <receiver
-            android:name="com.ntp.activity.notice.PushBroadcastReceiver"
+            android:name="com.ntp.ui.notice.PushBroadcastReceiver"
             android:exported="false" >
             <intent-filter>
                 <!-- 替换为action android:name="com.igexin.sdk.action.第三方应用APPID" -->
@@ -201,7 +201,7 @@
         <provider
             android:process=":pushservice"
             android:name="com.igexin.download.DownloadProvider"
-            android:authorities="downloads.com.ntp.activity"	/>
+            android:authorities="downloads.com.ntp.ui"	/>
         <!-- android:authorities="downloads.第三方包名" -->
 
         <activity android:name="com.igexin.getuiext.activity.GetuiExtActivity"

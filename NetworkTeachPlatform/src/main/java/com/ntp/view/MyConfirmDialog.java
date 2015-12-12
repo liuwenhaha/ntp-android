@@ -7,7 +7,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
-import com.ntp.activity.R;
+import com.ntp.ui.R;
 
 /**
  * 确定取消对话框，通过继承Activity实现，需要设置此MyDialog为透明

@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ntp.activity.R;
+import com.ntp.ui.R;
 import com.ntp.model.HomeworkNotice;
 
 import java.util.List;

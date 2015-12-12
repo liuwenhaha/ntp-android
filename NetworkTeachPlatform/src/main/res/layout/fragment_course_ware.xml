@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/layout_bg_normal"
     android:orientation="vertical"
-    tools:context="com.ntp.activity.course.CoursewareFragment">
+    tools:context="com.ntp.ui.course.CoursewareFragment">
 
     <LinearLayout
         android:id="@+id/load"

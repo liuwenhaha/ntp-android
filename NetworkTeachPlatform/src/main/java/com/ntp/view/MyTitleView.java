@@ -10,7 +10,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ntp.activity.R;
+import com.ntp.ui.R;
 
 /**
  * 标题栏控件：返回图片、标题

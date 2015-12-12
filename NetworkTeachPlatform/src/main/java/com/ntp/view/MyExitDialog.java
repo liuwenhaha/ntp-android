@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ntp.activity.R;
+import com.ntp.ui.R;
 import com.ntp.dao.PreferenceDao;
 
 /**

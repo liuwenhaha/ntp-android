@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/layout_bg_normal"
     android:orientation="vertical"
-    tools:context="com.ntp.activity.course.CourseForumFragment">
+    tools:context="com.ntp.ui.course.CourseForumFragment">
 
     <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/pull_to_refresh_listview"
