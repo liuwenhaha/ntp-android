@@ -1,4 +1,4 @@
-ntp-android 网络教学平台Android客户端
+ntp-android ntp android客户端
 ===========
 那时做的毕业设计，现在看来有很多地方可以优化，最近正好没事，准备重构下代码。
 <br> 
