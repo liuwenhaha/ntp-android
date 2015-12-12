@@ -63,6 +63,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".course.CourseDetailActivity"
+            android:theme="@style/translucent"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.ntp.view.MyConfirmDialog"

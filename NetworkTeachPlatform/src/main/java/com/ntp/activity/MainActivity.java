@@ -40,29 +40,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     //底部功能导航图片和文字课程,消息（作业），我
     @ViewById
     ImageView allCourse;
-
     @ViewById
     ImageView homework;
-
     @ViewById
     ImageView me;
-
     @ViewById
     TextView courseTxt;
-
     @ViewById
     TextView homeworkTxt;
-
     @ViewById
     TextView meTxt;
 
     //消息红点
     @ViewById
     ImageView noticeRed;
-
     @ViewById
     TextView tip;
-
     @ViewById
     LinearLayout search;
 

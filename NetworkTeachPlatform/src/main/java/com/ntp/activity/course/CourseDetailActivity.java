@@ -11,15 +11,18 @@ import android.widget.TextView;
 
 import com.ntp.activity.R;
 import com.ntp.adapter.FragAdapter;
+import com.ntp.base.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
 
 /**
  * 课程详细:简介、课件、视频、讨论
  */
-public class CourseDetailActivity extends FragmentActivity implements View.OnClickListener {
+public class CourseDetailActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageView back;//返回
     private TextView courseName;
@@ -32,7 +35,7 @@ public class CourseDetailActivity extends FragmentActivity implements View.OnCli
     private ImageView mOverviewIndicator, mCourseWareIndicator, mCourseVideoIndicator, mCourseForumIndicator;
     private String code;//课程代码
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_detail);
         initView();

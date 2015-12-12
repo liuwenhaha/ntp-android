@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.WindowManager;
 
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
+
 /**
  * 基类Activity
  * Created by lishuangxiang on 2015/12/10.
  */
-public class BaseActivity extends FragmentActivity {
+public class BaseActivity extends SwipeBackActivity {
 
     /**
      * 使用子类包名+类名打印日志,如果只用类名getClass().getSimpleName()

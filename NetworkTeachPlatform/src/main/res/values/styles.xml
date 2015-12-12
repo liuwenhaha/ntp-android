@@ -103,4 +103,8 @@
         <item name="android:background">@drawable/edit_text</item>
     </style>
 
+    <style name="translucent" parent="AppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
 </resources>
