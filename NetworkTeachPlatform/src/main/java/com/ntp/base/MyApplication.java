@@ -12,6 +12,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
+import org.xutils.x;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,8 @@ public class MyApplication extends Application {
         super.onCreate();
         initImageLoader(getApplicationContext());
         PushManager.getInstance().initialize(getApplicationContext());//初始化个推SDK
+        x.Ext.init(this);
+        x.Ext.setDebug(true); // 是否输出debug日志
     }
 
     /**

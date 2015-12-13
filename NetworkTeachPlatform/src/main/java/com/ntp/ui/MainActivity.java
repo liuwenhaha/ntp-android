@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -20,10 +21,10 @@ import com.ntp.base.BaseActivity;
 import com.ntp.dao.PreferenceDao;
 import com.ntp.util.AppUtil;
 
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.ViewById;
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.Event;
+import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,33 +32,40 @@ import java.util.List;
 /**
  * 主程序
  */
-@EActivity(R.layout.activity_main)
-public class MainActivity extends BaseActivity implements View.OnClickListener {
+@ContentView(R.layout.activity_main)
+public class MainActivity extends BaseActivity{
 
-    @ViewById
-    ViewPager viewPager;
+    @ViewInject(R.id.viewPager)
+    private ViewPager mViewPager;
 
     //底部功能导航图片和文字课程,消息（作业），我
-    @ViewById
-    ImageView allCourse;
-    @ViewById
-    ImageView homework;
-    @ViewById
-    ImageView me;
-    @ViewById
-    TextView courseTxt;
-    @ViewById
-    TextView homeworkTxt;
-    @ViewById
-    TextView meTxt;
+    @ViewInject(R.id.allCourse)
+    private ImageView mAllCourse;
+
+    @ViewInject(R.id.homework)
+    private ImageView mHomework;
+
+    @ViewInject(R.id.me)
+    private ImageView mMe;
+
+    @ViewInject(R.id.courseTxt)
+    private TextView mCourseTxt;
+
+    @ViewInject(R.id.homeworkTxt)
+    private TextView mHomeworkTxt;
+
+    @ViewInject(R.id.meTxt)
+    private TextView mMeTxt;
 
     //消息红点
-    @ViewById
-    ImageView noticeRed;
-    @ViewById
-    TextView tip;
-    @ViewById
-    LinearLayout search;
+    @ViewInject(R.id.noticeRed)
+    private ImageView mNoticeRed;
+
+    @ViewInject(R.id.tip)
+    private TextView mTip;
+
+    @ViewInject(R.id.search)
+    private LinearLayout search;
 
     private FragAdapter fragAdapter;
     //课程、消息、我三个fragment
@@ -76,33 +84,39 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      */
     public static final String SHOW_NOTICE_ACTION = "com.ntp.notice.action";
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        x.view().inject(this);
+        initView();
+    }
+
     /**
      * 设置底部导航
-     * 以下代码不能在onCreate写，因为View注入在onCreate之后
      */
-    @AfterViews
-    void afterInitView() {
+    void initView() {
         AppUtil.setStatusBarDarkMode(true, this);
         if (PreferenceDao.isNoticeRed(getApplicationContext())){
-            noticeRed.setVisibility(View.VISIBLE);
+            mNoticeRed.setVisibility(View.VISIBLE);
         }
         fragments = new ArrayList<Fragment>();
         fragments.add(new CourseListFragment());
         fragments.add(new NoticeFragment());
         fragments.add(new MeFragment());
         fragAdapter = new FragAdapter(getSupportFragmentManager(), fragments);
-        viewPager.setAdapter(fragAdapter);
-        viewPager.setCurrentItem(0);//设置默认显示CourseListFragment界面
-        viewPager.setOnPageChangeListener(new MyViewPagerChangeListener());
+        mViewPager.setAdapter(fragAdapter);
+        mViewPager.setCurrentItem(0);//设置默认显示CourseListFragment界面
+        mViewPager.setOnPageChangeListener(new MyViewPagerChangeListener());
+        setSwipeBackEnable(false);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         if (PreferenceDao.isNoticeRed(getApplicationContext())){
-            noticeRed.setVisibility(View.VISIBLE);
+            mNoticeRed.setVisibility(View.VISIBLE);
         }else {
-            noticeRed.setVisibility(View.INVISIBLE);
+            mNoticeRed.setVisibility(View.INVISIBLE);
         }
         IntentFilter filter = new IntentFilter();
         filter.addAction(EXIT_ACTION);
@@ -117,23 +131,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             if (intent.getAction().equals(EXIT_ACTION)) {
                 finish();
             } else if (intent.getAction().equals(SHOW_NOTICE_ACTION)) {
-                noticeRed.setVisibility(View.VISIBLE);
+                mNoticeRed.setVisibility(View.VISIBLE);
             }
         }
     };
 
 
-    @Click({R.id.allCourse, R.id.homework, R.id.me, R.id.search})
-    public void onClick(View v) {
+    @Event(value = {R.id.allCourse, R.id.homework, R.id.me, R.id.search})
+    private void onClick(View v) {
         switch (v.getId()) {
             case R.id.allCourse:
-                viewPager.setCurrentItem(0);
+                mViewPager.setCurrentItem(0);
                 break;
             case R.id.homework:
-                viewPager.setCurrentItem(1);
+                mViewPager.setCurrentItem(1);
                 break;
             case R.id.me:
-                viewPager.setCurrentItem(2);
+                mViewPager.setCurrentItem(2);
                 break;
             case R.id.search:
                 Intent searchIntent = new Intent(this, SearchCourseActivity.class);
@@ -157,17 +171,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             switch (position) {
                 case 0://CourseListFragment被选中
                     setTextColor(0);
-                    tip.setText(COURSE);
+                    mTip.setText(COURSE);
                     search.setVisibility(View.VISIBLE);
                     break;
                 case 1://NoticeFragment被选择
                     setTextColor(1);
-                    tip.setText(NOTICE);
+                    mTip.setText(NOTICE);
                     search.setVisibility(View.INVISIBLE);
                     break;
                 case 2://MeFragment被选择
                     setTextColor(2);
-                    tip.setText(ME);
+                    mTip.setText(ME);
                     search.setVisibility(View.INVISIBLE);
             }
         }
@@ -183,21 +197,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
          * @param position Fragment索引值
          */
         public void setTextColor(int position) {
-            allCourse.setImageDrawable(getResources().getDrawable(R.drawable.homepage_normal));
-            homework.setImageDrawable(getResources().getDrawable(R.drawable.homework_normal));
-            me.setImageDrawable(getResources().getDrawable(R.drawable.me_normal));
-            courseTxt.setTextColor(getResources().getColor(R.color.menu_text_reserve));
-            homeworkTxt.setTextColor(getResources().getColor(R.color.menu_text_reserve));
-            meTxt.setTextColor(getResources().getColor(R.color.menu_text_reserve));
+            mAllCourse.setImageDrawable(getResources().getDrawable(R.drawable.homepage_normal));
+            mHomework.setImageDrawable(getResources().getDrawable(R.drawable.homework_normal));
+            mMe.setImageDrawable(getResources().getDrawable(R.drawable.me_normal));
+            mCourseTxt.setTextColor(getResources().getColor(R.color.menu_text_reserve));
+            mHomeworkTxt.setTextColor(getResources().getColor(R.color.menu_text_reserve));
+            mMeTxt.setTextColor(getResources().getColor(R.color.menu_text_reserve));
             if (position == 0) {//CourseListFragment被选中
-                allCourse.setImageDrawable(getResources().getDrawable(R.drawable.homepage_pressed_d));
-                courseTxt.setTextColor(getResources().getColor(R.color.blue_3));
+                mAllCourse.setImageDrawable(getResources().getDrawable(R.drawable.homepage_pressed_d));
+                mCourseTxt.setTextColor(getResources().getColor(R.color.blue_3));
             } else if (position == 1) {//NoticeFragment被选择
-                homework.setImageDrawable(getResources().getDrawable(R.drawable.homework_pressed_d));
-                homeworkTxt.setTextColor(getResources().getColor(R.color.blue_3));
+                mHomework.setImageDrawable(getResources().getDrawable(R.drawable.homework_pressed_d));
+                mHomeworkTxt.setTextColor(getResources().getColor(R.color.blue_3));
             } else if (position == 2) {//MeFragment被选择
-                me.setImageDrawable(getResources().getDrawable(R.drawable.me_pressed_d));
-                meTxt.setTextColor(getResources().getColor(R.color.blue_3));
+                mMe.setImageDrawable(getResources().getDrawable(R.drawable.me_pressed_d));
+                mMeTxt.setTextColor(getResources().getColor(R.color.blue_3));
             }
         }
     }

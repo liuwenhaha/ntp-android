@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.WindowManager;
 
+import org.xutils.x;
+
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
 /**
@@ -20,6 +22,7 @@ public class BaseActivity extends SwipeBackActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         initImmersionStatus();
     }
 
