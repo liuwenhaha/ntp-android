@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.ntp.ui.R;
 import com.ntp.adapter.CourseAdapter;
-import com.ntp.util.PathConstant;
+import com.ntp.util.ConstantValue;
 import com.ntp.dao.SearchHistoryDao;
 import com.ntp.model.Course;
 import com.ntp.util.NetworkStateUtil;
@@ -96,7 +96,7 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
             startActivityForResult(intent, REQUEST_PROGRESS);
             RequestParams params = new RequestParams();
             params.put("name", search.getText().toString());//键和后台参数接受字段一直
-            client.post(PathConstant.PATH_COURSE_SEARCH, params, new JsonHttpResponseHandler() {
+            client.post(ConstantValue.PATH_COURSE_SEARCH, params, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers,
                                       JSONObject response) {
@@ -119,7 +119,7 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
                             for (Course course:list){
                                 //有图片加上网址前缀
                                 if (!course.getImageUri().equals("")){
-                                    course.setImageUri(PathConstant.PATH_IMAGE+course.getImageUri());
+                                    course.setImageUri(ConstantValue.PATH_IMAGE+course.getImageUri());
                                 }
                             }
                             courseAdapter = new CourseAdapter(list, getApplicationContext());

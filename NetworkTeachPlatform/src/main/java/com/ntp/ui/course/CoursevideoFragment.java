@@ -17,8 +17,8 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.ntp.ui.R;
 import com.ntp.adapter.CoursevideoAdapter;
-import com.ntp.util.PathConstant;
-import com.ntp.dao.PreferenceDao;
+import com.ntp.util.ConstantValue;
+import com.ntp.util.AppConfig;
 import com.ntp.model.Coursevideo;
 import com.ntp.util.NetworkStateUtil;
 
@@ -71,7 +71,7 @@ public class CoursevideoFragment extends Fragment implements CoursevideoAdapter.
         RequestParams params = new RequestParams();
         params.put("code", code);
         if (NetworkStateUtil.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
-            client.post(PathConstant.PATH_COURSE_VIDEO, params, new JsonHttpResponseHandler() {
+            client.post(ConstantValue.PATH_COURSE_VIDEO, params, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers,
                                       JSONObject response) {
@@ -121,14 +121,14 @@ public class CoursevideoFragment extends Fragment implements CoursevideoAdapter.
                     break;
                 }
                 //检查当前是否禁用了移动网络下载课件和播放视频
-                if (NetworkStateUtil.isMobileConnected(getActivity().getApplicationContext()) && !PreferenceDao.getConfig(getActivity().getApplicationContext())) {
+                if (NetworkStateUtil.isMobileConnected(getActivity().getApplicationContext()) && !AppConfig.getConfig(getActivity().getApplicationContext())) {
                     Toast.makeText(getActivity().getApplicationContext(), "你已经禁用移动网络下载课件和观看视频", Toast.LENGTH_LONG).show();
                     break;
                 }
                 int position=Integer.parseInt(v.getTag().toString());
                 String path=list.get(position).getPath();
                 Intent intent = new Intent(getActivity(), VideoPlayActivity.class);
-                intent.putExtra("path",PathConstant.PATH_DOWNLOAD_COURSE_VIDEO+path);
+                intent.putExtra("path", ConstantValue.PATH_DOWNLOAD_COURSE_VIDEO+path);
                 startActivity(intent);
                 break;
         }

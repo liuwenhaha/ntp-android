@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ntp.ui.R;
-import com.ntp.util.PathConstant;
+import com.ntp.util.ConstantValue;
 import com.ntp.util.NetworkStateUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -61,7 +61,7 @@ public class CourseOverviewFragment extends Fragment {
         RequestParams params=new RequestParams();
         params.put("code", code);
         if(NetworkStateUtil.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
-            client.post(PathConstant.PATH_COURSE_DETAIL, params, new JsonHttpResponseHandler() {
+            client.post(ConstantValue.PATH_COURSE_DETAIL, params, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers,
                                       JSONObject response) {

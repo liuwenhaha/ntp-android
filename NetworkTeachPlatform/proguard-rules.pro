@@ -35,3 +35,4 @@
    *** *Event(...);
 }
 #################### end region
+-keep public class com.tencent.bugly.**{*;}

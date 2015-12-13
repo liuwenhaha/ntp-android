@@ -13,7 +13,7 @@ import com.ntp.ui.MainActivity;
 import com.ntp.ui.R;
 import com.ntp.dao.CourseDao;
 import com.ntp.dao.CourseTypeDao;
-import com.ntp.dao.PreferenceDao;
+import com.ntp.util.AppConfig;
 import com.ntp.dao.SearchHistoryDao;
 import com.ntp.view.MyConfirmDialog;
 import com.ntp.view.MyExitDialog;
@@ -61,7 +61,7 @@ public class SettingActivity extends Activity implements View.OnClickListener {
         courseTypeDao=new CourseTypeDao(getApplicationContext());
         courseDao=new CourseDao(getApplicationContext());
         searchHistoryDao = new SearchHistoryDao(getApplicationContext());
-        if (PreferenceDao.getConfig(getApplicationContext())) {//可以使用移动网络播放视频、下载课件
+        if (AppConfig.getConfig(getApplicationContext())) {//可以使用移动网络播放视频、下载课件
             switchImg.setImageDrawable(getResources().getDrawable(R.drawable.switch_on));
         } else {
             switchImg.setImageDrawable(getResources().getDrawable(R.drawable.switch_off));
@@ -76,12 +76,12 @@ public class SettingActivity extends Activity implements View.OnClickListener {
                 finish();
                 break;
             case R.id.switchImg://设置用2G3G4G网络播放视频和下载课件开关
-                if (PreferenceDao.getConfig(getApplicationContext())) {
+                if (AppConfig.getConfig(getApplicationContext())) {
                     switchImg.setImageDrawable(getResources().getDrawable(R.drawable.switch_off));
-                    PreferenceDao.saveConfig(getApplicationContext(), false);
+                    AppConfig.saveConfig(getApplicationContext(), false);
                 } else {
                     switchImg.setImageDrawable(getResources().getDrawable(R.drawable.switch_on));
-                    PreferenceDao.saveConfig(getApplicationContext(), true);
+                    AppConfig.saveConfig(getApplicationContext(), true);
                 }
                 break;
             case R.id.cache://清除缓存
@@ -138,11 +138,10 @@ public class SettingActivity extends Activity implements View.OnClickListener {
             courseTypeDao.delete();
             searchHistoryDao.delete();
             cacheText.setText("0KB");
-            PreferenceDao.saveCurrentPage(getApplicationContext(), 1);//重置课程列表当前页数
             Toast.makeText(getApplicationContext(),"清除成功",Toast.LENGTH_LONG).show();
         } else if (requestCode == REQUEST_EXIT) {
             if (resultCode == MyExitDialog.RESULT_EXIT_LOGIN) {//退出登录
-                PreferenceDao.saveLoadName(getApplicationContext(), "");//清除登录信息
+                AppConfig.saveLoadName(getApplicationContext(), "");//清除登录信息
                 finish();
             } else if (resultCode == MyExitDialog.RESULT_EXIT_APP) {//退出应用
                 sendBroadcast(new Intent(MainActivity.EXIT_ACTION));

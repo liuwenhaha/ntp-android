@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.ntp.ui.R;
-import com.ntp.dao.PreferenceDao;
+import com.ntp.util.AppConfig;
 
 
 /**
@@ -35,11 +35,11 @@ public class NoticeFragment extends Fragment implements View.OnClickListener{
         homeworkRed= (ImageView) view.findViewById(R.id.homeworkRed);
         commentRed= (ImageView) view.findViewById(R.id.commentRed);
         //如果有作业消息
-        if (PreferenceDao.isHomeworkRed(getActivity().getApplicationContext())){
+        if (AppConfig.isHomeworkRed(getActivity().getApplicationContext())){
           homeworkRed.setVisibility(View.VISIBLE);
         }
         //如果有回帖消息
-        if (PreferenceDao.isCommentRed(getActivity().getApplicationContext())){
+        if (AppConfig.isCommentRed(getActivity().getApplicationContext())){
             commentRed.setVisibility(View.VISIBLE);
         }
         homeworkNotice.setOnClickListener(this);
@@ -55,19 +55,19 @@ public class NoticeFragment extends Fragment implements View.OnClickListener{
             //查看作业消息
             case R.id.homeworkNotice:
                 startActivity(new Intent(getActivity().getApplicationContext(), HomeworkNoticeActivity.class));
-                PreferenceDao.setHomeworkRed(getActivity().getApplicationContext(),false);
+                AppConfig.setHomeworkRed(getActivity().getApplicationContext(), false);
                 //如果没有回帖消息，消去消息图标红点
-                if (!PreferenceDao.isCommentRed(getActivity().getApplicationContext())){
-                    PreferenceDao.setNoticeRed(getActivity().getApplicationContext(),false);
+                if (!AppConfig.isCommentRed(getActivity().getApplicationContext())){
+                    AppConfig.setNoticeRed(getActivity().getApplicationContext(), false);
                 }
                 break;
             //查看回帖消息
             case R.id.replyNotice:
                 startActivity(new Intent(getActivity().getApplicationContext(),CommentNoticeActivity.class));
-                PreferenceDao.setCommentRed(getActivity().getApplicationContext(),false);
+                AppConfig.setCommentRed(getActivity().getApplicationContext(), false);
                 //如果没有回帖消息，消去消息图标红点
-                if (!PreferenceDao.isHomeworkRed(getActivity().getApplicationContext())){
-                    PreferenceDao.setNoticeRed(getActivity().getApplicationContext(),false);
+                if (!AppConfig.isHomeworkRed(getActivity().getApplicationContext())){
+                    AppConfig.setNoticeRed(getActivity().getApplicationContext(), false);
                 }
                 break;
 
@@ -77,12 +77,12 @@ public class NoticeFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onResume() {
         super.onResume();
-        if (PreferenceDao.isHomeworkRed(getActivity().getApplicationContext())){
+        if (AppConfig.isHomeworkRed(getActivity().getApplicationContext())){
             homeworkRed.setVisibility(View.VISIBLE);
         }else {
             homeworkRed.setVisibility(View.INVISIBLE);
         }
-        if (PreferenceDao.isCommentRed(getActivity().getApplicationContext())){
+        if (AppConfig.isCommentRed(getActivity().getApplicationContext())){
             commentRed.setVisibility(View.VISIBLE);
         }else {
             commentRed.setVisibility(View.INVISIBLE);

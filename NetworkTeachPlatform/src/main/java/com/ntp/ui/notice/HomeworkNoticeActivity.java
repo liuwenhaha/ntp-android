@@ -16,8 +16,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ntp.ui.R;
 import com.ntp.adapter.HomeworkNoticeAdapter;
-import com.ntp.util.PathConstant;
-import com.ntp.dao.PreferenceDao;
+import com.ntp.util.ConstantValue;
+import com.ntp.util.AppConfig;
 import com.ntp.model.HomeworkNotice;
 import com.ntp.util.HttpUtil;
 import com.ntp.util.NetworkStateUtil;
@@ -54,7 +54,7 @@ public class HomeworkNoticeActivity extends Activity implements AdapterView.OnIt
         homeworkNoticeList =new ArrayList<HomeworkNotice>();
         homeworkNoticeAdapter =new HomeworkNoticeAdapter(getApplicationContext(), homeworkNoticeList);
         pullToRefreshView = (PullToRefreshListView)findViewById(R.id.pull_to_refresh_listview);
-        name=PreferenceDao.getLoadName(getApplicationContext());
+        name= AppConfig.getLoadName(getApplicationContext());
         pullToRefreshView.setMode(PullToRefreshBase.Mode.BOTH);//同时可以下拉和上拉刷新
         pullToRefreshView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override //下拉刷新
@@ -108,7 +108,7 @@ public class HomeworkNoticeActivity extends Activity implements AdapterView.OnIt
         @Override //后台耗时操作
         protected List<HomeworkNotice> doInBackground(Void... params) {
             try {
-                JSONObject response = HttpUtil.getDataFromInternet(new URL(PathConstant.PATH_MY_HOMEWORK + "?username=" +name), "GET");
+                JSONObject response = HttpUtil.getDataFromInternet(new URL(ConstantValue.PATH_MY_HOMEWORK + "?username=" +name), "GET");
                 homeworkNoticeList.clear();
                 if (response != null) {
                     Log.d(TAG,response.toString());
@@ -165,7 +165,7 @@ public class HomeworkNoticeActivity extends Activity implements AdapterView.OnIt
         protected List<HomeworkNotice> doInBackground(Void... params) {
 
             try {
-                JSONObject response = HttpUtil.getDataFromInternet(new URL(PathConstant.PATH_MY_HOMEWORK + "?username=" +name+"&page="+(currentPage+1)), "GET");
+                JSONObject response = HttpUtil.getDataFromInternet(new URL(ConstantValue.PATH_MY_HOMEWORK + "?username=" +name+"&page="+(currentPage+1)), "GET");
                 if (response != null) {
                     JSONArray ja = response.getJSONArray("scores");
                     if(ja.length()!=0){//获取到了数据，则增加页数

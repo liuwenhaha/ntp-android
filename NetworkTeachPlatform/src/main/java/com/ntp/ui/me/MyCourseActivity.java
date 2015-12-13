@@ -21,8 +21,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.ntp.ui.R;
 import com.ntp.ui.course.CourseDetailActivity;
 import com.ntp.adapter.CourseAdapter;
-import com.ntp.util.PathConstant;
-import com.ntp.dao.PreferenceDao;
+import com.ntp.util.ConstantValue;
+import com.ntp.util.AppConfig;
 import com.ntp.model.Course;
 import com.ntp.util.HttpUtil;
 import com.ntp.util.NetworkStateUtil;
@@ -75,7 +75,7 @@ public class MyCourseActivity extends Activity implements AdapterView.OnItemClic
             }
         });
         imageLoader = ImageLoader.getInstance();
-        username= PreferenceDao.getLoadName(getApplicationContext());
+        username= AppConfig.getLoadName(getApplicationContext());
         if (!username.equals("")){
             tip.setVisibility(View.GONE);
             loadMyCourse(username);
@@ -89,7 +89,7 @@ public class MyCourseActivity extends Activity implements AdapterView.OnItemClic
     private void loadMyCourse(String username){
         RequestParams params = new RequestParams();
         params.put("username", username);//键和后台参数接受字段一直
-        client.post(PathConstant.PATH_MY_COURSE, params, new JsonHttpResponseHandler() {
+        client.post(ConstantValue.PATH_MY_COURSE, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers,
                                   JSONObject response) {
@@ -111,7 +111,7 @@ public class MyCourseActivity extends Activity implements AdapterView.OnItemClic
                         for (Course course:list){
                             //有图片加上网址前缀
                             if (!course.getImageUri().equals("")){
-                                course.setImageUri(PathConstant.PATH_IMAGE+course.getImageUri());
+                                course.setImageUri(ConstantValue.PATH_IMAGE+course.getImageUri());
                             }
                         }
                         courseAdapter = new CourseAdapter(list, getApplicationContext());
@@ -143,7 +143,7 @@ public class MyCourseActivity extends Activity implements AdapterView.OnItemClic
         @Override //后台耗时操作
         protected List<Course> doInBackground(Void... params) {
             try {
-                JSONObject response = HttpUtil.getDataFromInternet(new URL(PathConstant.PATH_MY_COURSE+"?username=" + username), "GET");
+                JSONObject response = HttpUtil.getDataFromInternet(new URL(ConstantValue.PATH_MY_COURSE+"?username=" + username), "GET");
                 list.clear();
                 if (response != null) {
                     JSONArray ja = response.getJSONArray("list");
@@ -159,7 +159,7 @@ public class MyCourseActivity extends Activity implements AdapterView.OnItemClic
                     for (Course course:list){
                         //有图片加上网址前缀
                         if (!course.getImageUri().equals("")){
-                            course.setImageUri(PathConstant.PATH_IMAGE+course.getImageUri());
+                            course.setImageUri(ConstantValue.PATH_IMAGE+course.getImageUri());
                         }
                     }
                 }

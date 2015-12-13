@@ -14,7 +14,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.ntp.ui.R;
-import com.ntp.util.PathConstant;
+import com.ntp.util.ConstantValue;
 import com.ntp.dao.CourseTypeDao;
 import com.ntp.util.HttpUtil;
 import com.ntp.util.NetworkStateUtil;
@@ -60,7 +60,7 @@ public class CoursetypeSelectActivity extends Activity implements View.OnClickLi
     public String[] getData() {
         if (NetworkStateUtil.isNetworkConnected(getApplicationContext())) {//网络可用
             try {
-                JSONObject jb = HttpUtil.getDataFromInternet(new URL(PathConstant.PATH_COURSE_TYPE_LIST), null);
+                JSONObject jb = HttpUtil.getDataFromInternet(new URL(ConstantValue.PATH_COURSE_TYPE_LIST), null);
                 if (jb != null) {
                     JSONArray ja = jb.getJSONArray("listCType");
                     String name[] = new String[ja.length()];

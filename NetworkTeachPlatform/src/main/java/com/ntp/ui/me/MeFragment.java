@@ -12,8 +12,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ntp.ui.R;
-import com.ntp.util.PathConstant;
-import com.ntp.dao.PreferenceDao;
+import com.ntp.util.ConstantValue;
+import com.ntp.util.AppConfig;
 import com.ntp.dao.UserDao;
 import com.ntp.model.User;
 import com.ntp.util.BitmapUtil;
@@ -46,7 +46,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {//用户退出，返回此Activity，清除登录状态
         super.onResume();
-        if (PreferenceDao.getLoadName(getActivity()).equals("")) {
+        if (AppConfig.getLoadName(getActivity()).equals("")) {
             username.setText("");
             login.setImageDrawable(getResources().getDrawable(R.drawable.default_head));
         }
@@ -65,13 +65,13 @@ public class MeFragment extends Fragment implements View.OnClickListener {
         myDownload = (TextView) view.findViewById(R.id.myDownload);
         username = (TextView) view.findViewById(R.id.username);
         setting = (TextView) view.findViewById(R.id.setting);
-        username.setText(PreferenceDao.getLoadName(getActivity()));
+        username.setText(AppConfig.getLoadName(getActivity()));
         login.setOnClickListener(this);
         myCourse.setOnClickListener(this);
         myDownload.setOnClickListener(this);
         setting.setOnClickListener(this);
         userDao = new UserDao(getActivity().getApplicationContext());
-        if (!PreferenceDao.getLoadName(getActivity().getApplicationContext()).equals("")) {//已有用户登陆
+        if (!AppConfig.getLoadName(getActivity().getApplicationContext()).equals("")) {//已有用户登陆
             displayHead();
         }
         return view;
@@ -81,7 +81,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
      * 显示本地缓存头像
      */
     private void displayHead() {
-        User user = userDao.findByName(PreferenceDao.getLoadName(getActivity().getApplicationContext()).trim());
+        User user = userDao.findByName(AppConfig.getLoadName(getActivity().getApplicationContext()).trim());
         if (null==user){
             return;
         }
@@ -98,7 +98,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login://登录
-                String name = PreferenceDao.getLoadName(getActivity().getApplicationContext());
+                String name = AppConfig.getLoadName(getActivity().getApplicationContext());
                 //检查是否有登录
                 if (!name.equals("")) {//已登录
                     Intent intent = new Intent(getActivity(), MeInformationActivity.class);
@@ -143,7 +143,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
                     return;
                 }
                 login.setImageDrawable(getResources().getDrawable(R.drawable.default_head_loading));
-                String imageUri = PathConstant.PATH_IMAGE + head;
+                String imageUri = ConstantValue.PATH_IMAGE + head;
                 asyncHttpClient.post(imageUri, new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

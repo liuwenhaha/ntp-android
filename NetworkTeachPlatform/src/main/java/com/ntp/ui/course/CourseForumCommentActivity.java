@@ -11,7 +11,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.ntp.ui.R;
-import com.ntp.util.PathConstant;
+import com.ntp.util.ConstantValue;
 
 import org.apache.http.Header;
 import org.json.JSONException;
@@ -63,7 +63,7 @@ public class CourseForumCommentActivity extends Activity implements View.OnClick
         params.put("code",code);
         params.put("name",name);
         params.put("comment",commentStr);
-        asyncHttpClient.post(PathConstant.PATH_COURSE_FORUM_COMMENT,params, new JsonHttpResponseHandler(){
+        asyncHttpClient.post(ConstantValue.PATH_COURSE_FORUM_COMMENT,params, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);

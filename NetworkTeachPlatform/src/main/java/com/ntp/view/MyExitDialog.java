@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ntp.ui.R;
-import com.ntp.dao.PreferenceDao;
+import com.ntp.util.AppConfig;
 
 /**
  * 退出对话框,退出应用，退出账号
@@ -34,7 +34,7 @@ public class MyExitDialog extends Activity {
         setContentView(R.layout.my_exit_dialog);
         exitLogin = (TextView) findViewById(R.id.exit_login);
         line = (ImageView) findViewById(R.id.h_line);
-        if (PreferenceDao.getLoadName(getApplicationContext()).equals("")) {
+        if (AppConfig.getLoadName(getApplicationContext()).equals("")) {
             exitLogin.setVisibility(View.GONE);
             line.setVisibility(View.GONE);
         }

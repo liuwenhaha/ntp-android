@@ -9,7 +9,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.ntp.ui.R;
-import com.ntp.util.PathConstant;
+import com.ntp.util.ConstantValue;
 
 import org.apache.http.Header;
 import org.json.JSONException;
@@ -48,7 +48,7 @@ public class HomeworkDetailActivity extends Activity {
     public void loadData(String scoreId) {
         RequestParams params = new RequestParams();
         params.put("id", scoreId);
-        asyncHttpClient.post(PathConstant.PATH_COURSE_SCORE, params, new JsonHttpResponseHandler() {
+        asyncHttpClient.post(ConstantValue.PATH_COURSE_SCORE, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);

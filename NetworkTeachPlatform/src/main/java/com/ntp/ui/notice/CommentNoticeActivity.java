@@ -14,8 +14,8 @@ import android.widget.Toast;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ntp.ui.R;
-import com.ntp.util.PathConstant;
-import com.ntp.dao.PreferenceDao;
+import com.ntp.util.ConstantValue;
+import com.ntp.util.AppConfig;
 import com.ntp.util.HttpUtil;
 import com.ntp.util.NetworkStateUtil;
 
@@ -51,7 +51,7 @@ public class CommentNoticeActivity extends Activity{
         setContentView(R.layout.activity_comment_notice);
         tip= (TextView) findViewById(R.id.tip);
         pullToRefreshView = (PullToRefreshListView)findViewById(R.id.pull_to_refresh_listview);
-        name=PreferenceDao.getLoadName(getApplicationContext());
+        name= AppConfig.getLoadName(getApplicationContext());
         simpleAdapter = new SimpleAdapter(getApplicationContext(), list,
                 R.layout.listview_item_comment_notice, new String[]{"commentName","time", "forumUsernameRe", "commentContent", "forumUsername","forumContent"},
                 new int[]{R.id.commentName,R.id.time, R.id.forumUsernameRe, R.id.commentContent, R.id.forumUsername,R.id.forumContent});
@@ -101,7 +101,7 @@ public class CommentNoticeActivity extends Activity{
         @Override //后台耗时操作
         protected List<Map<String, String>> doInBackground(Void... params) {
             try {
-                JSONObject response = HttpUtil.getDataFromInternet(new URL(PathConstant.PATH_FORUM_COMMENT + "?username=" +name), "GET");
+                JSONObject response = HttpUtil.getDataFromInternet(new URL(ConstantValue.PATH_FORUM_COMMENT + "?username=" +name), "GET");
                 list.clear();
                 if (response != null) {
                     Log.d(TAG,response.toString());
@@ -189,7 +189,7 @@ public class CommentNoticeActivity extends Activity{
         protected List<Map<String, String>> doInBackground(Void... params) {
 
             try {
-                JSONObject response = HttpUtil.getDataFromInternet(new URL(PathConstant.PATH_FORUM_COMMENT + "?username=" +name+"&page="+(currentPage+1)), "GET");
+                JSONObject response = HttpUtil.getDataFromInternet(new URL(ConstantValue.PATH_FORUM_COMMENT + "?username=" +name+"&page="+(currentPage+1)), "GET");
                 if (response != null) {
                     JSONArray ja = response.getJSONArray("forumUsers");
                     if(ja.length()!=0){//获取到了数据，则增加页数

@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.ntp.ui.R;
 import com.ntp.adapter.CoursevideoAdapter;
-import com.ntp.util.PathConstant;
+import com.ntp.util.ConstantValue;
 import com.ntp.dao.SearchHistoryDao;
 import com.ntp.model.Course;
 import com.ntp.model.Coursevideo;
@@ -84,7 +84,7 @@ public class SearchHistoryActivity extends Activity implements CoursevideoAdapte
                 String nameStr = list.get(posi).getName();
                 RequestParams params = new RequestParams();
                 params.put("name", nameStr);//键和后台参数接受字段一直
-                client.post(PathConstant.PATH_COURSE_SEARCH, params, new JsonHttpResponseHandler() {
+                client.post(ConstantValue.PATH_COURSE_SEARCH, params, new JsonHttpResponseHandler() {
                     public void onSuccess(int statusCode, Header[] headers,
                                           JSONObject response) {
                         super.onSuccess(statusCode, headers, response);

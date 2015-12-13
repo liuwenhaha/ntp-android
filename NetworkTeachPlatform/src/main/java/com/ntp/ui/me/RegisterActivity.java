@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.ntp.ui.R;
-import com.ntp.util.PathConstant;
+import com.ntp.util.ConstantValue;
 import com.ntp.util.MD5Util;
 import com.ntp.util.NetworkStateUtil;
 import com.loopj.android.http.AsyncHttpClient;
@@ -58,7 +58,7 @@ public class RegisterActivity extends Activity {
                     Toast.makeText(getApplicationContext(), "请连接网络再试", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                asyncHttpClient.post(PathConstant.PATH_USERNAME_EXIST, params, new JsonHttpResponseHandler() {
+                asyncHttpClient.post(ConstantValue.PATH_USERNAME_EXIST, params, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
@@ -101,7 +101,7 @@ public class RegisterActivity extends Activity {
                     Toast.makeText(getApplicationContext(), "请连接网络再试", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                asyncHttpClient.post(PathConstant.PATH_REGISTER, params, new JsonHttpResponseHandler() {
+                asyncHttpClient.post(ConstantValue.PATH_REGISTER, params, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);

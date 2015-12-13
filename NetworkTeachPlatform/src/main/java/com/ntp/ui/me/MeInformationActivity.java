@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ntp.ui.R;
-import com.ntp.util.PathConstant;
+import com.ntp.util.ConstantValue;
 import com.ntp.dao.UserDao;
 import com.ntp.model.User;
 import com.ntp.util.BitmapUtil;
@@ -102,7 +102,7 @@ public class MeInformationActivity extends Activity {
             Toast.makeText(getApplicationContext(),"请连接网络再试",Toast.LENGTH_SHORT).show();
             return;
         }
-        asyncHttpClient.post(PathConstant.PATH_USER_INFO, params, new JsonHttpResponseHandler() {
+        asyncHttpClient.post(ConstantValue.PATH_USER_INFO, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
@@ -186,7 +186,7 @@ public class MeInformationActivity extends Activity {
                     Toast.makeText(getApplicationContext(),"请连接网络再试",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                asyncHttpClient.post(PathConstant.PATH_EMAIL, params, new JsonHttpResponseHandler() {
+                asyncHttpClient.post(ConstantValue.PATH_EMAIL, params, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
@@ -219,7 +219,7 @@ public class MeInformationActivity extends Activity {
                     Toast.makeText(getApplicationContext(),"请连接网络再试",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                asyncHttpClient.post(PathConstant.PATH_PWD, params, new JsonHttpResponseHandler() {
+                asyncHttpClient.post(ConstantValue.PATH_PWD, params, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
@@ -251,7 +251,7 @@ public class MeInformationActivity extends Activity {
                             Toast.makeText(getApplicationContext(), "请连接网络再试", Toast.LENGTH_SHORT).show();
                             break;
                         }
-                        asyncHttpClient.post(PathConstant.PATH_SEX, requestParams, new JsonHttpResponseHandler() {
+                        asyncHttpClient.post(ConstantValue.PATH_SEX, requestParams, new JsonHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                 super.onSuccess(statusCode, headers, response);
@@ -283,7 +283,7 @@ public class MeInformationActivity extends Activity {
                             Toast.makeText(getApplicationContext(), "请连接网络再试", Toast.LENGTH_SHORT).show();
                             break;
                         }
-                        asyncHttpClient.post(PathConstant.PATH_SEX, requestParams, new JsonHttpResponseHandler() {
+                        asyncHttpClient.post(ConstantValue.PATH_SEX, requestParams, new JsonHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                 super.onSuccess(statusCode, headers, response);

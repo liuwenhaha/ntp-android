@@ -17,8 +17,8 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.ntp.ui.R;
-import com.ntp.util.PathConstant;
-import com.ntp.dao.PreferenceDao;
+import com.ntp.util.ConstantValue;
+import com.ntp.util.AppConfig;
 import com.ntp.util.HttpUtil;
 import com.ntp.util.NetworkStateUtil;
 
@@ -95,7 +95,7 @@ public class CourseForumReplyActivity extends Activity {
     private void loadForumReply(int forumId) {
         RequestParams params=new RequestParams();
         params.put("forumId",forumId);//帖子id
-        asyncHttpClient.post(PathConstant.PATH_COURSE_FORUM_ALL,params,new JsonHttpResponseHandler(){
+        asyncHttpClient.post(ConstantValue.PATH_COURSE_FORUM_ALL,params,new JsonHttpResponseHandler(){
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -150,7 +150,7 @@ public class CourseForumReplyActivity extends Activity {
         protected List<Map<String,String>> doInBackground(Void... params) {
 
                 try {
-                    JSONObject response = HttpUtil.getDataFromInternet(new URL(PathConstant.PATH_COURSE_FORUM_ALL + "?forumId=" + forumId+"&page="+(currentPage+1)), "GET");
+                    JSONObject response = HttpUtil.getDataFromInternet(new URL(ConstantValue.PATH_COURSE_FORUM_ALL + "?forumId=" + forumId+"&page="+(currentPage+1)), "GET");
                     if (response != null) {
                         JSONArray ja = response.getJSONArray("forumUsers");
                         if(ja.length()!=0){//获取到了数据，则增加页数
@@ -195,7 +195,7 @@ public class CourseForumReplyActivity extends Activity {
      */
     public void reply(View view) {
         //检查有没有登录
-        if(PreferenceDao.getLoadName(getApplicationContext()).equals("")){
+        if(AppConfig.getLoadName(getApplicationContext()).equals("")){
             Toast.makeText(getApplicationContext(),"你尚未登录，不能评论",Toast.LENGTH_SHORT).show();
             return;
         }
@@ -205,9 +205,9 @@ public class CourseForumReplyActivity extends Activity {
         }else{
             RequestParams params=new RequestParams();
             params.put("forumId",forumId);//帖子
-            params.put("name",PreferenceDao.getLoadName(getApplicationContext()));//回帖人用户名
+            params.put("name", AppConfig.getLoadName(getApplicationContext()));//回帖人用户名
             params.put("comment",commentContent);//评论内容
-            asyncHttpClient.post(PathConstant.PATH_COURSE_FORUM_REPLY,params,new JsonHttpResponseHandler(){
+            asyncHttpClient.post(ConstantValue.PATH_COURSE_FORUM_REPLY,params,new JsonHttpResponseHandler(){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     super.onSuccess(statusCode, headers, response);

@@ -12,8 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ntp.ui.R;
-import com.ntp.util.PathConstant;
-import com.ntp.dao.PreferenceDao;
+import com.ntp.util.ConstantValue;
+import com.ntp.util.AppConfig;
 import com.ntp.util.MD5Util;
 import com.ntp.view.MyProgress;
 import com.loopj.android.http.AsyncHttpClient;
@@ -74,7 +74,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     RequestParams requestParams = new RequestParams();
                     requestParams.put("username", nameString);
                     requestParams.put("password", MD5Util.generatePassword(passwordString));
-                    asyncHttpClient.post(PathConstant.PATH_LOGIN, requestParams, new JsonHttpResponseHandler() {
+                    asyncHttpClient.post(ConstantValue.PATH_LOGIN, requestParams, new JsonHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             super.onSuccess(statusCode, headers, response);
@@ -86,7 +86,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                         //如果服务端没有头像，返回的head是error字符串，如果有则是头像名称
                                         String head = response.getString("head");
                                         Log.i(TAG, head);
-                                        PreferenceDao.saveLoadName(getApplicationContext(), nameString);
+                                        AppConfig.saveLoadName(getApplicationContext(), nameString);
                                         finishActivity(REQUEST_CODE);
                                         Intent intent = new Intent();
                                         Bundle bundle = new Bundle();

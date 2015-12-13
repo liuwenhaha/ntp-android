@@ -5,36 +5,44 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ntp.base.MyApplication;
+import com.ntp.base.BaseFragment;
+import com.ntp.network.HttpRequestHelper;
 import com.ntp.ui.R;
 import com.ntp.adapter.CourseAdapter;
-import com.ntp.util.PathConstant;
+import com.ntp.util.ConstantValue;
 import com.ntp.dao.CourseDao;
 import com.ntp.dao.CourseTypeDao;
-import com.ntp.dao.PreferenceDao;
+import com.ntp.util.AppConfig;
 import com.ntp.model.Course;
 import com.ntp.util.HttpUtil;
+import com.ntp.util.LogUtil;
 import com.ntp.util.NetworkStateUtil;
 import com.ntp.util.SDCardUtil;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.Event;
+import org.xutils.view.annotation.ViewInject;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -43,20 +51,21 @@ import java.util.List;
 /**
  * 课程界面,供学生浏览课程
  */
-public class CourseListFragment extends Fragment implements AdapterView.OnItemClickListener {
+@ContentView(R.layout.fragment_course_list)
+public class CourseListFragment extends BaseFragment implements PullToRefreshBase.OnRefreshListener2{
 
+    @ViewInject(R.id.pull_to_refresh_listview)
     private PullToRefreshListView pullToRefreshView;
 
-    private CourseAdapter adapter;//课程适配器
+    private CourseAdapter adapter;
     private CourseDao courseDao;
     private CourseTypeDao courseTypeDao;
-    private LinearLayout load;
     private List<Course> courses = new ArrayList<Course>();
 
-    private static final int RESULT = 1;//发送消息成功标识
-    private static final String IMAGE_URI = "file:///mnt/sdcard/ntp/";//缓存图片文件夹
-    public static final String TAG = "down_json";//下拉日志标识
-    public static final String TAG1 = "up_json";//下拉日志标识
+    //当前分页页数
+    private int currentPage=1;
+    //发送消息成功标识
+    private static final int RESULT = 1;
 
     //加载课程成功后更新界面
     Handler handler = new Handler() {
@@ -68,79 +77,75 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                 adapter.notifyDataSetChanged();
                 //需要此句，不然无法显示
                 pullToRefreshView.setAdapter(adapter);
-                load.setVisibility(View.GONE);
             }
         }
     };
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//                             Bundle savedInstanceState) {
+//        super.onCreateView(inflater, container, savedInstanceState);
+//        View view = inflater.inflate(R.layout.fragment_course_list, container, false);
+//
+////        pullToRefreshView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+////            @Override //下拉刷新
+////            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+////                String label = DateUtils.formatDateTime(getActivity().getApplicationContext(), System.currentTimeMillis(),
+////                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+////                refreshView.getLoadingLayoutProxy(true, false).setLastUpdatedLabel("更新于:" + label);
+////                if (NetworkStateUtil.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
+////                    new GetDataTask().execute();
+////                } else {
+////                    Toast.makeText(getActivity().getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
+////                }
+////            }
+////
+////            @Override  //下拉刷新
+////            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+////                String label = "正在加载...";
+////                refreshView.getLoadingLayoutProxy(false, true).setPullLabel(label);
+////                refreshView.getLoadingLayoutProxy(false, true).setReleaseLabel(label);
+////                refreshView.getLoadingLayoutProxy(false, true).setRefreshingLabel(label);
+////                if (NetworkStateUtil.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
+////                    new PullUpTask().execute();
+////                } else {
+////                    Toast.makeText(getActivity().getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
+////                }
+////            }
+////        });
+//
+//        return view;
+//    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_course_list, container, false);
-        load = (LinearLayout) view.findViewById(R.id.load);
-        pullToRefreshView = (PullToRefreshListView) view.findViewById(R.id.pull_to_refresh_listview);
-        PreferenceDao.saveCurrentPage(getActivity().getApplicationContext(), 1);//重置当前页数
-        pullToRefreshView.setMode(PullToRefreshBase.Mode.BOTH);//同时可以下拉和上拉刷新
-        pullToRefreshView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
-            @Override //下拉刷新
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                String label = DateUtils.formatDateTime(getActivity().getApplicationContext(), System.currentTimeMillis(),
-                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
-                refreshView.getLoadingLayoutProxy(true, false).setLastUpdatedLabel("更新于:" + label);
-                if (NetworkStateUtil.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
-                    new GetDataTask().execute();
-                } else {
-                    Toast.makeText(getActivity().getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override  //下拉刷新
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                String label = "正在加载...";
-                refreshView.getLoadingLayoutProxy(false, true).setPullLabel(label);
-                refreshView.getLoadingLayoutProxy(false, true).setReleaseLabel(label);
-                refreshView.getLoadingLayoutProxy(false, true).setRefreshingLabel(label);
-                if (NetworkStateUtil.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
-                    new PullUpTask().execute();
-                } else {
-                    Toast.makeText(getActivity().getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        courseDao = new CourseDao(getActivity().getApplicationContext());
-        courseTypeDao = new CourseTypeDao(getActivity().getApplicationContext());
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        pullToRefreshView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        pullToRefreshView.setOnRefreshListener(this);
+        courseDao = new CourseDao(getActivity());
+        courseTypeDao = new CourseTypeDao(getActivity());
         List<Course> courseList = courseDao.getAllCourse();
         if (courseList.size() > 0) {//如果本地有缓存,隐藏"提示正在加载课程中"视图
             loadCourseCache(courseList);
 
         } else {//本地没有缓存，请求网络数据
-            if (NetworkStateUtil.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
-                new LoadCourseThread().start();
+            if (NetworkStateUtil.isNetworkConnected(getActivity())) {//网络可用
             } else {
                 Toast.makeText(getActivity().getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
-                load.setVisibility(View.GONE);
             }
         }
-        pullToRefreshView.setOnItemClickListener(this);
-        return view;
     }
 
     //加载本地课程缓存信息
     private void loadCourseCache(List<Course> courseList) {
-        Log.i(TAG, "本地有缓存.......");
-        load.setVisibility(View.GONE);
+        LogUtil.i(TAG, "本地有缓存.......");
         if (!SDCardUtil.checkSDCard()) {
             Toast.makeText(getActivity().getApplicationContext(), "请插入SD卡", Toast.LENGTH_SHORT).show();
         }
         for (Course course : courseList) {//追加图片路径前缀
             //如果课程图片名称不为空，则添加前缀本地缓存路径，为空，则默认显示course_default图片（在适配器中配置）
             if (!course.getImageUri().equals("")) {
-                course.setImageUri(IMAGE_URI + course.getImageUri());
+                course.setImageUri(ConstantValue.IMAGE_URI + course.getImageUri());
             }
             //如果SD卡不存在，则显示默认图片
             if (!SDCardUtil.checkSDCard()){
@@ -153,7 +158,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
     }
 
     //ListView点击事件响应
-    @Override
+    @Event(value = R.id.pull_to_refresh_listview,type=AdapterView.OnItemClickListener.class)
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), CourseDetailActivity.class);
         TextView text = (TextView) view.findViewById(R.id.code);
@@ -167,66 +172,39 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
         startActivity(intent);
     }
 
-    /**
-     * 加载课程线程
-     */
-    private class LoadCourseThread extends Thread {
-        Message msg = new Message();
-        List<Course> list = new ArrayList<Course>();
+    //下拉刷新
+    @Override
+    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        loadData(true);
+    }
 
-        @Override
-        public void run() {
-            try {
-                JSONObject jb = null;
-                while (jb == null) {//直到获取数据
-                    jb = HttpUtil.getDataFromInternet(new URL(PathConstant.PATH_COURSE_LIST), null);
-                }
-                int currentPage = jb.getInt("currentPage");
-                PreferenceDao.saveCurrentPage(getActivity().getApplicationContext(), currentPage);//保存当前页数
-                JSONArray ja = jb.getJSONArray("list");
-                for (int i = 0; i < ja.length(); i++) {
-                    JSONObject j = ja.getJSONObject(i);
-                    Object courseTypeJS = j.get("coursetype");//先视为对象，防止空指针
-                    Object userJS = j.get("user");
-                    String coursetypeStr;
-                    String userStr;
-                    if (courseTypeJS.equals(null)) {
-                        coursetypeStr = "";
-                    } else {
-                        coursetypeStr = j.getJSONObject("coursetype").getString("type");
-                    }
-                    if (userJS.equals(null)) {
-                        userStr = "";
-                    } else {
-                        userStr = j.getJSONObject("user").getString("name");
-                    }
-                    Course course = new Course(j.getString("code"), j.getString("name"), j.getString("image").equals("null") ? "" : j.getString("image"), coursetypeStr, userStr);
-                    list.add(course);
-                    courseDao.save(course);//缓存到数据库
-                    Log.i(TAG, course.toString());
-                }
-                msg.what = RESULT;
-                Bundle bundle = new Bundle();
-                for (Course course : list) {
-                    //如果课程图片名称不为空，则添加其网络地址前缀，为空，则默认显示course_default图片（在适配器中配置）
-                    if (!course.getImageUri().equals("")) {
-                        course.setImageUri(PathConstant.PATH_IMAGE + course.getImageUri());
-                    }
-                }
-                bundle.putSerializable("list", (java.io.Serializable) list);
-                msg.setData(bundle);
-                courses = list;
-            } catch (MalformedURLException e) {
-                Log.i(TAG, e.toString());
-                e.printStackTrace();
-            } catch (JSONException e) {
-                Log.i(TAG, e.toString());
-                e.printStackTrace();
-            } finally {
-                handler.sendMessage(msg);
+    //上拉刷新
+    @Override
+    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        loadData(false);
+    }
+
+    /**
+     * 加载课程列表
+     * @param pullUpOrDown true 下拉刷新，false上拉刷新
+     */
+    private void loadData(final boolean pullUpOrDown) {
+        if (!pullUpOrDown){//上拉刷新
+            currentPage++;
+        }
+        HttpRequestHelper.getInstance().getCourseList(currentPage, 20, new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                LogUtil.e(TAG,request.toString()+e.toString());
+
             }
 
-        }
+            @Override
+            public void onResponse(Response response) throws IOException {
+                   LogUtil.d(TAG,response.body().string());
+            }
+        });
+
     }
 
 /**----------------------------------------- 下拉刷新线程-------------------------------------------------**/
@@ -240,12 +218,10 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
         protected List<Course> doInBackground(Void... params) {
             List<Course> list = new ArrayList<Course>();//下拉刷新更新数据，最多显示20条，不显示上次上拉刷新更新的数据
             try {
-                JSONObject jb = HttpUtil.getDataFromInternet(new URL(PathConstant.PATH_COURSE_LIST), null);
+                JSONObject jb = HttpUtil.getDataFromInternet(new URL(ConstantValue.PATH_COURSE_LIST), null);
                 if (jb != null) {
                     int currentPage = jb.getInt("currentPage");
-                    PreferenceDao.saveCurrentPage(getActivity().getApplicationContext(), currentPage);//保存当前页数
                     JSONArray ja = jb.getJSONArray("list");
-                    MyApplication myApplication = (MyApplication) getActivity().getApplication();
                     courseDao.delete();//先清空缓存
                     for (int i = 0; i < ja.length(); i++) {
                         JSONObject j = ja.getJSONObject(i);
@@ -266,7 +242,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
                         Course course = new Course(j.getString("code"), j.getString("name"), j.getString("image").equals("null") ? "" :j.getString("image"), coursetypeStr, userStr);
                         list.add(course);
                         courseDao.save(course);//缓存到数据库
-                        Log.i(TAG1, course.toString());
+                        LogUtil.d(TAG, course.toString());
                     }
                 }
             } catch (MalformedURLException e) {
@@ -282,11 +258,10 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
         protected void onPostExecute(List<Course> list) {
             pullToRefreshView.onRefreshComplete();
             if (list.size() > 0) {//获取到数据，更新UI
-                load.setVisibility(View.GONE);
                 for (Course course : list) {
                     //如果课程图片名称不为空，则添加其网络地址前缀，为空，则默认显示course_default图片（在适配器中配置）
                     if (!course.getImageUri().equals("")) {
-                        course.setImageUri(PathConstant.PATH_IMAGE + course.getImageUri());
+                        course.setImageUri(ConstantValue.PATH_IMAGE + course.getImageUri());
                     }
                 }
                 adapter = new CourseAdapter(list, getActivity());
@@ -303,7 +278,7 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
          */
         public void updateData() {
             try {
-                JSONObject jb = HttpUtil.getDataFromInternet(new URL(PathConstant.PATH_COURSE_TYPE_LIST), null);
+                JSONObject jb = HttpUtil.getDataFromInternet(new URL(ConstantValue.PATH_COURSE_TYPE_LIST), null);
                 if (jb != null) {
                     courseTypeDao.delete();//先清空
                     JSONArray ja = jb.getJSONArray("listCType");
@@ -337,16 +312,14 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
         protected List<Course> doInBackground(Void... params) {
             List<Course> list=null;
             try {
-                int currentPage = PreferenceDao.getCurrentPage(getActivity().getApplicationContext());
-                jb = HttpUtil.getDataFromInternet(new URL(PathConstant.PATH_COURSE_LIST + "?page=" + (currentPage + 1)), "GET");
+                jb = HttpUtil.getDataFromInternet(new URL(ConstantValue.PATH_COURSE_LIST + "?page=" + (currentPage + 1)), "GET");
                 if (jb != null) {//下拉刷新的数据不缓存到数据库
                     ja = jb.getJSONArray("list");
                     if (ja.length() != 0) {//如果list集合有数据，可能数据查完了，但是currentPage会返回数据
                         int page = jb.getInt("currentPage");
-                        PreferenceDao.saveCurrentPage(getActivity().getApplicationContext(), page);//保存当前页数
                     }
                     list = courses;
-                    Log.d(TAG1 + " list size=", list.size() + "");
+                    LogUtil.d(TAG + " list size=", list.size() + "");
                     for (int i = 0; i < ja.length(); i++) {
                         JSONObject j = ja.getJSONObject(i);
                         Object courseTypeJS = j.get("coursetype");//先视为对象，防止空指针
@@ -381,11 +354,10 @@ public class CourseListFragment extends Fragment implements AdapterView.OnItemCl
             super.onPostExecute(list);
             pullToRefreshView.onRefreshComplete();
             if (jb != null && ja.length() != 0) {//获取到数据，更新UI
-                load.setVisibility(View.GONE);
                 for (Course course : list) {
                     //如果课程图片名称不为空，则添加其网络地址前缀，为空，则默认显示course_default图片（在适配器中配置）
                     if (!course.getImageUri().equals("")) {
-                        course.setImageUri(PathConstant.PATH_IMAGE + course.getImageUri());
+                        course.setImageUri(ConstantValue.PATH_IMAGE + course.getImageUri());
                     }
                 }
                 adapter = new CourseAdapter(list, getActivity());

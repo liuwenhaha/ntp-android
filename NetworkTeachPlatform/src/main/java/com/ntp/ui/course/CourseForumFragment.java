@@ -23,8 +23,8 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.ntp.ui.R;
-import com.ntp.util.PathConstant;
-import com.ntp.dao.PreferenceDao;
+import com.ntp.util.ConstantValue;
+import com.ntp.util.AppConfig;
 import com.ntp.util.HttpUtil;
 import com.ntp.util.NetworkStateUtil;
 
@@ -127,7 +127,7 @@ public class CourseForumFragment extends Fragment implements AdapterView.OnItemC
     private void loadForumData() {
         RequestParams requestParams=new RequestParams();
         requestParams.put("code", code);
-        asyncHttpClient.post(PathConstant.PATH_COURSE_FORUM, requestParams, new JsonHttpResponseHandler() {
+        asyncHttpClient.post(ConstantValue.PATH_COURSE_FORUM, requestParams, new JsonHttpResponseHandler() {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
                 if (response != null) {
@@ -166,12 +166,12 @@ public class CourseForumFragment extends Fragment implements AdapterView.OnItemC
         switch (v.getId()){
             case R.id.reply://发帖
                 //检查有没有登录
-                if(PreferenceDao.getLoadName(getActivity().getApplicationContext()).equals("")){
+                if(AppConfig.getLoadName(getActivity().getApplicationContext()).equals("")){
                     Toast.makeText(getActivity().getApplicationContext(),"你尚未登录，不能评论",Toast.LENGTH_SHORT).show();
                     break;
                 }
                 Intent intent=new Intent(getActivity().getApplicationContext(),CourseForumCommentActivity.class);
-                intent.putExtra("name",PreferenceDao.getLoadName(getActivity().getApplicationContext()));
+                intent.putExtra("name", AppConfig.getLoadName(getActivity().getApplicationContext()));
                 intent.putExtra("code",code);
                 startActivityForResult(intent,REQUEST_COMMENT);
                 break;
@@ -187,7 +187,7 @@ public class CourseForumFragment extends Fragment implements AdapterView.OnItemC
         @Override //后台耗时操作
         protected List<Map<String, String>> doInBackground(Void... params) {
             try {
-                JSONObject response = HttpUtil.getDataFromInternet(new URL(PathConstant.PATH_COURSE_FORUM + "?code=" + code), "GET");
+                JSONObject response = HttpUtil.getDataFromInternet(new URL(ConstantValue.PATH_COURSE_FORUM + "?code=" + code), "GET");
                 if (response != null) {
                     list.clear();//清空数据
                     JSONArray ja = response.getJSONArray("forums");
@@ -236,7 +236,7 @@ public class CourseForumFragment extends Fragment implements AdapterView.OnItemC
         @Override
         protected List<Map<String, String>> doInBackground(Void... params) {
             try {
-                JSONObject response = HttpUtil.getDataFromInternet(new URL(PathConstant.PATH_COURSE_FORUM + "?code=" + code+"&page="+(currentPage+1)), "GET");
+                JSONObject response = HttpUtil.getDataFromInternet(new URL(ConstantValue.PATH_COURSE_FORUM + "?code=" + code+"&page="+(currentPage+1)), "GET");
                 if (response != null) {
                     JSONArray ja = response.getJSONArray("forums");
                     if(ja.length()!=0){//获取到了数据，则增加页数

@@ -23,9 +23,9 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.ntp.ui.R;
 import com.ntp.adapter.CoursewareAdapter;
-import com.ntp.util.PathConstant;
+import com.ntp.util.ConstantValue;
 import com.ntp.dao.DownloadHistoryDao;
-import com.ntp.dao.PreferenceDao;
+import com.ntp.util.AppConfig;
 import com.ntp.model.Courseware;
 import com.ntp.service.DownloadService;
 import com.ntp.util.NetworkStateUtil;
@@ -100,7 +100,7 @@ public class CoursewareFragment extends Fragment implements CoursewareAdapter.Ca
         params.put("code", code);
         Log.i(TAG, code);
         list = new ArrayList<Courseware>();
-        asyncHttpClient.post(PathConstant.PATH_COURSE_WARE, params, new JsonHttpResponseHandler() {
+        asyncHttpClient.post(ConstantValue.PATH_COURSE_WARE, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
@@ -161,7 +161,7 @@ public class CoursewareFragment extends Fragment implements CoursewareAdapter.Ca
                     download.setText(DOWNLOAD);//设置按钮为下载状态
                     this.progressBar.setVisibility(View.GONE);
                     this.tip.setVisibility(View.GONE);
-                    File file=new File(PathConstant.SAVE_PATH+name);//删除下载文件
+                    File file=new File(ConstantValue.SAVE_PATH+name);//删除下载文件
                     file.delete();
                     break;
                 }
@@ -176,18 +176,18 @@ public class CoursewareFragment extends Fragment implements CoursewareAdapter.Ca
                     break;
                 }
                 //如果用户没有登录，不可下载课件
-                if (PreferenceDao.getLoadName(getActivity().getApplicationContext()).equals("")) {
+                if (AppConfig.getLoadName(getActivity().getApplicationContext()).equals("")) {
                     Toast.makeText(getActivity().getApplicationContext(), "该操作需要先登录", Toast.LENGTH_LONG).show();
                     break;
                 }
                 //检查当前是否禁用了移动网络下载课件和播放视频
-                if (NetworkStateUtil.isMobileConnected(getActivity().getApplicationContext()) && !PreferenceDao.getConfig(getActivity().getApplicationContext())) {
+                if (NetworkStateUtil.isMobileConnected(getActivity().getApplicationContext()) && !AppConfig.getConfig(getActivity().getApplicationContext())) {
                     Toast.makeText(getActivity().getApplicationContext(), "你已经禁用移动网络下载课件和观看视频", Toast.LENGTH_LONG).show();
                     break;
                 }
                 this.progressBar = progressBar;
                 this.tip = tip;
-                downloadService.startActionDownload(getActivity().getApplicationContext(), PathConstant.PATH_DOWNLOAD_COURSE_WARE + path, name, PathConstant.SAVE_PATH);
+                downloadService.startActionDownload(getActivity().getApplicationContext(), ConstantValue.PATH_DOWNLOAD_COURSE_WARE + path, name, ConstantValue.SAVE_PATH);
                 CoursewareFragment.name =name;
                 CoursewareFragment.path =path;
                 progressBar.setVisibility(View.VISIBLE);

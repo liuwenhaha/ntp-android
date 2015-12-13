@@ -18,13 +18,12 @@ import com.ntp.ui.me.MeFragment;
 import com.ntp.ui.notice.NoticeFragment;
 import com.ntp.adapter.FragAdapter;
 import com.ntp.base.BaseActivity;
-import com.ntp.dao.PreferenceDao;
+import com.ntp.util.AppConfig;
 import com.ntp.util.AppUtil;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +86,6 @@ public class MainActivity extends BaseActivity{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        x.view().inject(this);
         initView();
     }
 
@@ -96,7 +94,7 @@ public class MainActivity extends BaseActivity{
      */
     void initView() {
         AppUtil.setStatusBarDarkMode(true, this);
-        if (PreferenceDao.isNoticeRed(getApplicationContext())){
+        if (AppConfig.isNoticeRed(getApplicationContext())){
             mNoticeRed.setVisibility(View.VISIBLE);
         }
         fragments = new ArrayList<Fragment>();
@@ -113,7 +111,7 @@ public class MainActivity extends BaseActivity{
     @Override
     protected void onResume() {
         super.onResume();
-        if (PreferenceDao.isNoticeRed(getApplicationContext())){
+        if (AppConfig.isNoticeRed(getApplicationContext())){
             mNoticeRed.setVisibility(View.VISIBLE);
         }else {
             mNoticeRed.setVisibility(View.INVISIBLE);

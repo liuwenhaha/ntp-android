@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ntp.ui.R;
-import com.ntp.util.PathConstant;
+import com.ntp.util.ConstantValue;
 import com.ntp.dao.DownloadHistoryDao;
 import com.ntp.util.OpenFileUtil;
 import com.ntp.view.MySelectDialog;
@@ -56,7 +56,7 @@ public class MyDownloadActivity extends Activity implements AdapterView.OnItemCl
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         String fileName=((TextView)view).getText().toString();
-        File file=new File(PathConstant.SAVE_PATH+fileName);
+        File file=new File(ConstantValue.SAVE_PATH+fileName);
         if (isFileWord(fileName)){//如果是word文件
             Intent intent=OpenFileUtil.getWordFileIntent(file);
             startActivity(intent);
@@ -140,7 +140,7 @@ public class MyDownloadActivity extends Activity implements AdapterView.OnItemCl
             }
             List<String> downloadHistoryList=downloadHistoryDao.findAll();
             for (String str:downloadHistoryList){
-                File file=new File(PathConstant.SAVE_PATH+str);
+                File file=new File(ConstantValue.SAVE_PATH+str);
                 if (!file.exists()){//如果下载目录文件已经不存在，则删除数据库中的记录
                     downloadHistoryDao.delete(str);
                     continue;
@@ -165,7 +165,7 @@ public class MyDownloadActivity extends Activity implements AdapterView.OnItemCl
         //删除文件
         if (requestCode==REQUEST&&resultCode==MySelectDialog.RESULT_ITEM1){
             Log.i(TAG,fileName);
-            File file=new File(PathConstant.SAVE_PATH+fileName);
+            File file=new File(ConstantValue.SAVE_PATH+fileName);
             file.delete();
             //从list集合中移除删除的详
             for (int i=0;i<list.size();i++){

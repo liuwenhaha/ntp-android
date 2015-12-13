@@ -2,8 +2,8 @@ package com.ntp.base;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import org.xutils.x;
 
@@ -22,7 +22,7 @@ public class BaseActivity extends SwipeBackActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        x.view().inject(this);
         initImmersionStatus();
     }
 
@@ -34,5 +34,12 @@ public class BaseActivity extends SwipeBackActivity {
             //透明状态栏
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+    }
+
+    /**
+     * 提示
+     */
+    protected void showToast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 }

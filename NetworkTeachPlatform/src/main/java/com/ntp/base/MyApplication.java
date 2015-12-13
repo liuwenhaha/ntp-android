@@ -11,6 +11,7 @@ import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import org.xutils.x;
 
@@ -31,6 +32,7 @@ public class MyApplication extends Application {
         PushManager.getInstance().initialize(getApplicationContext());//初始化个推SDK
         x.Ext.init(this);
         x.Ext.setDebug(true); // 是否输出debug日志
+        CrashReport.initCrashReport(this, "900014235", false);
     }
 
     /**

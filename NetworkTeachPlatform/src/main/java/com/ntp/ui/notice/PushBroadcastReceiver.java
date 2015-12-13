@@ -13,8 +13,8 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.ntp.ui.MainActivity;
-import com.ntp.util.PathConstant;
-import com.ntp.dao.PreferenceDao;
+import com.ntp.util.ConstantValue;
+import com.ntp.util.AppConfig;
 
 import org.apache.http.Header;
 import org.json.JSONObject;
@@ -51,15 +51,15 @@ public class PushBroadcastReceiver extends BroadcastReceiver {
                 if (payload != null) {
                     String data = new String(payload);
                     Log.d("GeTuiSdk", "Got Payload:" + data);
-                    PreferenceDao.setNoticeRed(context, true);
+                    AppConfig.setNoticeRed(context, true);
                     context.sendBroadcast(new Intent(MainActivity.SHOW_NOTICE_ACTION));
                     if (data.equals(HOMEWORK)){//作业消息
-                       PreferenceDao.setHomeworkRed(context,true);
+                       AppConfig.setHomeworkRed(context, true);
                         if (NoticeFragment.homeworkRed!=null){
                             NoticeFragment.homeworkRed.setVisibility(View.VISIBLE);
                         }
                     }else if (data.equals(COMMENT)){//回帖消息
-                        PreferenceDao.setCommentRed(context,true);
+                        AppConfig.setCommentRed(context, true);
                         if (NoticeFragment.commentRed!=null){
                             NoticeFragment.commentRed.setVisibility(View.VISIBLE);
                         }
@@ -72,7 +72,7 @@ public class PushBroadcastReceiver extends BroadcastReceiver {
                 // 有些情况下ClientID可能会发生变化，为保证获取最新的ClientID，请应用程序在每次获取ClientID广播后，都能进行一次关联绑定
                 String cid = bundle.getString("clientid");
                 Log.d(TAG, "clientId=" + cid);
-                String name= PreferenceDao.getLoadName(context);
+                String name= AppConfig.getLoadName(context);
                 Log.d(TAG,"name="+name);
                 //用户没有登录，取消上传
                 if (name.trim().equals("")){
@@ -82,7 +82,7 @@ public class PushBroadcastReceiver extends BroadcastReceiver {
                 params.put("CID",cid);
                 params.put("username",name);
                 //上传用户名和clientID
-                asyncHttpClient.post(PathConstant.PATH_UID_CID,params,new JsonHttpResponseHandler(){
+                asyncHttpClient.post(ConstantValue.PATH_UID_CID,params,new JsonHttpResponseHandler(){
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);

@@ -5,7 +5,7 @@ package com.ntp.util;
  *
  * @author yanxing
  */
-public class PathConstant {
+public class ConstantValue {
 
     public static final String IP = "http://192.168.0.105/ntp/";
 
@@ -138,5 +138,11 @@ public class PathConstant {
      * 上传<UID,CID>
      */
     public static final String PATH_UID_CID = IP + "phone/cid";
+
+
+    /**
+     * 图片缓存文件夹
+     */
+    public static final String IMAGE_URI = "file:///mnt/sdcard/ntp/";
 
 }
