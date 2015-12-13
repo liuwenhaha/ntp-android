@@ -23,9 +23,10 @@ int attr ptrShowIndicator 0x7f010005
 int attr ptrSubHeaderTextAppearance 0x7f01000b
 int dimen header_footer_left_right_padding 0x7f060000
 int dimen header_footer_top_bottom_padding 0x7f060001
-int dimen indicator_corner_radius 0x7f060002
-int dimen indicator_internal_padding 0x7f060003
-int dimen indicator_right_padding 0x7f060004
+int dimen header_size 0x7f060002
+int dimen indicator_corner_radius 0x7f060003
+int dimen indicator_internal_padding 0x7f060004
+int dimen indicator_right_padding 0x7f060005
 int drawable default_ptr_flip 0x7f020000
 int drawable default_ptr_rotate 0x7f020001
 int drawable indicator_arrow 0x7f020002

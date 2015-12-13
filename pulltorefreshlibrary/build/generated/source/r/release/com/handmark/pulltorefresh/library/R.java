@@ -129,9 +129,10 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
     public static final class dimen {
         public static int header_footer_left_right_padding=0x7f060000;
         public static int header_footer_top_bottom_padding=0x7f060001;
-        public static int indicator_corner_radius=0x7f060002;
-        public static int indicator_internal_padding=0x7f060003;
-        public static int indicator_right_padding=0x7f060004;
+        public static int header_size=0x7f060002;
+        public static int indicator_corner_radius=0x7f060003;
+        public static int indicator_internal_padding=0x7f060004;
+        public static int indicator_right_padding=0x7f060005;
     }
     public static final class drawable {
         public static int default_ptr_flip=0x7f020000;
