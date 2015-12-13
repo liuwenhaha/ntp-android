@@ -135,6 +135,7 @@ public class MainActivity extends BaseActivity{
     };
 
 
+    //点击事件，必须私有
     @Event(value = {R.id.allCourse, R.id.homework, R.id.me, R.id.search})
     private void onClick(View v) {
         switch (v.getId()) {

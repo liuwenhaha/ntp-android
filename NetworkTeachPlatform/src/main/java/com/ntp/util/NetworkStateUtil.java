@@ -12,6 +12,7 @@ import android.util.Log;
 public class NetworkStateUtil {
 
 
+    public static final String NO_NETWORK="网络不可用，请检查网络连接";
     /**
      * 网络是否可用
      *

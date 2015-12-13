@@ -43,6 +43,15 @@ public class CourseAdapter extends BaseAdapter {
                 .build();
     }
 
+    /**
+     * 更新数据
+     * @param mCourseList
+     */
+    public void update (List<Course> mCourseList){
+        this.mCourseList=mCourseList;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return mCourseList.size();

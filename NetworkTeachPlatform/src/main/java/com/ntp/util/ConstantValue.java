@@ -45,11 +45,6 @@ public class ConstantValue {
     public static final String PATH_COURSE_TYPE_LIST = IP + "phone/course-type";
 
     /**
-     * 访问用户服务器端图片地址，需要拼接加上图片名称
-     */
-    public static String PATH_IMAGE = IP + "upload/";
-
-    /**
      * 访问用户服务器端课件地址，需要拼接加上课件path
      */
     public static String PATH_DOWNLOAD_COURSE_WARE = IP + "upload/";

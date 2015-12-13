@@ -1,7 +1,7 @@
 package com.ntp.network;
 
+import com.ntp.network.okhttp.CallbackHandler;
 import com.ntp.util.ConstantValue;
-import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -38,11 +38,20 @@ public class HttpRequestHelper {
      * @param pageSize 每页大小
      * @param callback
      */
-    public void getCourseList(int page,int pageSize,Callback callback){
+    public void getCourseList(int page,int pageSize,CallbackHandler callback){
         String url= ConstantValue.PATH_COURSE_LIST;
         String key[]=new String[]{"page","pageSize"};
         String value[]=new String[]{String.valueOf(page),String.valueOf(pageSize)};
         post(url,key,value,callback);
+    }
+
+    /**
+     * 获取课程类型
+     * @param callback
+     */
+    public void getCourseTypeList(CallbackHandler callback){
+        String url=ConstantValue.PATH_COURSE_TYPE_LIST;
+        post(url,new String[]{},new String[]{},callback);
     }
 
     /**
@@ -52,7 +61,7 @@ public class HttpRequestHelper {
      * @param value
      * @param callback
      */
-    private void post(String url,String key[],String value[],Callback callback){
+    private void post(String url,String key[],String value[],CallbackHandler callback){
         FormEncodingBuilder builder = new FormEncodingBuilder();
         for (int i=0;i<key.length;i++){
             builder.add(key[i],value[i]);

@@ -20,7 +20,7 @@ public class Course {
      * 只存image.png,方便加载本地缓存图片
      * @param code    课程代码
      * @param name    课程名称
-     * @param imageUri 课程图片路径
+     * @param imageUri 课程图片名称
      * @param type    课程类型
      * @param teacher 老师姓名
      */

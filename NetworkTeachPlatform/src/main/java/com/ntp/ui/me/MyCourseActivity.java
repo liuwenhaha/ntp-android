@@ -108,12 +108,6 @@ public class MyCourseActivity extends Activity implements AdapterView.OnItemClic
                                     j.get("coursetype").equals(null)?"":j.getJSONObject("coursetype").getString("type"), j.get("user").equals(null)?"":j.getJSONObject("user").getString("name"));
                             list.add(course);
                         }
-                        for (Course course:list){
-                            //有图片加上网址前缀
-                            if (!course.getImageUri().equals("")){
-                                course.setImageUri(ConstantValue.PATH_IMAGE+course.getImageUri());
-                            }
-                        }
                         courseAdapter = new CourseAdapter(list, getApplicationContext());
                         load.setVisibility(View.GONE);
                         pullToRefreshView.setAdapter(courseAdapter);
@@ -155,12 +149,6 @@ public class MyCourseActivity extends Activity implements AdapterView.OnItemClic
                         Course course = new Course(j.getString("code"), j.getString("name"),j.getString("image").equals("null")?"":j.getString("image"),
                                 j.get("coursetype").equals(null)?"":j.getJSONObject("coursetype").getString("type"), j.get("user").equals(null)?"":j.getJSONObject("user").getString("name"));
                         list.add(course);
-                    }
-                    for (Course course:list){
-                        //有图片加上网址前缀
-                        if (!course.getImageUri().equals("")){
-                            course.setImageUri(ConstantValue.PATH_IMAGE+course.getImageUri());
-                        }
                     }
                 }
             } catch (JSONException e) {

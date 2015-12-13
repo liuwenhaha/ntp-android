@@ -1,50 +1,33 @@
 package com.ntp.ui.course;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.text.format.DateUtils;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ntp.base.BaseFragment;
+import com.ntp.model.CoursePageInfo;
+import com.ntp.model.CourseType;
 import com.ntp.network.HttpRequestHelper;
+import com.ntp.network.okhttp.CallbackHandler;
+import com.ntp.network.okhttp.GsonOkHttpResponse;
 import com.ntp.ui.R;
 import com.ntp.adapter.CourseAdapter;
-import com.ntp.util.ConstantValue;
 import com.ntp.dao.CourseDao;
 import com.ntp.dao.CourseTypeDao;
-import com.ntp.util.AppConfig;
 import com.ntp.model.Course;
-import com.ntp.util.HttpUtil;
 import com.ntp.util.LogUtil;
 import com.ntp.util.NetworkStateUtil;
-import com.ntp.util.SDCardUtil;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,102 +47,29 @@ public class CourseListFragment extends BaseFragment implements PullToRefreshBas
 
     //当前分页页数
     private int currentPage=1;
-    //发送消息成功标识
-    private static final int RESULT = 1;
-
-    //加载课程成功后更新界面
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            if (msg.what == RESULT) {
-                ArrayList<Course> list = (ArrayList<Course>) msg.getData().getSerializable("list");
-                adapter = new CourseAdapter(list, getActivity());
-                adapter.notifyDataSetChanged();
-                //需要此句，不然无法显示
-                pullToRefreshView.setAdapter(adapter);
-            }
-        }
-    };
-
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        super.onCreateView(inflater, container, savedInstanceState);
-//        View view = inflater.inflate(R.layout.fragment_course_list, container, false);
-//
-////        pullToRefreshView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
-////            @Override //下拉刷新
-////            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-////                String label = DateUtils.formatDateTime(getActivity().getApplicationContext(), System.currentTimeMillis(),
-////                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
-////                refreshView.getLoadingLayoutProxy(true, false).setLastUpdatedLabel("更新于:" + label);
-////                if (NetworkStateUtil.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
-////                    new GetDataTask().execute();
-////                } else {
-////                    Toast.makeText(getActivity().getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
-////                }
-////            }
-////
-////            @Override  //下拉刷新
-////            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-////                String label = "正在加载...";
-////                refreshView.getLoadingLayoutProxy(false, true).setPullLabel(label);
-////                refreshView.getLoadingLayoutProxy(false, true).setReleaseLabel(label);
-////                refreshView.getLoadingLayoutProxy(false, true).setRefreshingLabel(label);
-////                if (NetworkStateUtil.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
-////                    new PullUpTask().execute();
-////                } else {
-////                    Toast.makeText(getActivity().getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
-////                }
-////            }
-////        });
-//
-//        return view;
-//    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         pullToRefreshView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         pullToRefreshView.setOnRefreshListener(this);
+        adapter = new CourseAdapter(courses, getActivity());
+        pullToRefreshView.setAdapter(adapter);
         courseDao = new CourseDao(getActivity());
         courseTypeDao = new CourseTypeDao(getActivity());
         List<Course> courseList = courseDao.getAllCourse();
-        if (courseList.size() > 0) {//如果本地有缓存,隐藏"提示正在加载课程中"视图
-            loadCourseCache(courseList);
-
-        } else {//本地没有缓存，请求网络数据
-            if (NetworkStateUtil.isNetworkConnected(getActivity())) {//网络可用
-            } else {
-                Toast.makeText(getActivity().getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
-            }
+        //如果本地有缓存数据
+        if (courseList.size() > 0) {
+            adapter.update(courseList);
+            pullToRefreshView.setMode(PullToRefreshBase.Mode.BOTH);
+        } else {
+            pullToRefreshView.setRefreshing(true);
         }
     }
 
-    //加载本地课程缓存信息
-    private void loadCourseCache(List<Course> courseList) {
-        LogUtil.i(TAG, "本地有缓存.......");
-        if (!SDCardUtil.checkSDCard()) {
-            Toast.makeText(getActivity().getApplicationContext(), "请插入SD卡", Toast.LENGTH_SHORT).show();
-        }
-        for (Course course : courseList) {//追加图片路径前缀
-            //如果课程图片名称不为空，则添加前缀本地缓存路径，为空，则默认显示course_default图片（在适配器中配置）
-            if (!course.getImageUri().equals("")) {
-                course.setImageUri(ConstantValue.IMAGE_URI + course.getImageUri());
-            }
-            //如果SD卡不存在，则显示默认图片
-            if (!SDCardUtil.checkSDCard()){
-                course.setImageUri("");
-            }
-        }
-        courses = courseList;
-        adapter = new CourseAdapter(courseList, getActivity());
-        pullToRefreshView.setAdapter(adapter);
-    }
-
-    //ListView点击事件响应
+    //item点击事件响应
     @Event(value = R.id.pull_to_refresh_listview,type=AdapterView.OnItemClickListener.class)
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    private void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), CourseDetailActivity.class);
         TextView text = (TextView) view.findViewById(R.id.code);
         TextView textView = (TextView) view.findViewById(R.id.courseName);
@@ -189,186 +99,78 @@ public class CourseListFragment extends BaseFragment implements PullToRefreshBas
      * @param pullUpOrDown true 下拉刷新，false上拉刷新
      */
     private void loadData(final boolean pullUpOrDown) {
+        if (!NetworkStateUtil.isNetworkConnected(getActivity())){
+            showToast(NetworkStateUtil.NO_NETWORK);
+            return;
+        }
         if (!pullUpOrDown){//上拉刷新
             currentPage++;
         }
-        HttpRequestHelper.getInstance().getCourseList(currentPage, 20, new Callback() {
+        GsonOkHttpResponse gsonOkHttpResponse=new GsonOkHttpResponse(CoursePageInfo.class);
+        HttpRequestHelper.getInstance().getCourseList(currentPage, 20, new CallbackHandler<CoursePageInfo>(gsonOkHttpResponse) {
             @Override
-            public void onFailure(Request request, IOException e) {
-                LogUtil.e(TAG,request.toString()+e.toString());
-
+            public void onFailure(Request request, IOException e,int code) {
+                LogUtil.e(TAG, request.toString() + e.toString());
             }
 
             @Override
-            public void onResponse(Response response) throws IOException {
-                   LogUtil.d(TAG,response.body().string());
+            public void onResponse(CoursePageInfo coursePageInfo){
+                currentPage = coursePageInfo.getCurrentPage();
+
+                if (pullUpOrDown) {//下拉刷新
+                    if (coursePageInfo.getList().isEmpty()) {
+                        pullToRefreshView.onRefreshComplete();
+                        showToast("没有课程");
+                        return;
+                    }
+                    courses.clear();
+                    pullToRefreshView.setMode(PullToRefreshBase.Mode.BOTH);
+                    updateCourseTypeData();
+                } else {
+                    if (coursePageInfo.getList().isEmpty()) {
+                        pullToRefreshView.onRefreshComplete();
+                        showToast("已经翻到底了");
+                        return;
+                    }
+
+                }
+                for (CoursePageInfo.ListEntity listEntity : coursePageInfo.getList()) {
+                    Course course = new Course();
+                    course.setName(listEntity.getName());
+                    course.setImageUri(listEntity.getImage());
+                    course.setCode(listEntity.getCode());
+                    course.setTeacher(listEntity.getUser().getName());
+                    course.setType(listEntity.getCoursetype().getType());
+                    courses.add(course);
+                    if (pullUpOrDown) {
+                        courseDao.save(course);//上拉缓存到数据库
+                    }
+                }
+                pullToRefreshView.onRefreshComplete();
+                adapter.update(courses);
             }
         });
-
     }
 
-/**----------------------------------------- 下拉刷新线程-------------------------------------------------**/
     /**
-     * 下拉刷新线程
+     * 更新课程类型，保存到数据库
      */
-    private class GetDataTask extends AsyncTask<Void, Void, List<Course>> {
-
-
-        @Override //后台耗时操作
-        protected List<Course> doInBackground(Void... params) {
-            List<Course> list = new ArrayList<Course>();//下拉刷新更新数据，最多显示20条，不显示上次上拉刷新更新的数据
-            try {
-                JSONObject jb = HttpUtil.getDataFromInternet(new URL(ConstantValue.PATH_COURSE_LIST), null);
-                if (jb != null) {
-                    int currentPage = jb.getInt("currentPage");
-                    JSONArray ja = jb.getJSONArray("list");
-                    courseDao.delete();//先清空缓存
-                    for (int i = 0; i < ja.length(); i++) {
-                        JSONObject j = ja.getJSONObject(i);
-                        Object courseTypeJS = j.get("coursetype");//先视为对象，防止空指针
-                        Object userJS = j.get("user");
-                        String coursetypeStr;
-                        String userStr;
-                        if (courseTypeJS.equals(null)) {
-                            coursetypeStr = "";
-                        } else {
-                            coursetypeStr = j.getJSONObject("coursetype").getString("type");
-                        }
-                        if (userJS.equals(null)) {
-                            userStr = "";
-                        } else {
-                            userStr = j.getJSONObject("user").getString("name");
-                        }
-                        Course course = new Course(j.getString("code"), j.getString("name"), j.getString("image").equals("null") ? "" :j.getString("image"), coursetypeStr, userStr);
-                        list.add(course);
-                        courseDao.save(course);//缓存到数据库
-                        LogUtil.d(TAG, course.toString());
-                    }
-                }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
+    public void updateCourseTypeData() {
+        GsonOkHttpResponse gsonOkHttpResponse=new GsonOkHttpResponse(CourseType.class);
+        HttpRequestHelper.getInstance().getCourseTypeList(new CallbackHandler<CourseType>(gsonOkHttpResponse) {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                LogUtil.e(TAG, request.toString() + e.toString());
             }
-            updateData();//下拉更新首页时同时更新所有的课程类型，保存到数据库
-            return list;
-        }
 
-        @Override //操作UI
-        protected void onPostExecute(List<Course> list) {
-            pullToRefreshView.onRefreshComplete();
-            if (list.size() > 0) {//获取到数据，更新UI
-                for (Course course : list) {
-                    //如果课程图片名称不为空，则添加其网络地址前缀，为空，则默认显示course_default图片（在适配器中配置）
-                    if (!course.getImageUri().equals("")) {
-                        course.setImageUri(ConstantValue.PATH_IMAGE + course.getImageUri());
-                    }
+            @Override
+            public void onResponse(CourseType courseType){
+                courseTypeDao.delete();
+                for (CourseType.ListCTypeEntity listCTypeEntity : courseType.getListCType()) {
+                    courseTypeDao.save(listCTypeEntity.getType());
                 }
-                adapter = new CourseAdapter(list, getActivity());
-                pullToRefreshView.setAdapter(adapter);
-                Toast.makeText(getActivity().getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getActivity().getApplicationContext(), "没有更新到数据，请检查网络，稍后再试", Toast.LENGTH_LONG).show();
             }
-            super.onPostExecute(list);
-        }
-
-        /**
-         * 更新课程类型，保存到数据库
-         */
-        public void updateData() {
-            try {
-                JSONObject jb = HttpUtil.getDataFromInternet(new URL(ConstantValue.PATH_COURSE_TYPE_LIST), null);
-                if (jb != null) {
-                    courseTypeDao.delete();//先清空
-                    JSONArray ja = jb.getJSONArray("listCType");
-                    for (int i = 0; i < ja.length(); i++) {
-                        JSONObject j = ja.getJSONObject(i);
-                        courseTypeDao.save(j.getString("type"));
-                    }
-                } else {
-                    Log.i(TAG, "没有取到后台数据");
-                }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (JSONException e1) {
-                e1.printStackTrace();
-            }
-        }
-    }
-
-
-/**---------------------------------------------- 上拉刷新线程-----------------------------------------------**/
-    /**
-     * 上拉刷新线程
-     */
-    private class PullUpTask extends AsyncTask<Void, Void, List<Course>> {
-
-        JSONObject jb;
-        JSONArray ja;
-
-        //后台耗时操作
-        @Override
-        protected List<Course> doInBackground(Void... params) {
-            List<Course> list=null;
-            try {
-                jb = HttpUtil.getDataFromInternet(new URL(ConstantValue.PATH_COURSE_LIST + "?page=" + (currentPage + 1)), "GET");
-                if (jb != null) {//下拉刷新的数据不缓存到数据库
-                    ja = jb.getJSONArray("list");
-                    if (ja.length() != 0) {//如果list集合有数据，可能数据查完了，但是currentPage会返回数据
-                        int page = jb.getInt("currentPage");
-                    }
-                    list = courses;
-                    LogUtil.d(TAG + " list size=", list.size() + "");
-                    for (int i = 0; i < ja.length(); i++) {
-                        JSONObject j = ja.getJSONObject(i);
-                        Object courseTypeJS = j.get("coursetype");//先视为对象，防止空指针
-                        Object userJS = j.get("user");
-                        String coursetypeStr;
-                        String userStr;
-                        if (courseTypeJS.equals(null)) {
-                            coursetypeStr = "";
-                        } else {
-                            coursetypeStr = j.getJSONObject("coursetype").getString("type");
-                        }
-                        if (userJS.equals(null)) {
-                            userStr = "";
-                        } else {
-                            userStr = j.getJSONObject("user").getString("name");
-                        }
-                        Course course = new Course(j.getString("code"), j.getString("name"), j.getString("image").equals("null") ? "" :j.getString("image"), coursetypeStr, userStr);
-                        list.add(course);
-                        Log.i(TAG, course.toString());
-                    }
-                }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return list;
-        }
-
-        @Override //操作UI
-        protected void onPostExecute(List<Course> list) {
-            super.onPostExecute(list);
-            pullToRefreshView.onRefreshComplete();
-            if (jb != null && ja.length() != 0) {//获取到数据，更新UI
-                for (Course course : list) {
-                    //如果课程图片名称不为空，则添加其网络地址前缀，为空，则默认显示course_default图片（在适配器中配置）
-                    if (!course.getImageUri().equals("")) {
-                        course.setImageUri(ConstantValue.PATH_IMAGE + course.getImageUri());
-                    }
-                }
-                adapter = new CourseAdapter(list, getActivity());
-                adapter.notifyDataSetChanged();
-                Toast.makeText(getActivity().getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
-            } else if (jb == null) {
-                Toast.makeText(getActivity().getApplicationContext(), "没有更新到数据，请检查网络，稍后再试", Toast.LENGTH_LONG).show();
-            } else if (jb != null && ja.length() == 0) {//数据加载完
-                Toast.makeText(getActivity().getApplicationContext(), "课程已加载完", Toast.LENGTH_LONG).show();
-            }
-        }
+        });
     }
 
     @Override
@@ -377,7 +179,6 @@ public class CourseListFragment extends BaseFragment implements PullToRefreshBas
         courseTypeDao.close();
         super.onDestroy();
     }
-
 }
 
 

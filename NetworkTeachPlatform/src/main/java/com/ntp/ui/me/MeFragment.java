@@ -143,7 +143,7 @@ public class MeFragment extends Fragment implements View.OnClickListener {
                     return;
                 }
                 login.setImageDrawable(getResources().getDrawable(R.drawable.default_head_loading));
-                String imageUri = ConstantValue.PATH_IMAGE + head;
+                String imageUri =head;
                 asyncHttpClient.post(imageUri, new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

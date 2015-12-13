@@ -116,12 +116,6 @@ public class SearchCourseActivity extends Activity implements View.OnClickListen
                                 list.add(course);
                             }
                             searchHistoryDao.save(search.getText().toString());//保存搜索历史
-                            for (Course course:list){
-                                //有图片加上网址前缀
-                                if (!course.getImageUri().equals("")){
-                                    course.setImageUri(ConstantValue.PATH_IMAGE+course.getImageUri());
-                                }
-                            }
                             courseAdapter = new CourseAdapter(list, getApplicationContext());
                             listView.setVisibility(View.VISIBLE);//设置listView可见
                             tip.setVisibility(View.GONE);
