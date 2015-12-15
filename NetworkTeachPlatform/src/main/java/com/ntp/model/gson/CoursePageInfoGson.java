@@ -1,4 +1,4 @@
-package com.ntp.model;
+package com.ntp.model.gson;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import java.util.List;
  * 课程列表和分页信息 Gson插件GsonFormat自动生成
  * Created by lishuangxiang on 2015/12/13.
  */
-public class CoursePageInfo {
+public class CoursePageInfoGson {
 
     /**
      * currentPage : 1

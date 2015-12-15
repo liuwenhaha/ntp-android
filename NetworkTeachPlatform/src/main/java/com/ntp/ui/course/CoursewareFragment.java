@@ -69,18 +69,6 @@ public class CoursewareFragment extends Fragment implements CoursewareAdapter.Ca
     public static final String DOWNLOAD = "下载";
     public static final String DOWNLOAD_CANCEL = "取消";
 
-
-    /**
-     * @param code 课程代码
-     */
-    public static CoursewareFragment getInstance(String code) {
-        mCoursewareFragment = new CoursewareFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("code", code);
-        mCoursewareFragment.setArguments(bundle);
-        return mCoursewareFragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

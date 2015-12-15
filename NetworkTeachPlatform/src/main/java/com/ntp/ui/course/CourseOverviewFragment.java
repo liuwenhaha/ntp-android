@@ -2,49 +2,38 @@ package com.ntp.ui.course;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.ntp.base.BaseFragment;
+import com.ntp.model.gson.CourseOverviewGson;
+import com.ntp.network.HttpRequestHelper;
+import com.ntp.network.okhttp.CallbackHandler;
+import com.ntp.network.okhttp.GsonOkHttpResponse;
 import com.ntp.ui.R;
-import com.ntp.util.ConstantValue;
-import com.ntp.util.NetworkStateUtil;
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
+import com.squareup.okhttp.Request;
 
-import org.apache.http.Header;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
+
+import java.io.IOException;
 
 /**
  * 课程简介
  */
-public class CourseOverviewFragment extends Fragment {
+@ContentView(R.layout.fragment_course_overview)
+public class CourseOverviewFragment extends BaseFragment {
 
-    private static CourseOverviewFragment mCourseOverviewFragment;
-    private String code;//课程代码
-    private static final String TAG = "CourseOverviewFragment";
-    private static AsyncHttpClient client = new AsyncHttpClient();
+    @ViewInject(R.id.content)
     private TextView content;//课程简介
+
+    @ViewInject(R.id.load)
     private LinearLayout load;//加载提示
 
-
-    /**
-     * @param code 需要向Fragment传入的课程代码
-     */
-    public static CourseOverviewFragment getInstance(String code) {
-        mCourseOverviewFragment = new CourseOverviewFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("code", code);
-        mCourseOverviewFragment.setArguments(bundle);
-        return mCourseOverviewFragment;
-    }
+    private String code;//课程代码
+    private static AsyncHttpClient client = new AsyncHttpClient();
 
     @Override
      public void onCreate(Bundle savedInstanceState) {
@@ -53,49 +42,23 @@ public class CourseOverviewFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_course_overview, container, false);
-        content= (TextView) view.findViewById(R.id.content);
-        load= (LinearLayout) view.findViewById(R.id.load);
-        RequestParams params=new RequestParams();
-        params.put("code", code);
-        if(NetworkStateUtil.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
-            client.post(ConstantValue.PATH_COURSE_DETAIL, params, new JsonHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers,
-                                      JSONObject response) {
-                    super.onSuccess(statusCode, headers, response);
-                    if (response != null) {
-                        try {
-                            String overview = response.getJSONObject("course").getString("overview");
-                            content.setText(overview.equals("null") ? "无" : overview);
-                            load.setVisibility(View.GONE);
-                            Log.i(TAG, overview);
-                        } catch (JSONException e) {
-                            Log.i(TAG, e.toString());
-                            e.printStackTrace();
-                        }
-                    } else {
-                        if(getActivity()!=null){
-                            Toast.makeText(getActivity().getApplicationContext(), "加载失败", Toast.LENGTH_SHORT).show();
-                        }
-                        load.setVisibility(View.GONE);
-                    }
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    super.onFailure(statusCode, headers, throwable, errorResponse);
-                    Log.i(TAG, throwable.toString());
-                    if(getActivity()!=null){
-                        Toast.makeText(getActivity().getApplicationContext(), "加载失败", Toast.LENGTH_SHORT).show();
-                    }
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        GsonOkHttpResponse gsonOkHttpResponse=new GsonOkHttpResponse(CourseOverviewGson.class);
+        HttpRequestHelper.getInstance().getCourseOverview(code, new CallbackHandler<CourseOverviewGson>(gsonOkHttpResponse) {
+            @Override
+            public void onResponse(CourseOverviewGson courseOverviewGson) {
+                if (courseOverviewGson != null) {
                     load.setVisibility(View.GONE);
+                    content.setText(courseOverviewGson.getCourse().getOverview());
                 }
-            });
-        }
-        return view;
-    }
+            }
 
+            @Override
+            public void onFailure(Request request, IOException e, int response) {
+                super.onFailure(request, e, response);
+                showToast("加载失败");
+            }
+        });
+    }
 }

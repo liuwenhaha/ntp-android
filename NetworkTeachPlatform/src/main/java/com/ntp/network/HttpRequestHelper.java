@@ -55,6 +55,15 @@ public class HttpRequestHelper {
     }
 
     /**
+     * 获取课程简介
+     * @param callback
+     */
+    public void getCourseOverview(String code,CallbackHandler callback){
+        String url=ConstantValue.PATH_COURSE_DETAIL;
+        post(url,new String[]{"code"},new String[]{code},callback);
+    }
+
+    /**
      * post异步网络请求
      * @param url
      * @param key

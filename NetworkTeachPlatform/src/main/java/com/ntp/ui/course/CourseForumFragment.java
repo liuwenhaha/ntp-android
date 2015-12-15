@@ -59,17 +59,6 @@ public class CourseForumFragment extends Fragment implements AdapterView.OnItemC
     private static final int REQUEST =207;
     private static final int REQUEST_COMMENT =208;
 
-    /**
-     * 创建对象
-     */
-    public static CourseForumFragment getInstance(String code) {
-        mCourseForumFragment = new CourseForumFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("code", code);
-        mCourseForumFragment.setArguments(bundle);
-        return mCourseForumFragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

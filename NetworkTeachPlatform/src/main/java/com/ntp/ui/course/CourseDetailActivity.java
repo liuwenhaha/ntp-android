@@ -11,62 +11,88 @@ import com.ntp.ui.R;
 import com.ntp.adapter.FragAdapter;
 import com.ntp.base.BaseActivity;
 
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.Event;
+import org.xutils.view.annotation.ViewInject;
+
 import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * 课程详细:简介、课件、视频、讨论
  */
-public class CourseDetailActivity extends BaseActivity implements View.OnClickListener {
+@ContentView(R.layout.activity_course_detail)
+public class CourseDetailActivity extends BaseActivity{
 
-    private ImageView back;//返回
-    private TextView courseName;
-    private ViewPager viewPager;
-    private FragAdapter fragAdapter;//ViewPager适配器
-    private List<Fragment> fragments = new ArrayList<Fragment>();
+    @ViewInject(R.id.courseName)
+    private TextView mCourseName;
+
+    @ViewInject(R.id.viewPager)
+    private ViewPager mViewPager;
+
     //tab选项卡文字
-    private TextView mOverview, mCourseWare, mCourseVideo, mCourseForum;
+    @ViewInject(R.id.overview)
+    private TextView mOverview;
+
+    @ViewInject(R.id.courseWare)
+    private TextView mCourseWare;
+
+    @ViewInject(R.id.courseVideo)
+    private TextView mCourseVideo;
+
+    @ViewInject(R.id.courseForum)
+    private TextView mCourseForum;
     //tab选项卡下划线
-    private ImageView mOverviewIndicator, mCourseWareIndicator, mCourseVideoIndicator, mCourseForumIndicator;
-    private String code;//课程代码
+    @ViewInject(R.id.overviewIndicator)
+    private ImageView mOverviewIndicator;
+
+    @ViewInject(R.id.courseWareIndicator)
+    private ImageView mCourseWareIndicator;
+
+    @ViewInject(R.id.courseVideoIndicator)
+    private ImageView mCourseVideoIndicator;
+
+    @ViewInject(R.id.courseForumIndicator)
+    private ImageView mCourseForumIndicator;
+
+    private String mCode;//课程代码
+    private FragAdapter mFragAdapter;//ViewPager适配器
+    private List<Fragment> mFragments = new ArrayList<Fragment>();
+    private Fragment mCourseOverviewFragment;
+    private Fragment mCoursewareFragment;
+    private Fragment mCoursevideoFragment;
+    private Fragment mCourseForumFragment;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course_detail);
-        initView();
+        initData();
     }
 
     //初始化界面
-    private void initView() {
-        courseName = (TextView) findViewById(R.id.courseName);
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
-        mOverview = (TextView) findViewById(R.id.overview);
-        mCourseWare = (TextView) findViewById(R.id.courseWare);
-        mCourseVideo = (TextView) findViewById(R.id.courseVideo);
-        mCourseForum = (TextView) findViewById(R.id.courseForum);
-        mOverviewIndicator = (ImageView) findViewById(R.id.overviewIndicator);
-        mCourseWareIndicator = (ImageView) findViewById(R.id.courseWareIndicator);
-        mCourseVideoIndicator = (ImageView) findViewById(R.id.courseVideoIndicator);
-        mCourseForumIndicator = (ImageView) findViewById(R.id.courseForumIndicator);
+    private void initData() {
         String name = getIntent().getExtras().getString("name");
-        courseName.setText(name);//设置课程名称
-        code=getIntent().getExtras().getString("code");
-        mOverview.setOnClickListener(this);
-        mCourseWare.setOnClickListener(this);
-        mCourseVideo.setOnClickListener(this);
-        mCourseForum.setOnClickListener(this);
-        back = (ImageView) findViewById(R.id.back);
-        back.setOnClickListener(this);
-        fragments.add(CourseOverviewFragment.getInstance(code));
-        fragments.add(CoursewareFragment.getInstance(code));
-        fragments.add(CoursevideoFragment.getInstance(code));
-        fragments.add(CourseForumFragment.getInstance(code));
-        fragAdapter = new FragAdapter(getSupportFragmentManager(), fragments);
-        viewPager.setAdapter(fragAdapter);
-        viewPager.setOffscreenPageLimit(2);//缓存相邻两个页面
-        viewPager.setCurrentItem(0);
-        viewPager.setOnPageChangeListener(new MyViewPagerChangeListener());
+        mCourseName.setText(name);//设置课程名称
+        mCode=getIntent().getExtras().getString("code");
+        Bundle bundle = new Bundle();
+        bundle.putString("code", mCode);
+        mCourseOverviewFragment=new CourseOverviewFragment();
+        mCoursewareFragment=new CoursewareFragment();
+        mCoursevideoFragment=new CoursevideoFragment();
+        mCourseForumFragment=new CourseForumFragment();
+        mCourseOverviewFragment.setArguments(bundle);
+        mCoursewareFragment.setArguments(bundle);
+        mCoursevideoFragment.setArguments(bundle);
+        mCourseForumFragment.setArguments(bundle);
+        mFragments.add(mCourseOverviewFragment);
+        mFragments.add(mCoursewareFragment);
+        mFragments.add(mCoursevideoFragment);
+        mFragments.add(mCourseForumFragment);
+        mFragAdapter = new FragAdapter(getSupportFragmentManager(), mFragments);
+        mViewPager.setAdapter(mFragAdapter);
+        mViewPager.setOffscreenPageLimit(2);//缓存相邻两个页面
+        mViewPager.setCurrentItem(0);
+        mViewPager.setOnPageChangeListener(new MyViewPagerChangeListener());
     }
 
     /**
@@ -85,7 +111,7 @@ public class CourseDetailActivity extends BaseActivity implements View.OnClickLi
                 case 0://简介Fragment被选择
                     setTextColor(0);
                     break;
-                case 1://课件Fragent被选择
+                case 1://课件Fragment被选择
                     setTextColor(1);
                     break;
                 case 2://课程视频被选择
@@ -132,23 +158,23 @@ public class CourseDetailActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
-    @Override
-    public void onClick(View v) {
+    @Event(value = {R.id.back,R.id.overview,R.id.courseWare,R.id.courseVideo,R.id.courseForum})
+    private void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
                 finish();
                 break;
             case R.id.overview:
-                viewPager.setCurrentItem(0);
+                mViewPager.setCurrentItem(0);
                 break;
             case R.id.courseWare:
-                viewPager.setCurrentItem(1);
+                mViewPager.setCurrentItem(1);
                 break;
             case R.id.courseVideo:
-                viewPager.setCurrentItem(2);
+                mViewPager.setCurrentItem(2);
                 break;
             case R.id.courseForum:
-                viewPager.setCurrentItem(3);
+                mViewPager.setCurrentItem(3);
                 break;
         }
     }

@@ -1,4 +1,4 @@
-package com.ntp.model;
+package com.ntp.model.gson;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import java.util.List;
  * 课程类型 GsonFormat自动生成
  * Created by lishuangxiang on 2015/12/13.
  */
-public class CourseType {
+public class CourseTypeGson {
 
     /**
      * type : 软件方向

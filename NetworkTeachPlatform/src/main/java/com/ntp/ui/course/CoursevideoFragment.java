@@ -47,17 +47,6 @@ public class CoursevideoFragment extends Fragment implements CoursevideoAdapter.
     private static AsyncHttpClient client = new AsyncHttpClient();
     private static final String TAG = "CourseVideoFragment";
 
-    /**
-     * 创建对象
-     */
-    public static CoursevideoFragment getInstance(String code) {
-        mCoursevideoFragment = new CoursevideoFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("code", code);
-        mCoursevideoFragment.setArguments(bundle);
-        return mCoursevideoFragment;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

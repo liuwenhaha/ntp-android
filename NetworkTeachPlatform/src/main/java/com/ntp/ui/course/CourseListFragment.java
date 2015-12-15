@@ -7,8 +7,8 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.ntp.base.BaseFragment;
-import com.ntp.model.CoursePageInfo;
-import com.ntp.model.CourseType;
+import com.ntp.model.gson.CoursePageInfoGson;
+import com.ntp.model.gson.CourseTypeGson;
 import com.ntp.network.HttpRequestHelper;
 import com.ntp.network.okhttp.CallbackHandler;
 import com.ntp.network.okhttp.GsonOkHttpResponse;
@@ -106,19 +106,19 @@ public class CourseListFragment extends BaseFragment implements PullToRefreshBas
         if (!pullUpOrDown){//上拉刷新
             currentPage++;
         }
-        GsonOkHttpResponse gsonOkHttpResponse=new GsonOkHttpResponse(CoursePageInfo.class);
-        HttpRequestHelper.getInstance().getCourseList(currentPage, 20, new CallbackHandler<CoursePageInfo>(gsonOkHttpResponse) {
+        GsonOkHttpResponse gsonOkHttpResponse=new GsonOkHttpResponse(CoursePageInfoGson.class);
+        HttpRequestHelper.getInstance().getCourseList(currentPage, 20, new CallbackHandler<CoursePageInfoGson>(gsonOkHttpResponse) {
             @Override
             public void onFailure(Request request, IOException e,int code) {
                 LogUtil.e(TAG, request.toString() + e.toString());
             }
 
             @Override
-            public void onResponse(CoursePageInfo coursePageInfo){
-                currentPage = coursePageInfo.getCurrentPage();
+            public void onResponse(CoursePageInfoGson coursePageInfoGson){
+                currentPage = coursePageInfoGson.getCurrentPage();
 
                 if (pullUpOrDown) {//下拉刷新
-                    if (coursePageInfo.getList().isEmpty()) {
+                    if (coursePageInfoGson.getList().isEmpty()) {
                         pullToRefreshView.onRefreshComplete();
                         showToast("没有课程");
                         return;
@@ -127,14 +127,14 @@ public class CourseListFragment extends BaseFragment implements PullToRefreshBas
                     pullToRefreshView.setMode(PullToRefreshBase.Mode.BOTH);
                     updateCourseTypeData();
                 } else {
-                    if (coursePageInfo.getList().isEmpty()) {
+                    if (coursePageInfoGson.getList().isEmpty()) {
                         pullToRefreshView.onRefreshComplete();
                         showToast("已经翻到底了");
                         return;
                     }
 
                 }
-                for (CoursePageInfo.ListEntity listEntity : coursePageInfo.getList()) {
+                for (CoursePageInfoGson.ListEntity listEntity : coursePageInfoGson.getList()) {
                     Course course = new Course();
                     course.setName(listEntity.getName());
                     course.setImageUri(listEntity.getImage());
@@ -156,17 +156,17 @@ public class CourseListFragment extends BaseFragment implements PullToRefreshBas
      * 更新课程类型，保存到数据库
      */
     public void updateCourseTypeData() {
-        GsonOkHttpResponse gsonOkHttpResponse=new GsonOkHttpResponse(CourseType.class);
-        HttpRequestHelper.getInstance().getCourseTypeList(new CallbackHandler<CourseType>(gsonOkHttpResponse) {
+        GsonOkHttpResponse gsonOkHttpResponse=new GsonOkHttpResponse(CourseTypeGson.class);
+        HttpRequestHelper.getInstance().getCourseTypeList(new CallbackHandler<CourseTypeGson>(gsonOkHttpResponse) {
             @Override
             public void onFailure(Request request, IOException e) {
                 LogUtil.e(TAG, request.toString() + e.toString());
             }
 
             @Override
-            public void onResponse(CourseType courseType){
+            public void onResponse(CourseTypeGson courseTypeGson){
                 courseTypeDao.delete();
-                for (CourseType.ListCTypeEntity listCTypeEntity : courseType.getListCType()) {
+                for (CourseTypeGson.ListCTypeEntity listCTypeEntity : courseTypeGson.getListCType()) {
                     courseTypeDao.save(listCTypeEntity.getType());
                 }
             }
