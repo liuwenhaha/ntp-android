@@ -3,30 +3,28 @@ package com.ntp.ui.course;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
+import com.ntp.base.BaseFragment;
+import com.ntp.model.gson.CourseVideoGson;
+import com.ntp.network.HttpRequestHelper;
+import com.ntp.network.okhttp.CallbackHandler;
+import com.ntp.network.okhttp.GsonOkHttpResponse;
 import com.ntp.ui.R;
 import com.ntp.adapter.CoursevideoAdapter;
 import com.ntp.util.ConstantValue;
 import com.ntp.util.AppConfig;
 import com.ntp.model.Coursevideo;
 import com.ntp.util.NetworkStateUtil;
+import com.squareup.okhttp.Request;
 
-import org.apache.http.Header;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,68 +32,51 @@ import java.util.List;
 /**
  * 课程教学视频
  */
-public class CoursevideoFragment extends Fragment implements CoursevideoAdapter.Callback {
+@ContentView(R.layout.fragment_course_video)
+public class CoursevideoFragment extends BaseFragment implements CoursevideoAdapter.Callback {
 
-    private static CoursevideoFragment mCoursevideoFragment;
+    @ViewInject(R.id.coursevideoList)
     private ListView mCoursevideoList;
-    private CoursevideoAdapter mCoursevideoAdapter;
+
+    @ViewInject(R.id.load)
     private LinearLayout load;
 
-    private List<Coursevideo> list;
+    private CoursevideoAdapter mCoursevideoAdapter;
+    private List<Coursevideo> list=new ArrayList<Coursevideo>();
     private String code;//课程代码
 
-    private static AsyncHttpClient client = new AsyncHttpClient();
-    private static final String TAG = "CourseVideoFragment";
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_course_video, container, false);
-        mCoursevideoList = (ListView) view.findViewById(R.id.coursevideoList);
-        load = (LinearLayout) view.findViewById(R.id.load);
-        list = new ArrayList<Coursevideo>();
-        mCoursevideoAdapter = new CoursevideoAdapter(list, getActivity().getApplicationContext(), this);
-        mCoursevideoList.setAdapter(mCoursevideoAdapter);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         code = getArguments().getString("code");
-        RequestParams params = new RequestParams();
-        params.put("code", code);
-        if (NetworkStateUtil.isNetworkConnected(getActivity().getApplicationContext())) {//网络可用
-            client.post(ConstantValue.PATH_COURSE_VIDEO, params, new JsonHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers,
-                                      JSONObject response) {
-                    super.onSuccess(statusCode, headers, response);
-                    if (response != null) {
-                        try {
-                            JSONArray ja = response.getJSONArray("videos");
-                            for (int i = 0; i < ja.length(); i++) {
-                                JSONObject jb = ja.getJSONObject(i);
-                                Coursevideo coursevideo = new Coursevideo(jb.getString("name"), jb.getString("path"), jb.getString("size").equals("null") ? "" : jb.getString("size"));
-                                list.add(coursevideo);
-                            }
-                            load.setVisibility(View.GONE);
-                            mCoursevideoAdapter = new CoursevideoAdapter(list, getActivity().getApplicationContext(), CoursevideoFragment.this);
-                            mCoursevideoAdapter.notifyDataSetChanged();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        Toast.makeText(getActivity().getApplicationContext(), "加载失败", Toast.LENGTH_SHORT).show();
-                        load.setVisibility(View.GONE);
-                    }
-                }
+        GsonOkHttpResponse gsonOkHttpResponse=new GsonOkHttpResponse(CourseVideoGson.class);
+        HttpRequestHelper.getInstance().getCourseVideo(code,new CallbackHandler<CourseVideoGson>(gsonOkHttpResponse){
+            @Override
+            public void onFailure(Request request, IOException e, int response) {
+                super.onFailure(request, e, response);
+                showToast("加载失败");
+                load.setVisibility(View.GONE);
+            }
 
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    super.onFailure(statusCode, headers, throwable, errorResponse);
-                    Log.i(TAG, throwable.toString());
+            @Override
+            public void onResponse(CourseVideoGson courseVideoGson) {
+                super.onResponse(courseVideoGson);
+                if (courseVideoGson!=null){
+                    for (CourseVideoGson.VideosEntity videosEntity:courseVideoGson.getVideos()){
+                        Coursevideo coursevideo = new Coursevideo(videosEntity.getName(),videosEntity.getPath(),videosEntity.getSize());
+                        list.add(coursevideo);
+                    }
+                    load.setVisibility(View.GONE);
+                    mCoursevideoAdapter = new CoursevideoAdapter(list, getActivity(), CoursevideoFragment.this);
+                    mCoursevideoList.setAdapter(mCoursevideoAdapter);
+                }else {
                     load.setVisibility(View.GONE);
                 }
-            });
-        }
-        return view;
-    }
+            }
+        });
 
+    }
 
     /**
      * 回调接口方法

@@ -62,8 +62,12 @@ public class Coursevideo {
      * @param size  视频大小
      */
     public Coursevideo(String name, String path,String size) {
-        this.size = size;
         this.name = name;
+        if (size.equals("null")){
+            this.size="";
+        }else {
+            this.size = size;
+        }
         this.path = path;
     }
 

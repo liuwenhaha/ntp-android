@@ -11,6 +11,9 @@ import android.widget.TextView;
 import com.ntp.ui.R;
 import com.ntp.model.HomeworkNotice;
 
+import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
+
 import java.util.List;
 
 /**
@@ -46,17 +49,37 @@ public class HomeworkNoticeAdapter extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
         TextView id,title,content,time;
-        convertView = LayoutInflater.from(context).inflate(R.layout.listview_item_notice, null);
-        imageView= (ImageView) convertView.findViewById(R.id.img);
-        imageView.setImageResource(homeworkNoticeList.get(position).getImageId());
-        id= (TextView) convertView.findViewById(R.id.id);
-        id.setText(homeworkNoticeList.get(position).getId());
-        title= (TextView) convertView.findViewById(R.id.title);
-        title.setText(homeworkNoticeList.get(position).getTitle());
-        content= (TextView) convertView.findViewById(R.id.courseName);
-        content.setText(homeworkNoticeList.get(position).getContent());
-        time= (TextView) convertView.findViewById(R.id.time);
-        time.setText(homeworkNoticeList.get(position).getTime());
+        ViewHolder viewHolder;
+        if (convertView==null){
+            convertView = LayoutInflater.from(context).inflate(R.layout.listview_item_notice, null);
+            viewHolder=new ViewHolder();
+            x.view().inject(viewHolder,convertView);
+            convertView.setTag(viewHolder);
+        }else {
+            viewHolder= (ViewHolder) convertView.getTag();
+        }
+        viewHolder.imageView.setImageResource(homeworkNoticeList.get(position).getImageId());
+        viewHolder.id.setText(homeworkNoticeList.get(position).getId());
+        viewHolder.title.setText(homeworkNoticeList.get(position).getTitle());
+        viewHolder.content.setText(homeworkNoticeList.get(position).getContent());
+        viewHolder.time.setText(homeworkNoticeList.get(position).getTime());
         return convertView;
+    }
+
+    private class ViewHolder{
+        @ViewInject(R.id.img)
+        private ImageView imageView;
+
+        @ViewInject(R.id.id)
+        private TextView id;
+
+        @ViewInject(R.id.title)
+        private TextView title;
+
+        @ViewInject(R.id.content)
+        private TextView content;
+
+        @ViewInject(R.id.time)
+        private TextView time;
     }
 }

@@ -11,6 +11,9 @@ import android.widget.TextView;
 import com.ntp.model.Coursevideo;
 import com.ntp.ui.R;
 
+import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
+
 import java.util.List;
 
 
@@ -53,25 +56,39 @@ public class CoursevideoAdapter extends BaseAdapter implements View.OnClickListe
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        TextView name,path;
-        ImageView imageView;
-        convertView = LayoutInflater.from(context).inflate(R.layout.listview_item_coursevideo, null);
-        imageView = (ImageView) convertView.findViewById(R.id.watch);
-        imageView.setImageResource(mCoursevideoList.get(position).getImageId());
-        imageView.setTag(position);//设置标记
-        name = (TextView) convertView.findViewById(R.id.coursevideoName);
-        name.setText(mCoursevideoList.get(position).getName());
-        name.setTag(position);
-        path= (TextView) convertView.findViewById(R.id.path);
-        path.setText(mCoursevideoList.get(position).getPath());
-        name.setOnClickListener(this);
-        imageView.setOnClickListener(this);
+        ViewHolder viewHolder;
+        if (convertView==null){
+            convertView = LayoutInflater.from(context).inflate(R.layout.listview_item_coursevideo, null);
+            viewHolder=new ViewHolder();
+            x.view().inject(viewHolder,convertView);
+            convertView.setTag(viewHolder);
+        }else {
+            viewHolder= (ViewHolder) convertView.getTag();
+        }
+        viewHolder.watch.setImageResource(mCoursevideoList.get(position).getImageId());
+        viewHolder.watch.setTag(position);//设置标记
+        viewHolder.coursevideoName.setText(mCoursevideoList.get(position).getName());
+        viewHolder.coursevideoName.setTag(position);
+        viewHolder.path.setText(mCoursevideoList.get(position).getPath());
+        viewHolder.coursevideoName.setOnClickListener(this);
+        viewHolder.watch.setOnClickListener(this);
         return convertView;
     }
 
     @Override
     public void onClick(View v) {
            callback.click(v);
+    }
+
+    private class ViewHolder{
+        @ViewInject(R.id.watch)
+        private ImageView watch;
+
+        @ViewInject(R.id.coursevideoName)
+        private TextView coursevideoName;
+
+        @ViewInject(R.id.path)
+        private TextView path;
     }
 
 }

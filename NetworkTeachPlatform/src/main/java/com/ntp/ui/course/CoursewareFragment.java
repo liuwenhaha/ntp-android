@@ -109,7 +109,6 @@ public class CoursewareFragment extends BaseFragment implements CoursewareAdapte
                     mCoursewareAdapter = new CoursewareAdapter(list, getActivity(), CoursewareFragment.this);
                     mCourseWareList.setAdapter(mCoursewareAdapter);
                 } else {
-                    showToast("加载失败");
                     load.setVisibility(View.GONE);
                 }
             }

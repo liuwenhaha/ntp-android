@@ -73,6 +73,15 @@ public class HttpRequestHelper {
     }
 
     /**
+     * 获取课程视频
+     * @param callback
+     */
+    public void getCourseVideo(String code,CallbackHandler callback){
+        String url=ConstantValue.PATH_COURSE_VIDEO;
+        post(url,new String[]{"code"},new String[]{code},callback);
+    }
+
+    /**
      * post异步网络请求
      * @param url
      * @param key
