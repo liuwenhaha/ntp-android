@@ -13,6 +13,9 @@ import com.ntp.model.Courseware;
 import com.ntp.ui.R;
 import com.ntp.util.SDCardUtil;
 
+import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
+
 import java.util.List;
 
 
@@ -63,32 +66,53 @@ public class CoursewareAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final TextView name,path, size,tip;
-        final Button download;
-        final ProgressBar progressBar;
-        convertView = LayoutInflater.from(context).inflate(R.layout.listview_item_courseware, null);
-        download = (Button) convertView.findViewById(R.id.myDownload);
-        path= (TextView) convertView.findViewById(R.id.coursewarePath);
-        path.setText(mCoursewareList.get(position).getPath());
-        name = (TextView) convertView.findViewById(R.id.coursewareName);
-        name.setText(mCoursewareList.get(position).getName());
-        size = (TextView) convertView.findViewById(R.id.size);
-        if (mCoursewareList.get(position).getSize().equals("")){
-            size.setVisibility(View.INVISIBLE);
+        ViewHolder viewHolder;
+        if (convertView==null){
+            convertView = LayoutInflater.from(context).inflate(R.layout.listview_item_courseware, null);
+            viewHolder=new ViewHolder();
+            x.view().inject(viewHolder,convertView);
+            convertView.setTag(viewHolder);
         }else {
-            size.setText(mCoursewareList.get(position).getSize());
+            viewHolder= (ViewHolder) convertView.getTag();
         }
-        progressBar= (ProgressBar) convertView.findViewById(R.id.progressBar);
-        tip= (TextView) convertView.findViewById(R.id.tip);
-        if (SDCardUtil.isExistSDFile("ntp/download/"+name.getText().toString())){//如果文件已下载
-            tip.setVisibility(View.VISIBLE);
+        viewHolder.path.setText(mCoursewareList.get(position).getPath());
+        viewHolder.courseWareName.setText(mCoursewareList.get(position).getName());
+        if (mCoursewareList.get(position).getSize().equals("")){
+            viewHolder.size.setVisibility(View.INVISIBLE);
+        }else {
+            viewHolder.size.setText(mCoursewareList.get(position).getSize());
         }
-        download.setOnClickListener(new View.OnClickListener() {
+        if (SDCardUtil.isExistSDFile("ntp/download/"+viewHolder.courseWareName.getText().toString())){//如果文件已下载
+            viewHolder.tip.setVisibility(View.VISIBLE);
+        }
+        final ViewHolder finalViewHolder = viewHolder;
+        viewHolder.download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.click(v, name.getText().toString(), path.getText().toString(), progressBar, tip);
+                callback.click(v, finalViewHolder.courseWareName.getText().toString(),
+                        finalViewHolder.path.getText().toString(), finalViewHolder.progressBar, finalViewHolder.tip);
             }
         });
         return convertView;
+    }
+
+    private class ViewHolder{
+        @ViewInject(R.id.myDownload)
+        private Button download;
+
+        @ViewInject(R.id.coursewarePath)
+        private TextView path;
+
+        @ViewInject(R.id.coursewareName)
+        private TextView courseWareName;
+
+        @ViewInject(R.id.size)
+        private TextView size;
+
+        @ViewInject(R.id.tip)
+        private TextView tip;
+
+        @ViewInject(R.id.progressBar)
+        private ProgressBar progressBar;
     }
 }

@@ -12,7 +12,6 @@ import com.ntp.network.HttpRequestHelper;
 import com.ntp.network.okhttp.CallbackHandler;
 import com.ntp.network.okhttp.GsonOkHttpResponse;
 import com.ntp.ui.R;
-import com.loopj.android.http.AsyncHttpClient;
 import com.squareup.okhttp.Request;
 
 import org.xutils.view.annotation.ContentView;
@@ -27,30 +26,29 @@ import java.io.IOException;
 public class CourseOverviewFragment extends BaseFragment {
 
     @ViewInject(R.id.content)
-    private TextView content;//课程简介
+    private TextView mContent;//课程简介
 
     @ViewInject(R.id.load)
-    private LinearLayout load;//加载提示
+    private LinearLayout mLoad;
 
-    private String code;//课程代码
-    private static AsyncHttpClient client = new AsyncHttpClient();
+    private String mCode;//课程代码
 
     @Override
      public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        code=getArguments().getString("code");
+        mCode=getArguments().getString("code");
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         GsonOkHttpResponse gsonOkHttpResponse=new GsonOkHttpResponse(CourseOverviewGson.class);
-        HttpRequestHelper.getInstance().getCourseOverview(code, new CallbackHandler<CourseOverviewGson>(gsonOkHttpResponse) {
+        HttpRequestHelper.getInstance().getCourseOverview(mCode, new CallbackHandler<CourseOverviewGson>(gsonOkHttpResponse) {
             @Override
             public void onResponse(CourseOverviewGson courseOverviewGson) {
                 if (courseOverviewGson != null) {
-                    load.setVisibility(View.GONE);
-                    content.setText(courseOverviewGson.getCourse().getOverview());
+                    mLoad.setVisibility(View.GONE);
+                    mContent.setText(courseOverviewGson.getCourse().getOverview());
                 }
             }
 

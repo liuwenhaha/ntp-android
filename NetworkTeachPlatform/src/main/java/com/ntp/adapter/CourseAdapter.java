@@ -17,6 +17,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
+import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
+
 import java.util.List;
 
 
@@ -69,41 +72,39 @@ public class CourseAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View view = convertView;
         final ViewHolder holder;
         if (convertView == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.listview_item_course, null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.listview_item_course, null);
             holder = new ViewHolder();
-            holder.code= (TextView) view.findViewById(R.id.code);
-            holder.courseName = (TextView) view.findViewById(R.id.courseName);
-            holder.courseType = (TextView) view.findViewById(R.id.courseType);
-            holder.teacher = (TextView) view.findViewById(R.id.teacher);
-            holder.imageView = (ImageView) view.findViewById(R.id.img);
-            view.setTag(holder);
+            x.view().inject(holder, convertView);
+            convertView.setTag(holder);
         } else {
-            holder = (ViewHolder) view.getTag();
+            holder = (ViewHolder) convertView.getTag();
         }
         holder.code.setText(mCourseList.get(position).getCode());
         holder.courseName.setText(mCourseList.get(position).getName());
         holder.courseType.setText(TYPE + mCourseList.get(position).getType());
         holder.teacher.setText(TEACHER + mCourseList.get(position).getTeacher());
         //加载图片
-        ImageLoader.getInstance().loadImage(mCourseList.get(position).getImageUri(), options, new SimpleImageLoadingListener() {
-            @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                super.onLoadingComplete(imageUri, view, loadedImage);
-                holder.imageView.setImageBitmap(BitmapUtil.createBitmapZoop(loadedImage, 120, 70));
-                FadeInBitmapDisplayer.animate(imageView, 500);
-            }
-        });
-        return view;
+        ImageLoader.getInstance().displayImage(mCourseList.get(position).getImageUri(),holder.imageView, options);
+        return convertView;
     }
 
     //中间变量，标记一个
     private class ViewHolder{
-        ImageView imageView;
-        TextView code,courseName, courseType, teacher;
+        @ViewInject(R.id.img)
+        private ImageView imageView;
+
+        @ViewInject(R.id.code)
+        private TextView code;
+
+        @ViewInject(R.id.courseName)
+        private TextView courseName;
+
+        @ViewInject(R.id.courseType)
+        private TextView courseType;
+
+        @ViewInject(R.id.teacher)
+        private TextView teacher;
     }
-
-
 }

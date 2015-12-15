@@ -6,11 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -18,9 +14,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
+import com.ntp.base.BaseFragment;
+import com.ntp.model.gson.CoursewareGson;
+import com.ntp.network.HttpRequestHelper;
+import com.ntp.network.okhttp.CallbackHandler;
+import com.ntp.network.okhttp.GsonOkHttpResponse;
 import com.ntp.ui.R;
 import com.ntp.adapter.CoursewareAdapter;
 import com.ntp.util.ConstantValue;
@@ -30,35 +28,43 @@ import com.ntp.model.Courseware;
 import com.ntp.service.DownloadService;
 import com.ntp.util.NetworkStateUtil;
 import com.ntp.util.SDCardUtil;
+import com.squareup.okhttp.Request;
 
-import org.apache.http.Header;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 课程课件、课件进度表
  */
-public class CoursewareFragment extends Fragment implements CoursewareAdapter.Callback {
+@ContentView(R.layout.fragment_course_ware)
+public class CoursewareFragment extends BaseFragment implements CoursewareAdapter.Callback {
 
-    private static CoursewareFragment mCoursewareFragment;
-    private static AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
+    @ViewInject(R.id.courseWareList)
+    private ListView mCourseWareList;
+
+    @ViewInject(R.id.load)
+    private LinearLayout load;
+
+    @ViewInject(R.id.progressBar)
+    private ProgressBar progressBar;
+
+    @ViewInject(R.id.tip)
+    private TextView tip;
+
+    private Button download;
     private DownloadService downloadService;//文件下载服务
     private DownloadHistoryDao downloadHistoryDao;
-    private ListView mCourseWareList;
     private List<Courseware> list;
     private CoursewareAdapter mCoursewareAdapter;
     private String code;//课程代码
-    private LinearLayout load;
-    private ProgressBar progressBar;
-    private Button download;
     private static String name;//文件名称
     private static String path;//文件路径
-    private TextView tip;
+
     private static int flag = 0;
 
     private static final String TAG = "CoursewareFragment";
@@ -78,51 +84,37 @@ public class CoursewareFragment extends Fragment implements CoursewareAdapter.Ca
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_course_ware, container, false);
-        mCourseWareList = (ListView) view.findViewById(R.id.courseWareList);
-        load = (LinearLayout) view.findViewById(R.id.load);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         downloadService = new DownloadService();
-        RequestParams params = new RequestParams();
-        params.put("code", code);
-        Log.i(TAG, code);
         list = new ArrayList<Courseware>();
-        asyncHttpClient.post(ConstantValue.PATH_COURSE_WARE, params, new JsonHttpResponseHandler() {
+        GsonOkHttpResponse gsonOkHttpResponse = new GsonOkHttpResponse(CoursewareGson.class);
+        HttpRequestHelper.getInstance().getCourseware(code, new CallbackHandler<CoursewareGson>(gsonOkHttpResponse) {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                if (response != null) {
-                    try {
-                        JSONArray ja = response.getJSONArray("coursewares");
-                        for (int i = 0; i < ja.length(); i++) {
-                            JSONObject jb = ja.getJSONObject(i);
-                            Courseware courseware = new Courseware(null, jb.getString("name"), jb.getString("path"), jb.getString("size").equals("null") ? "" : jb.getString("size"));
-                            list.add(courseware);
-                        }
-                        load.setVisibility(View.GONE);
-                        mCoursewareAdapter = new CoursewareAdapter(list, getActivity().getApplicationContext(),CoursewareFragment.this);
-                        mCoursewareAdapter.notifyDataSetChanged();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                else{
-                        Toast.makeText(getActivity().getApplicationContext(), "加载失败", Toast.LENGTH_SHORT).show();
-                        load.setVisibility(View.GONE);
-                }
+            public void onFailure(Request request, IOException e, int response) {
+                super.onFailure(request, e, response);
+                showToast("加载失败");
+                load.setVisibility(View.GONE);
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                Log.i(TAG, throwable.toString());
-                load.setVisibility(View.GONE);
+            public void onResponse(CoursewareGson coursewareGson) {
+                super.onResponse(coursewareGson);
+                if (coursewareGson != null) {
+                    for (CoursewareGson.CoursewaresEntity coursewaresEntity : coursewareGson.getCoursewares()) {
+                        Courseware courseware = new Courseware(null, coursewaresEntity.getName(), coursewaresEntity.getPath(), coursewaresEntity.getSize());
+                        list.add(courseware);
+                    }
+                    load.setVisibility(View.GONE);
+                    mCoursewareAdapter = new CoursewareAdapter(list, getActivity(), CoursewareFragment.this);
+                    mCourseWareList.setAdapter(mCoursewareAdapter);
+                } else {
+                    showToast("加载失败");
+                    load.setVisibility(View.GONE);
+                }
             }
         });
-        mCoursewareAdapter = new CoursewareAdapter(list, getActivity().getApplicationContext(), this);
-        mCourseWareList.setAdapter(mCoursewareAdapter);
-        return view;
+
     }
 
     @Override
@@ -149,7 +141,7 @@ public class CoursewareFragment extends Fragment implements CoursewareAdapter.Ca
                     download.setText(DOWNLOAD);//设置按钮为下载状态
                     this.progressBar.setVisibility(View.GONE);
                     this.tip.setVisibility(View.GONE);
-                    File file=new File(ConstantValue.SAVE_PATH+name);//删除下载文件
+                    File file = new File(ConstantValue.SAVE_PATH + name);//删除下载文件
                     file.delete();
                     break;
                 }
@@ -176,8 +168,8 @@ public class CoursewareFragment extends Fragment implements CoursewareAdapter.Ca
                 this.progressBar = progressBar;
                 this.tip = tip;
                 downloadService.startActionDownload(getActivity().getApplicationContext(), ConstantValue.PATH_DOWNLOAD_COURSE_WARE + path, name, ConstantValue.SAVE_PATH);
-                CoursewareFragment.name =name;
-                CoursewareFragment.path =path;
+                CoursewareFragment.name = name;
+                CoursewareFragment.path = path;
                 progressBar.setVisibility(View.VISIBLE);
                 //点击下载按钮后，按钮设置为取消下载状态
                 download.setText(DOWNLOAD_CANCEL);
@@ -203,10 +195,10 @@ public class CoursewareFragment extends Fragment implements CoursewareAdapter.Ca
                     tip.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.GONE);
                     progressBar.setProgress(0);//重置进度
-                    flag=0;//下载完成，下载另一个文件，重置设置最大进度标志
+                    flag = 0;//下载完成，下载另一个文件，重置设置最大进度标志
                     download.setText(DOWNLOAD);
-                    String fileName=intent.getStringExtra("fileName");
-                    downloadHistoryDao=new DownloadHistoryDao(context);
+                    String fileName = intent.getStringExtra("fileName");
+                    downloadHistoryDao = new DownloadHistoryDao(context);
                     //在数据库中添加下载记录
                     downloadHistoryDao.save(fileName);
                     downloadHistoryDao.close();
