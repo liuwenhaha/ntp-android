@@ -46,6 +46,19 @@ public class HttpRequestHelper {
     }
 
     /**
+     * 获取课程问题列表
+     * @param page 获取第几页
+     * @param pageSize 每页大小
+     * @param callback
+     */
+    public void getForumList(int page,int pageSize,String code,CallbackHandler callback){
+        String url= ConstantValue.PATH_COURSE_FORUM;
+        String key[]=new String[]{"page","pageSize","code"};
+        String value[]=new String[]{String.valueOf(page),String.valueOf(pageSize),code};
+        post(url,key,value,callback);
+    }
+
+    /**
      * 获取课程类型
      * @param callback
      */

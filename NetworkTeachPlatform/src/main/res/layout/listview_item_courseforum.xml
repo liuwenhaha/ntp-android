@@ -3,48 +3,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/layout_selector_bg"
-    android:orientation="vertical">
+    android:orientation="horizontal">
+
+    <com.ntp.view.CircleImageView
+        android:id="@+id/head"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:src="@drawable/head_default"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
-        android:layout_marginBottom="@dimen/my_margin_left_right"
-        android:paddingLeft="@dimen/my_margin_left"
-        android:paddingRight="@dimen/my_margin_left"
-        android:orientation="horizontal">
-
-        <!-- 帖子id，不作显示-->
-        <TextView
-            android:id="@+id/id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/course_name"
-            android:text="@string/test" />
-
-
-    </LinearLayout>
-
-    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="11dp"
-        android:paddingLeft="@dimen/my_margin_left"
-        android:paddingRight="@dimen/my_margin_left">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:text="@string/testName"
+            android:layout_marginLeft="10dp"
             android:textSize="13sp"
             android:textColor="@color/green" />
 
@@ -52,22 +31,58 @@
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/name"
+            android:layout_marginLeft="10dp"
             android:text="@string/testTime"
-            android:textSize="13sp"
+            android:textSize="11sp"
             android:textColor="@color/menu_text_reserve" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="@dimen/my_margin_left_right"
+            android:paddingLeft="10dp"
+            android:paddingRight="@dimen/my_margin_left"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/reply"
+            <!-- 帖子id，不作显示-->
+            <TextView
+                android:id="@+id/id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/course_name"
+                android:text="@string/test" />
+
+
+        </LinearLayout>
+
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="@string/testReply"
-            android:textSize="13sp"
-            android:textColor="@color/menu_text_reserve" />
+            android:orientation="horizontal"
+            android:layout_marginBottom="11dp"
+            android:paddingLeft="@dimen/my_margin_left"
+            android:paddingRight="@dimen/my_margin_left">
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/reply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="@string/testReply"
+                android:textSize="13sp"
+                android:textColor="@color/menu_text_reserve" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
 
 
 </LinearLayout>

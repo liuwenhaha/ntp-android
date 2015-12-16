@@ -63,7 +63,7 @@ public class Coursevideo {
      */
     public Coursevideo(String name, String path,String size) {
         this.name = name;
-        if (size.equals("null")){
+        if (size!=null&&size.equals("null")){
             this.size="";
         }else {
             this.size = size;

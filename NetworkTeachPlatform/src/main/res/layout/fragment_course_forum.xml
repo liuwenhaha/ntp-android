@@ -6,7 +6,8 @@
     android:orientation="vertical"
     tools:context="com.ntp.ui.course.CourseForumFragment">
 
-    <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/pull_to_refresh_listview"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
@@ -17,6 +18,7 @@
         android:listSelector="@android:color/transparent"
         android:cacheColorHint="#0000"
         android:background="@null"
+        ptr:ptrDrawable="@drawable/load"
         android:scrollbars="none" />
     <FrameLayout
         android:layout_width="match_parent"
