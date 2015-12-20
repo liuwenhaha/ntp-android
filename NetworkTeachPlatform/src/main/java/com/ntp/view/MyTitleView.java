@@ -3,6 +3,7 @@ package com.ntp.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,14 +21,18 @@ import com.ntp.ui.R;
 public class MyTitleView extends FrameLayout {
     private ImageView back;
     private TextView title;
+    private FrameLayout frameLayout;
 
     public MyTitleView(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.my_title_view, this);
         back = (ImageView) findViewById(R.id.back);
         title = (TextView) findViewById(R.id.title);
+        frameLayout= (FrameLayout) findViewById(R.id.frameLayout);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.MyTitleView);
         CharSequence text = a.getText(0);
+        int color=a.getColor(1,getResources().getColor(R.color.layout_bg_normal));
+        frameLayout.setBackgroundColor(color);
         title.setText(text);
         back.setOnClickListener(new OnClickListener() {
             @Override

@@ -77,10 +77,6 @@ public class CommentNoticeActivity extends Activity{
 
             @Override  //下拉刷新
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                String label = "正在加载...";
-                refreshView.getLoadingLayoutProxy(false, true).setPullLabel(label);
-                refreshView.getLoadingLayoutProxy(false, true).setReleaseLabel(label);
-                refreshView.getLoadingLayoutProxy(false, true).setRefreshingLabel(label);
                 if (NetworkStateUtil.isNetworkConnected(getApplicationContext())) {//网络可用
                     if (!name.equals("")){
                         new PullUpTask().execute();

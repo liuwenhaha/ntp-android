@@ -1,14 +1,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/layout_bg_pressed"
+    android:background="@color/nav_bg"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <com.ntp.view.MyTitleView xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    <com.ntp.view.MyTitleView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/myTitleView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/nav_bg"
+        ptr:background="@color/nav_bg"
         ptr:title="@string/detail" />
 
     <ImageView
@@ -18,75 +21,17 @@
         android:layout_below="@id/myTitleView"
         android:background="@drawable/list_top_line" />
 
-    <LinearLayout
-        android:id="@+id/load"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/h_line"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="15dp"
-        android:background="@color/layout_bg_normal"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="@string/about"
-                android:textColor="@color/green" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/question" />
-
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/about"
-                android:gravity="right"
-                android:layout_marginRight="@dimen/my_margin_left"
-                android:layout_weight="1"/>
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/forum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="@dimen/my_margin_left_right"
-            android:text="@string/about"
-            android:layout_marginBottom="6dp"
-            android:textSize="15sp"
-            android:textColor="@color/course_name" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/comment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/load"
-        android:layout_marginLeft="6dp"
-        android:clickable="true"
-        android:onClick="refreshReply"
-        android:text="@string/comment"/>
-
-    <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/pull_to_refresh_listview"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
         android:divider="@color/divider_line"
-        android:layout_below="@id/comment"
+        android:layout_below="@id/h_line"
         ptr:ptrHeaderTextColor="@color/menu_text_reserve"
+        ptr:ptrDrawable="@drawable/load"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
         android:dividerHeight="@dimen/divider_line"
         android:scrollbarStyle="outsideOverlay"
         android:listSelector="@android:color/transparent"
@@ -96,7 +41,7 @@
 
 
     <LinearLayout
-        android:id="@id/edit_text"
+        android:id="@+id/edit_text"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_alignParentBottom="true"
@@ -132,7 +77,6 @@
                 android:layout_marginRight="4dp"
                 android:layout_weight="1"
                 android:background="@drawable/rounded_download_btn"
-                android:onClick="reply"
                 android:text="@string/reply"
                 android:textColor="@color/layout_bg_normal"
                 android:textSize="14sp" />

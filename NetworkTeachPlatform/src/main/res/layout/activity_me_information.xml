@@ -25,7 +25,7 @@
         android:background="@color/layout_bg_normal"
         android:gravity="center_vertical">
 
-        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        <com.ntp.view.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/head"
             android:layout_width="72dp"
             android:layout_height="72dp"

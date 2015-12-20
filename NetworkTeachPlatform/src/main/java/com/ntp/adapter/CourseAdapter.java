@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.ntp.model.Course;
 import com.ntp.ui.R;
 import com.ntp.util.BitmapUtil;
@@ -32,7 +33,6 @@ public class CourseAdapter extends BaseAdapter {
     private DisplayImageOptions options;//UIL显示图片的配置
     private List<Course> mCourseList;
     private Context context;
-    public ImageView imageView;
     private static final String TYPE="类型：";
     private static final String TEACHER="老师：";
 

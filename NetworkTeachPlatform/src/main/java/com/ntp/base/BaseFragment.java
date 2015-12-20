@@ -39,6 +39,8 @@ public class BaseFragment extends Fragment {
      * 提示
      */
     protected void showToast(String msg) {
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+        if (getActivity()!=null){
+            Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+        }
     }
 }

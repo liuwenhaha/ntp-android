@@ -259,7 +259,6 @@ public class MeInformationActivity extends Activity {
                                     try {
                                         String result = response.getString("result");
                                         if (result.equals("success")) {
-//                                            Toast.makeText(getApplicationContext(),"修改成功",Toast.LENGTH_SHORT).show();
                                             sex.setText(MAIL);
                                         } else {
                                             Toast.makeText(getApplicationContext(), "修改失败", Toast.LENGTH_SHORT).show();
@@ -291,7 +290,6 @@ public class MeInformationActivity extends Activity {
                                     try {
                                         String result = response.getString("result");
                                         if (result.equals("success")) {
-//                                            Toast.makeText(getApplicationContext(),"修改成功",Toast.LENGTH_SHORT).show();
                                             sex.setText(FEMAIL);
                                         } else {
                                             Toast.makeText(getApplicationContext(), "修改失败", Toast.LENGTH_SHORT).show();

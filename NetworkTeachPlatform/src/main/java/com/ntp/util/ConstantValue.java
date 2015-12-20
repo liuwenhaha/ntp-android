@@ -7,7 +7,8 @@ package com.ntp.util;
  */
 public class ConstantValue {
 
-    public static final String IP = "http://192.168.0.105/ntp/";
+//    public static final String IP = "http://192.168.0.105/ntp/";
+    public static final String IP = "http://192.168.0.106/ntp/";
 
     /**
      * 登录网络地址

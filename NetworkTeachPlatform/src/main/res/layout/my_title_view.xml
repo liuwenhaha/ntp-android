@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="46dp"
     android:background="@color/layout_bg_normal"
+    android:id="@+id/frameLayout"
     android:gravity="center">
 
     <TextView

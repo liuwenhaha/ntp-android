@@ -49,10 +49,6 @@
             android:theme="@style/MyEditStyle"
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
-            android:name="com.ntp.ui.course.CoursetypeSelectActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MyDialogStyleTop" />
-        <activity
             android:name="com.ntp.ui.me.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AnimLogin" />
@@ -117,6 +113,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.ntp.ui.course.CourseForumReplyActivity"
+            android:theme="@style/translucent"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.ntp.ui.notice.HomeworkDetailActivity"

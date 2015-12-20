@@ -61,7 +61,7 @@ public class HomeworkNoticeAdapter extends BaseAdapter{
         viewHolder.imageView.setImageResource(homeworkNoticeList.get(position).getImageId());
         viewHolder.id.setText(homeworkNoticeList.get(position).getId());
         viewHolder.title.setText(homeworkNoticeList.get(position).getTitle());
-        viewHolder.content.setText(homeworkNoticeList.get(position).getContent());
+//        viewHolder.content.setText(homeworkNoticeList.get(position).getContent());
         viewHolder.time.setText(homeworkNoticeList.get(position).getTime());
         return convertView;
     }

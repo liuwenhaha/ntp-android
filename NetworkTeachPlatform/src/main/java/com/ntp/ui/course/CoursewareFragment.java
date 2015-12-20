@@ -50,10 +50,7 @@ public class CoursewareFragment extends BaseFragment implements CoursewareAdapte
     @ViewInject(R.id.load)
     private LinearLayout load;
 
-    @ViewInject(R.id.progressBar)
     private ProgressBar progressBar;
-
-    @ViewInject(R.id.tip)
     private TextView tip;
 
     private Button download;
@@ -93,7 +90,6 @@ public class CoursewareFragment extends BaseFragment implements CoursewareAdapte
             @Override
             public void onFailure(Request request, IOException e, int response) {
                 super.onFailure(request, e, response);
-                showToast("加载失败");
                 load.setVisibility(View.GONE);
             }
 

@@ -56,6 +56,7 @@ public class CourseOverviewFragment extends BaseFragment {
             public void onFailure(Request request, IOException e, int response) {
                 super.onFailure(request, e, response);
                 showToast("加载失败");
+                mLoad.setVisibility(View.GONE);
             }
         });
     }

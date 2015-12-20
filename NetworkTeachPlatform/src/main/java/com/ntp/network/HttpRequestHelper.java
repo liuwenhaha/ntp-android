@@ -2,6 +2,7 @@ package com.ntp.network;
 
 import com.ntp.network.okhttp.CallbackHandler;
 import com.ntp.util.ConstantValue;
+import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -46,15 +47,56 @@ public class HttpRequestHelper {
     }
 
     /**
+     * 获取我的课程
+     * @param username 用户名
+     * @param callback
+     */
+    public void getMyCourse(String username,CallbackHandler callback){
+        String url= ConstantValue.PATH_MY_COURSE;
+        String key[]=new String[]{"username"};
+        String value[]=new String[]{username};
+        post(url,key,value,callback);
+    }
+
+    /**
      * 获取课程问题列表
      * @param page 获取第几页
      * @param pageSize 每页大小
+     * @param code 课程代码
      * @param callback
      */
     public void getForumList(int page,int pageSize,String code,CallbackHandler callback){
         String url= ConstantValue.PATH_COURSE_FORUM;
         String key[]=new String[]{"page","pageSize","code"};
         String value[]=new String[]{String.valueOf(page),String.valueOf(pageSize),code};
+        post(url,key,value,callback);
+    }
+
+    /**
+     * 获取课程问题列表
+     * @param page 获取第几页
+     * @param pageSize 每页大小
+     * @param forumID 问题ID
+     * @param callback
+     */
+    public void getForumReplyList(int page,int pageSize,String forumID,CallbackHandler callback){
+        String url= ConstantValue.PATH_COURSE_FORUM_ALL;
+        String key[]=new String[]{"page","pageSize","forumId"};
+        String value[]=new String[]{String.valueOf(page),String.valueOf(pageSize),forumID};
+        post(url,key,value,callback);
+    }
+
+    /**
+     * 回复课程问题
+     * @param name
+     * @param content
+     * @param forumId
+     * @param callback
+     */
+    public void reply(String name,String content,String forumId ,Callback callback){
+        String url= ConstantValue.PATH_COURSE_FORUM_REPLY;
+        String key[]=new String[]{"name","comment","forumId"};
+        String value[]=new String[]{name,content,forumId};
         post(url,key,value,callback);
     }
 
@@ -101,7 +143,7 @@ public class HttpRequestHelper {
      * @param value
      * @param callback
      */
-    private void post(String url,String key[],String value[],CallbackHandler callback){
+    private void post(String url,String key[],String value[],Callback callback){
         FormEncodingBuilder builder = new FormEncodingBuilder();
         for (int i=0;i<key.length;i++){
             builder.add(key[i],value[i]);

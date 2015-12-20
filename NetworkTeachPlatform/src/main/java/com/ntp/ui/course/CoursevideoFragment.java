@@ -55,7 +55,6 @@ public class CoursevideoFragment extends BaseFragment implements CoursevideoAdap
             @Override
             public void onFailure(Request request, IOException e, int response) {
                 super.onFailure(request, e, response);
-                showToast("加载失败");
                 load.setVisibility(View.GONE);
             }
 
