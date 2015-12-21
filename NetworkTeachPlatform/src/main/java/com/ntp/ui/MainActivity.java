@@ -93,7 +93,6 @@ public class MainActivity extends BaseActivity{
      * 设置底部导航
      */
     void initView() {
-        AppUtil.setStatusBarDarkMode(true, this);
         if (AppConfig.isNoticeRed(getApplicationContext())){
             mNoticeRed.setVisibility(View.VISIBLE);
         }

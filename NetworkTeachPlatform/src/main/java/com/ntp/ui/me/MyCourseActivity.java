@@ -52,7 +52,6 @@ public class MyCourseActivity extends BaseActivity implements PullToRefreshBase.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppUtil.setStatusBarDarkMode(true,this);
         pullToRefreshView.setOnRefreshListener(this);
         pullToRefreshView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         courseAdapter=new CourseAdapter(courses,this);

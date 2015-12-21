@@ -3,8 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/layout_bg_normal"
-    android:orientation="vertical">
+    android:orientation="horizontal">
 
+    <com.ntp.view.CircleImageView
+        android:id="@+id/head"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="6dp"
+        android:src="@drawable/head_default"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -56,21 +68,13 @@
             android:textColor="@color/course_name"
             android:text="@string/reply1" />
 
-        <!-- 回复谁的，即原发帖人-->
-        <TextView
-            android:id="@+id/forumUsernameRe"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/comment"
-            android:textColor="@color/green" />
-
         <!-- 回复内容-->
         <TextView
             android:id="@+id/commentContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/course_name"
-            android:text="@string/commentContent" />
+            android:text="@string/commentContent1" />
 
     </RelativeLayout>
 
@@ -88,14 +92,6 @@
         android:paddingRight="2dp"
         android:paddingTop="6dp">
 
-        <!-- 原发帖人姓名-->
-        <TextView
-            android:id="@+id/forumUsername"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/nameTest"
-            android:textColor="@color/green" />
-
         <!--原发帖内容-->
         <TextView
             android:id="@+id/forumContent"
@@ -104,6 +100,8 @@
             android:textColor="@color/menu_text_reserve"
             android:text="@string/commentContent" />
     </RelativeLayout>
+
+    </LinearLayout>
 
 
 </LinearLayout>

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.ntp.util.AppUtil;
+
 import org.xutils.x;
 
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
@@ -24,6 +26,7 @@ public class BaseActivity extends SwipeBackActivity {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
         initImmersionStatus();
+        AppUtil.setStatusBarDarkMode(true,this);
     }
 
     /**

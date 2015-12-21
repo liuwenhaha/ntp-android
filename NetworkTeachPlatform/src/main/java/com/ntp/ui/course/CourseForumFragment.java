@@ -66,7 +66,6 @@ public class CourseForumFragment extends BaseFragment implements PullToRefreshBa
     @Override
     public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
         loadData(true);
-
     }
 
     /**
@@ -76,7 +75,6 @@ public class CourseForumFragment extends BaseFragment implements PullToRefreshBa
     @Override
     public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
         loadData(false);
-
     }
 
     /**

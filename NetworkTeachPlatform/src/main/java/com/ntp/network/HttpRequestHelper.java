@@ -59,6 +59,20 @@ public class HttpRequestHelper {
     }
 
     /**
+     * 获取评论消息列表
+     * @param username
+     * @param currentPage 当前页
+     * @param pageSize
+     * @param callbackHandler
+     */
+    public void getCommentNoticeList(String username,String currentPage,String pageSize,CallbackHandler callbackHandler){
+        String url= ConstantValue.PATH_FORUM_COMMENT;
+        String key[]=new String[]{"username","page","pageSize"};
+        String value[]=new String[]{username,currentPage,pageSize};
+        post(url,key,value,callbackHandler);
+    }
+
+    /**
      * 获取课程问题列表
      * @param page 获取第几页
      * @param pageSize 每页大小
