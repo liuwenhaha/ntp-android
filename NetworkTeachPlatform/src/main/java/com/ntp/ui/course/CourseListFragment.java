@@ -109,7 +109,7 @@ public class CourseListFragment extends BaseFragment implements PullToRefreshBas
             currentPage=1;
         }
         GsonOkHttpResponse gsonOkHttpResponse=new GsonOkHttpResponse(CoursePageInfoGson.class);
-        HttpRequestHelper.getInstance().getCourseList(currentPage, 20, new CallbackHandler<CoursePageInfoGson>(gsonOkHttpResponse) {
+        HttpRequestHelper.getInstance().getCourseList(currentPage, 10, new CallbackHandler<CoursePageInfoGson>(gsonOkHttpResponse) {
             @Override
             public void onFailure(Request request, IOException e,int code) {
                 LogUtil.e(TAG, request.toString() + e.toString());

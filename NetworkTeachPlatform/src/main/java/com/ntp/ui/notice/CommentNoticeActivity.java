@@ -93,6 +93,7 @@ public class CommentNoticeActivity extends BaseActivity implements PullToRefresh
                 super.onResponse(commentNoticeGson);
                 if (commentNoticeGson!=null){
                     if (refreshDownOrUp){
+                        mPullToRefreshView.setMode(PullToRefreshBase.Mode.BOTH);
                         mCurrentPage =commentNoticeGson.getCurrentPage();
                         mCommentNoticeAdapter.updateCommentNotice(commentNoticeGson.getForumUsers());
                         mPullToRefreshView.onRefreshComplete();
