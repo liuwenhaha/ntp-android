@@ -2,8 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/layout_bg_pressed"
+    android:background="@color/nav_bg"
     android:orientation="vertical"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
     tools:context="com.ntp.ui.homeworkFragment">
 
     <com.ntp.view.MyTitleView
@@ -11,7 +13,7 @@
         android:layout_height="wrap_content"
         xmlns:ptr="http://schemas.android.com/apk/res-auto"
         ptr:title="@string/homework1"
-        android:background="@color/nav_bg1" />
+        ptr:background="@color/nav_bg" />
 
     <ImageView
         android:id="@+id/h_line"
@@ -27,7 +29,8 @@
         android:visibility="gone"
         android:text="@string/noticeTip"/>
 
-    <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/pull_to_refresh_listview"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
@@ -36,6 +39,9 @@
         android:dividerHeight="@dimen/divider_line"
         android:scrollbarStyle="outsideOverlay"
         android:listSelector="@color/layout_bg_pressed"
+        ptr:ptrDrawable="@drawable/load"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
         android:scrollbars="vertical" />
 
 </LinearLayout>

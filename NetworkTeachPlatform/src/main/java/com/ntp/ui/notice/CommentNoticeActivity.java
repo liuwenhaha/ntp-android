@@ -101,7 +101,7 @@ public class CommentNoticeActivity extends BaseActivity implements PullToRefresh
                         for (CommentNoticeGson.ForumUsersEntity entity:commentNoticeGson.getForumUsers()){
                             mForumUsersEntityList.add(entity);
                         }
-                        mCommentNoticeAdapter.updateCommentNotice(commentNoticeGson.getForumUsers());
+                        mCommentNoticeAdapter.updateCommentNotice(mForumUsersEntityList);
                         mPullToRefreshView.onRefreshComplete();
                     }
                 }

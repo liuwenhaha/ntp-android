@@ -3,6 +3,7 @@ package com.ntp.model.gson;
 import java.util.List;
 
 /**
+ * 回帖消息
  * Created by lishuangxiang on 2015/12/21.
  */
 public class CommentNoticeGson {

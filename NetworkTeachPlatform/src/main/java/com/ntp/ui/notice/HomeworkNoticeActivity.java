@@ -1,33 +1,28 @@
 package com.ntp.ui.notice;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.ntp.base.BaseActivity;
+import com.ntp.model.gson.HomeworkNoticeGson;
+import com.ntp.network.HttpRequestHelper;
+import com.ntp.network.okhttp.CallbackHandler;
+import com.ntp.network.okhttp.GsonOkHttpResponse;
 import com.ntp.ui.R;
 import com.ntp.adapter.HomeworkNoticeAdapter;
-import com.ntp.util.ConstantValue;
 import com.ntp.util.AppConfig;
-import com.ntp.model.HomeworkNotice;
-import com.ntp.util.HttpUtil;
-import com.ntp.util.NetworkStateUtil;
+import com.squareup.okhttp.Request;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.Event;
+import org.xutils.view.annotation.ViewInject;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,181 +30,93 @@ import java.util.List;
  * 作业消息
  * @author yanxing
  */
-public class HomeworkNoticeActivity extends Activity implements AdapterView.OnItemClickListener{
+@ContentView(R.layout.activity_homework_notice)
+public class HomeworkNoticeActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2{
 
-    private PullToRefreshListView pullToRefreshView;
-    private HomeworkNoticeAdapter homeworkNoticeAdapter;
+    @ViewInject(R.id.pull_to_refresh_listview)
+    private PullToRefreshListView mPullToRefreshView;
+
+    @ViewInject(R.id.tip)
     private TextView tip;
 
-    private static final String TAG ="HomeworkNoticeActivity";
-    private List<HomeworkNotice> homeworkNoticeList;
-    private String name;
-    private int currentPage=1;//默认加载第一页问题
+    private List<HomeworkNoticeGson.ScoresEntity> mHomeworkNoticeList=new ArrayList<HomeworkNoticeGson.ScoresEntity>();
+    private HomeworkNoticeAdapter mHomeworkNoticeAdapter;
+    private String mName;
+    private int mCurrentPage=1;//默认加载第一页问题
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_homework_notice);
-        tip= (TextView) findViewById(R.id.tip);
-        homeworkNoticeList =new ArrayList<HomeworkNotice>();
-        homeworkNoticeAdapter =new HomeworkNoticeAdapter(getApplicationContext(), homeworkNoticeList);
-        pullToRefreshView = (PullToRefreshListView)findViewById(R.id.pull_to_refresh_listview);
-        name= AppConfig.getLoadName(getApplicationContext());
-        pullToRefreshView.setMode(PullToRefreshBase.Mode.BOTH);//同时可以下拉和上拉刷新
-        pullToRefreshView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
-            @Override //下拉刷新
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                String label = DateUtils.formatDateTime(getApplicationContext(), System.currentTimeMillis(),
-                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
-                refreshView.getLoadingLayoutProxy(true, false).setLastUpdatedLabel("更新于:" + label);
-                if (NetworkStateUtil.isNetworkConnected(getApplicationContext())) {//网络可用
-                    if (!name.equals("")){//没有登录
-                        new GetDataTask().execute();
-                    }else {
-                        pullToRefreshView.setVisibility(View.GONE);
-                        tip.setVisibility(View.VISIBLE);
-                    }
-                } else {
-                    Toast.makeText(getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override  //下拉刷新
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                String label = "正在加载...";
-                refreshView.getLoadingLayoutProxy(false, true).setPullLabel(label);
-                refreshView.getLoadingLayoutProxy(false, true).setReleaseLabel(label);
-                refreshView.getLoadingLayoutProxy(false, true).setRefreshingLabel(label);
-                if (NetworkStateUtil.isNetworkConnected(getApplicationContext())) {//网络可用
-                    new PullUpTask().execute();
-                } else {
-                    Toast.makeText(getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        homeworkNoticeAdapter =new HomeworkNoticeAdapter(getApplicationContext(), homeworkNoticeList);
-        pullToRefreshView.setOnItemClickListener(this);
-        pullToRefreshView.setAdapter(homeworkNoticeAdapter);
-        pullToRefreshView.setRefreshing(true);//自动刷新
+        mName= AppConfig.getLoadName(getApplicationContext());
+        if (mName.equals("")){
+            tip.setVisibility(View.VISIBLE);
+            return;
+        }
+        mHomeworkNoticeAdapter =new HomeworkNoticeAdapter(this, mHomeworkNoticeList);
+        mPullToRefreshView.setAdapter(mHomeworkNoticeAdapter);
+        mPullToRefreshView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        mPullToRefreshView.setOnRefreshListener(this);
+        mPullToRefreshView.setRefreshing(true);//自动刷新
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    @Event(value = R.id.pull_to_refresh_listview,type = AdapterView.OnItemClickListener.class)
+    private void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         String  scoreId= ((TextView)view.findViewById(R.id.id)).getText().toString();
         Intent intent=new Intent(getApplicationContext(), HomeworkDetailActivity.class);
-        intent.putExtra("scoreId",scoreId);
+        intent.putExtra("scoreId", scoreId);
         startActivity(intent);
     }
 
-    /**----------------------------------------- 下拉刷新线程-------------------------------------------------**/
-    private class GetDataTask extends AsyncTask<Void, Void, List<HomeworkNotice>> {
+    //下拉刷新
+    @Override
+    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        loadData(true);
 
-
-        @Override //后台耗时操作
-        protected List<HomeworkNotice> doInBackground(Void... params) {
-            try {
-                JSONObject response = HttpUtil.getDataFromInternet(new URL(ConstantValue.PATH_MY_HOMEWORK + "?username=" +name), "GET");
-                homeworkNoticeList.clear();
-                if (response != null) {
-                    Log.d(TAG,response.toString());
-                    JSONArray ja = response.getJSONArray("scores");
-                    if (ja.length() == 0) {
-                        return homeworkNoticeList;
-                    }
-                    for (int i = 0; i < ja.length(); i++) {
-                        JSONObject j = ja.getJSONObject(i);
-                        String time="",courseName="";
-                        if (!j.get("exercise").equals(null)){
-                            if (!j.getJSONObject("exercise").getString("time").equals("null")){
-                                time=j.getJSONObject("exercise").getString("time");
-                                time=time.substring(0, time.lastIndexOf("T"));
-                            }
-                        }
-                        if (!j.get("exercise").equals(null)){
-                            courseName=j.getJSONObject("exercise").get("course").equals(null)?"":j.getJSONObject("exercise").getJSONObject("course").getString("name");
-                        }
-                        HomeworkNotice homeworkNotice = new HomeworkNotice(j.getString("id"), j.get("exercise").equals(null)?"":j.getJSONObject("exercise").getString("name"),
-                                courseName,time);
-                        homeworkNoticeList.add(homeworkNotice);
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            return homeworkNoticeList;
-        }
-
-        @Override //操作UI
-        protected void onPostExecute(List<HomeworkNotice> list) {
-            pullToRefreshView.onRefreshComplete();
-            if (list.size()==0){
-                Toast.makeText(getApplicationContext(), "您还没有作业", Toast.LENGTH_SHORT).show();
-            }else {
-                homeworkNoticeAdapter = new HomeworkNoticeAdapter(getApplicationContext(),list);
-                pullToRefreshView.setAdapter(homeworkNoticeAdapter);
-            }
-            super.onPostExecute(list);
-        }
     }
 
-
-    /**---------------------------------------------- 上拉刷新线程-----------------------------------------------**/
-    private class PullUpTask extends AsyncTask<Void, Void, List<HomeworkNotice>> {
-
-        private boolean loadComplete;
-
-        //后台耗时操作
-        @Override
-        protected List<HomeworkNotice> doInBackground(Void... params) {
-
-            try {
-                JSONObject response = HttpUtil.getDataFromInternet(new URL(ConstantValue.PATH_MY_HOMEWORK + "?username=" +name+"&page="+(currentPage+1)), "GET");
-                if (response != null) {
-                    JSONArray ja = response.getJSONArray("scores");
-                    if(ja.length()!=0){//获取到了数据，则增加页数
-                        currentPage = response.getInt("currentPage");
-                    }else {
-                        loadComplete=true;//分页加载完服务器端数据
-                    }
-                    for (int i = 0; i < ja.length(); i++) {
-                        JSONObject j = ja.getJSONObject(i);
-                        String time="",courseName="";
-                        if (!j.get("exercise").equals(null)){
-                            if (!j.getJSONObject("exercise").getString("time").equals("null")){
-                                time=j.getJSONObject("exercise").getString("time");
-                                time=time.substring(0, time.lastIndexOf("T"));
-                            }
-                        }
-                        if (!j.get("exercise").equals(null)){
-                            courseName=j.getJSONObject("exercise").get("course").equals(null)?"":j.getJSONObject("exercise").getJSONObject("course").getString("name");
-                        }
-                        HomeworkNotice homeworkNotice = new HomeworkNotice(j.getString("id"), j.get("exercise").equals(null)?"":j.getJSONObject("exercise").getString("name"),
-                                courseName,time);
-                        homeworkNoticeList.add(homeworkNotice);
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            return homeworkNoticeList;
-        }
-
-        @Override //操作UI
-        protected void onPostExecute(List<HomeworkNotice> list) {
-            super.onPostExecute(list);
-            pullToRefreshView.onRefreshComplete();
-            if (loadComplete){
-                Toast.makeText(getApplicationContext(), "服务器端数据已经加载完", Toast.LENGTH_SHORT).show();
-            }else {
-                homeworkNoticeAdapter.notifyDataSetChanged();
-            }
-
-        }
+    //上拉刷新
+    @Override
+    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        loadData(false);
     }
 
+    /**
+     * 加载数据
+     * @param refreshDownOrUp true下拉刷新，false上拉刷新
+     */
+    public void loadData(final boolean refreshDownOrUp){
+        if (!refreshDownOrUp){//上拉刷新
+            mCurrentPage++;
+        }
+        GsonOkHttpResponse gsonOkHttpResponse=new GsonOkHttpResponse(HomeworkNoticeGson.class);
+        HttpRequestHelper.getInstance().getHomeworkList(mName, String.valueOf(mCurrentPage), String.valueOf(10), new CallbackHandler<HomeworkNoticeGson>(gsonOkHttpResponse) {
+            @Override
+            public void onFailure(Request request, IOException e, int response) {
+                super.onFailure(request, e, response);
+                mPullToRefreshView.onRefreshComplete();
+                showToast("加载失败");
+            }
+
+            @Override
+            public void onResponse(HomeworkNoticeGson homeworkNoticeGson) {
+                super.onResponse(homeworkNoticeGson);
+                if (homeworkNoticeGson != null) {
+                    if (refreshDownOrUp) {
+                        mPullToRefreshView.setMode(PullToRefreshBase.Mode.BOTH);
+                        mCurrentPage = homeworkNoticeGson.getCurrentPage();
+                        mPullToRefreshView.onRefreshComplete();
+                        mHomeworkNoticeAdapter.updateHomeworkNotice(homeworkNoticeGson.getScores());
+
+                    } else {
+                        for (HomeworkNoticeGson.ScoresEntity entity : homeworkNoticeGson.getScores()) {
+                            mHomeworkNoticeList.add(entity);
+                        }
+                        mHomeworkNoticeAdapter.updateHomeworkNotice(mHomeworkNoticeList);
+                        mPullToRefreshView.onRefreshComplete();
+                    }
+                }
+            }
+        });
+    }
 }
 

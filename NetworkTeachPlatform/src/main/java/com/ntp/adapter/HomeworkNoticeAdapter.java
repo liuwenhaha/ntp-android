@@ -8,8 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ntp.model.gson.HomeworkNoticeGson;
 import com.ntp.ui.R;
-import com.ntp.model.HomeworkNotice;
 
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
@@ -22,22 +22,22 @@ import java.util.List;
  */
 public class HomeworkNoticeAdapter extends BaseAdapter{
 
-    private List<HomeworkNotice> homeworkNoticeList;
+    private List<HomeworkNoticeGson.ScoresEntity> scoresEntities;
     private Context context;
 
-    public HomeworkNoticeAdapter(Context context, List<HomeworkNotice> homeworkNoticeList) {
-        this.homeworkNoticeList = homeworkNoticeList;
+    public HomeworkNoticeAdapter(Context context, List<HomeworkNoticeGson.ScoresEntity> scoresEntities) {
+        this.scoresEntities = scoresEntities;
         this.context = context;
     }
 
     @Override
     public int getCount() {
-        return homeworkNoticeList.size();
+        return scoresEntities.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return homeworkNoticeList.get(position);
+        return scoresEntities.get(position);
     }
 
     @Override
@@ -45,10 +45,15 @@ public class HomeworkNoticeAdapter extends BaseAdapter{
         return position;
     }
 
+    /**
+     * 更新数据
+     */
+    public void updateHomeworkNotice(List<HomeworkNoticeGson.ScoresEntity> scoresEntities){
+        this.scoresEntities=scoresEntities;
+        notifyDataSetChanged();
+    }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ImageView imageView;
-        TextView id,title,content,time;
         ViewHolder viewHolder;
         if (convertView==null){
             convertView = LayoutInflater.from(context).inflate(R.layout.listview_item_notice, null);
@@ -58,11 +63,11 @@ public class HomeworkNoticeAdapter extends BaseAdapter{
         }else {
             viewHolder= (ViewHolder) convertView.getTag();
         }
-        viewHolder.imageView.setImageResource(homeworkNoticeList.get(position).getImageId());
-        viewHolder.id.setText(homeworkNoticeList.get(position).getId());
-        viewHolder.title.setText(homeworkNoticeList.get(position).getTitle());
-//        viewHolder.content.setText(homeworkNoticeList.get(position).getContent());
-        viewHolder.time.setText(homeworkNoticeList.get(position).getTime());
+//        viewHolder.imageView.setImageResource(scoresEntities.get(position).getId());
+        viewHolder.id.setText(scoresEntities.get(position).getId()+"");
+        viewHolder.title.setText(scoresEntities.get(position).getExercise().getName());
+        String time=scoresEntities.get(position).getExercise().getTime();
+        viewHolder.time.setText(time.substring(0, time.lastIndexOf("T")));
         return convertView;
     }
 
@@ -75,9 +80,6 @@ public class HomeworkNoticeAdapter extends BaseAdapter{
 
         @ViewInject(R.id.title)
         private TextView title;
-
-        @ViewInject(R.id.content)
-        private TextView content;
 
         @ViewInject(R.id.time)
         private TextView time;
