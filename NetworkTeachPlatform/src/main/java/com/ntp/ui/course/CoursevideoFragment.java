@@ -11,13 +11,13 @@ import android.widget.Toast;
 import com.ntp.base.BaseFragment;
 import com.ntp.model.gson.CourseVideoGson;
 import com.ntp.network.HttpRequestHelper;
-import com.ntp.network.okhttp.CallbackHandler;
-import com.ntp.network.okhttp.GsonOkHttpResponse;
+import com.ntp.network.okhttp.ObjectCallbackHandler;
 import com.ntp.ui.R;
 import com.ntp.adapter.CoursevideoAdapter;
 import com.ntp.util.ConstantValue;
 import com.ntp.util.AppConfig;
 import com.ntp.model.Coursevideo;
+import com.ntp.util.ErrorCodeUtil;
 import com.ntp.util.NetworkStateUtil;
 import com.squareup.okhttp.Request;
 
@@ -50,12 +50,12 @@ public class CoursevideoFragment extends BaseFragment implements CoursevideoAdap
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         code = getArguments().getString("code");
-        GsonOkHttpResponse gsonOkHttpResponse=new GsonOkHttpResponse(CourseVideoGson.class);
-        HttpRequestHelper.getInstance().getCourseVideo(code,new CallbackHandler<CourseVideoGson>(gsonOkHttpResponse){
+        HttpRequestHelper.getInstance().getCourseVideo(code,new ObjectCallbackHandler<CourseVideoGson>(){
             @Override
             public void onFailure(Request request, IOException e, int response) {
                 super.onFailure(request, e, response);
                 load.setVisibility(View.GONE);
+                showToast(ErrorCodeUtil.SERVER_ERROR);
             }
 
             @Override

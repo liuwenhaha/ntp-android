@@ -14,10 +14,10 @@ import com.ntp.adapter.CourseForumAdapter;
 import com.ntp.base.BaseFragment;
 import com.ntp.model.gson.CourseForumGson;
 import com.ntp.network.HttpRequestHelper;
-import com.ntp.network.okhttp.CallbackHandler;
-import com.ntp.network.okhttp.GsonOkHttpResponse;
+import com.ntp.network.okhttp.ObjectCallbackHandler;
 import com.ntp.ui.R;
 import com.ntp.util.AppConfig;
+import com.ntp.util.ErrorCodeUtil;
 import com.ntp.util.NetworkStateUtil;
 import com.squareup.okhttp.Request;
 
@@ -91,13 +91,12 @@ public class CourseForumFragment extends BaseFragment implements PullToRefreshBa
         }else {
             currentPage=1;
         }
-        GsonOkHttpResponse gsonOkHttpResponse=new GsonOkHttpResponse(CourseForumGson.class);
-        HttpRequestHelper.getInstance().getForumList(currentPage, 10, code,new CallbackHandler<CourseForumGson>(gsonOkHttpResponse) {
+        HttpRequestHelper.getInstance().getForumList(currentPage, 10, code,new ObjectCallbackHandler<CourseForumGson>() {
             @Override
             public void onFailure(Request request, IOException e, int response) {
                 super.onFailure(request, e, response);
                 pullToRefreshView.onRefreshComplete();
-                showToast("加载失败");
+                showToast(ErrorCodeUtil.SERVER_ERROR);
             }
 
             @Override

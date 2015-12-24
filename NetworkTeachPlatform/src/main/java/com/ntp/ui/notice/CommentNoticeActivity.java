@@ -10,10 +10,10 @@ import com.ntp.adapter.CommentNoticeAdapter;
 import com.ntp.base.BaseActivity;
 import com.ntp.model.gson.CommentNoticeGson;
 import com.ntp.network.HttpRequestHelper;
-import com.ntp.network.okhttp.CallbackHandler;
-import com.ntp.network.okhttp.GsonOkHttpResponse;
+import com.ntp.network.okhttp.ObjectCallbackHandler;
 import com.ntp.ui.R;
 import com.ntp.util.AppConfig;
+import com.ntp.util.ErrorCodeUtil;
 import com.squareup.okhttp.Request;
 
 import org.xutils.view.annotation.ContentView;
@@ -79,13 +79,12 @@ public class CommentNoticeActivity extends BaseActivity implements PullToRefresh
         if (!refreshDownOrUp){//上拉刷新
             mCurrentPage++;
         }
-        GsonOkHttpResponse gsonOkHttpResponse=new GsonOkHttpResponse(CommentNoticeGson.class);
-        HttpRequestHelper.getInstance().getCommentNoticeList(mName,String.valueOf(mCurrentPage),String.valueOf(10),new CallbackHandler<CommentNoticeGson>(gsonOkHttpResponse){
+        HttpRequestHelper.getInstance().getCommentNoticeList(mName,String.valueOf(mCurrentPage),String.valueOf(10),new ObjectCallbackHandler<CommentNoticeGson>(){
             @Override
             public void onFailure(Request request, IOException e, int response) {
                 super.onFailure(request, e, response);
                 mPullToRefreshView.onRefreshComplete();
-                showToast("加载失败");
+                showToast(ErrorCodeUtil.SERVER_ERROR);
             }
 
             @Override

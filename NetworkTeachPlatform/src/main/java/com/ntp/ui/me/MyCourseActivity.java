@@ -11,14 +11,13 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ntp.base.BaseActivity;
 import com.ntp.model.gson.CoursePageInfoGson;
 import com.ntp.network.HttpRequestHelper;
-import com.ntp.network.okhttp.CallbackHandler;
-import com.ntp.network.okhttp.GsonOkHttpResponse;
+import com.ntp.network.okhttp.ObjectCallbackHandler;
 import com.ntp.ui.R;
 import com.ntp.ui.course.CourseDetailActivity;
 import com.ntp.adapter.CourseAdapter;
 import com.ntp.util.AppConfig;
 import com.ntp.model.Course;
-import com.ntp.util.AppUtil;
+import com.ntp.util.ErrorCodeUtil;
 import com.ntp.util.LogUtil;
 import com.ntp.util.NetworkStateUtil;
 import com.squareup.okhttp.Request;
@@ -76,13 +75,12 @@ public class MyCourseActivity extends BaseActivity implements PullToRefreshBase.
             showToast(NetworkStateUtil.NO_NETWORK);
             return;
         }
-        GsonOkHttpResponse gsonOkHttpResponse=new GsonOkHttpResponse(CoursePageInfoGson.class);
-        HttpRequestHelper.getInstance().getMyCourse(username, new CallbackHandler<CoursePageInfoGson>(gsonOkHttpResponse) {
+        HttpRequestHelper.getInstance().getMyCourse(username, new ObjectCallbackHandler<CoursePageInfoGson>() {
             @Override
             public void onFailure(Request request, IOException e, int code) {
                 LogUtil.e(TAG, request.toString() + e.toString());
                 pullToRefreshView.onRefreshComplete();
-                showToast("连接异常，请稍后再试");
+                showToast(ErrorCodeUtil.SERVER_ERROR);
             }
 
             @Override

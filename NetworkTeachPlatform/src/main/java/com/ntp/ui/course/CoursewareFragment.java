@@ -17,8 +17,7 @@ import android.widget.Toast;
 import com.ntp.base.BaseFragment;
 import com.ntp.model.gson.CoursewareGson;
 import com.ntp.network.HttpRequestHelper;
-import com.ntp.network.okhttp.CallbackHandler;
-import com.ntp.network.okhttp.GsonOkHttpResponse;
+import com.ntp.network.okhttp.ObjectCallbackHandler;
 import com.ntp.ui.R;
 import com.ntp.adapter.CoursewareAdapter;
 import com.ntp.util.ConstantValue;
@@ -26,6 +25,7 @@ import com.ntp.dao.DownloadHistoryDao;
 import com.ntp.util.AppConfig;
 import com.ntp.model.Courseware;
 import com.ntp.service.DownloadService;
+import com.ntp.util.ErrorCodeUtil;
 import com.ntp.util.NetworkStateUtil;
 import com.ntp.util.SDCardUtil;
 import com.squareup.okhttp.Request;
@@ -85,12 +85,12 @@ public class CoursewareFragment extends BaseFragment implements CoursewareAdapte
         super.onViewCreated(view, savedInstanceState);
         downloadService = new DownloadService();
         list = new ArrayList<Courseware>();
-        GsonOkHttpResponse gsonOkHttpResponse = new GsonOkHttpResponse(CoursewareGson.class);
-        HttpRequestHelper.getInstance().getCourseware(code, new CallbackHandler<CoursewareGson>(gsonOkHttpResponse) {
+        HttpRequestHelper.getInstance().getCourseware(code, new ObjectCallbackHandler<CoursewareGson>() {
             @Override
             public void onFailure(Request request, IOException e, int response) {
                 super.onFailure(request, e, response);
                 load.setVisibility(View.GONE);
+                showToast(ErrorCodeUtil.SERVER_ERROR);
             }
 
             @Override

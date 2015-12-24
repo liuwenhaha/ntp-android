@@ -11,11 +11,11 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ntp.base.BaseActivity;
 import com.ntp.model.gson.HomeworkNoticeGson;
 import com.ntp.network.HttpRequestHelper;
-import com.ntp.network.okhttp.CallbackHandler;
-import com.ntp.network.okhttp.GsonOkHttpResponse;
+import com.ntp.network.okhttp.ObjectCallbackHandler;
 import com.ntp.ui.R;
 import com.ntp.adapter.HomeworkNoticeAdapter;
 import com.ntp.util.AppConfig;
+import com.ntp.util.ErrorCodeUtil;
 import com.squareup.okhttp.Request;
 
 import org.xutils.view.annotation.ContentView;
@@ -88,13 +88,12 @@ public class HomeworkNoticeActivity extends BaseActivity implements PullToRefres
         if (!refreshDownOrUp){//上拉刷新
             mCurrentPage++;
         }
-        GsonOkHttpResponse gsonOkHttpResponse=new GsonOkHttpResponse(HomeworkNoticeGson.class);
-        HttpRequestHelper.getInstance().getHomeworkList(mName, String.valueOf(mCurrentPage), String.valueOf(10), new CallbackHandler<HomeworkNoticeGson>(gsonOkHttpResponse) {
+        HttpRequestHelper.getInstance().getHomeworkList(mName, String.valueOf(mCurrentPage), String.valueOf(10), new ObjectCallbackHandler<HomeworkNoticeGson>() {
             @Override
             public void onFailure(Request request, IOException e, int response) {
                 super.onFailure(request, e, response);
                 mPullToRefreshView.onRefreshComplete();
-                showToast("加载失败");
+                showToast(ErrorCodeUtil.SERVER_ERROR);
             }
 
             @Override

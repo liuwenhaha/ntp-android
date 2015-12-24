@@ -9,9 +9,9 @@ import android.widget.TextView;
 import com.ntp.base.BaseFragment;
 import com.ntp.model.gson.CourseOverviewGson;
 import com.ntp.network.HttpRequestHelper;
-import com.ntp.network.okhttp.CallbackHandler;
-import com.ntp.network.okhttp.GsonOkHttpResponse;
+import com.ntp.network.okhttp.ObjectCallbackHandler;
 import com.ntp.ui.R;
+import com.ntp.util.ErrorCodeUtil;
 import com.squareup.okhttp.Request;
 
 import org.xutils.view.annotation.ContentView;
@@ -42,8 +42,7 @@ public class CourseOverviewFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        GsonOkHttpResponse gsonOkHttpResponse=new GsonOkHttpResponse(CourseOverviewGson.class);
-        HttpRequestHelper.getInstance().getCourseOverview(mCode, new CallbackHandler<CourseOverviewGson>(gsonOkHttpResponse) {
+        HttpRequestHelper.getInstance().getCourseOverview(mCode, new ObjectCallbackHandler<CourseOverviewGson>() {
             @Override
             public void onResponse(CourseOverviewGson courseOverviewGson) {
                 if (courseOverviewGson != null) {
@@ -55,7 +54,7 @@ public class CourseOverviewFragment extends BaseFragment {
             @Override
             public void onFailure(Request request, IOException e, int response) {
                 super.onFailure(request, e, response);
-                showToast("加载失败");
+                showToast(ErrorCodeUtil.SERVER_ERROR);
                 mLoad.setVisibility(View.GONE);
             }
         });

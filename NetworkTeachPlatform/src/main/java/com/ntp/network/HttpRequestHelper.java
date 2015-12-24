@@ -1,6 +1,6 @@
 package com.ntp.network;
 
-import com.ntp.network.okhttp.CallbackHandler;
+import com.ntp.network.okhttp.ObjectCallbackHandler;
 import com.ntp.util.ConstantValue;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
@@ -39,7 +39,7 @@ public class HttpRequestHelper {
      * @param pageSize 每页大小
      * @param callback
      */
-    public void getCourseList(int page,int pageSize,CallbackHandler callback){
+    public void getCourseList(int page,int pageSize,ObjectCallbackHandler callback){
         String url= ConstantValue.PATH_COURSE_LIST;
         String key[]=new String[]{"page","pageSize"};
         String value[]=new String[]{String.valueOf(page),String.valueOf(pageSize)};
@@ -51,7 +51,7 @@ public class HttpRequestHelper {
      * @param username 用户名
      * @param callback
      */
-    public void getMyCourse(String username,CallbackHandler callback){
+    public void getMyCourse(String username,ObjectCallbackHandler callback){
         String url= ConstantValue.PATH_MY_COURSE;
         String key[]=new String[]{"username"};
         String value[]=new String[]{username};
@@ -63,13 +63,13 @@ public class HttpRequestHelper {
      * @param username
      * @param currentPage 当前页
      * @param pageSize
-     * @param callbackHandler
+     * @param objectCallbackHandler
      */
-    public void getCommentNoticeList(String username,String currentPage,String pageSize,CallbackHandler callbackHandler){
+    public void getCommentNoticeList(String username,String currentPage,String pageSize,ObjectCallbackHandler objectCallbackHandler){
         String url= ConstantValue.PATH_FORUM_COMMENT;
         String key[]=new String[]{"username","page","pageSize"};
         String value[]=new String[]{username,currentPage,pageSize};
-        post(url,key,value,callbackHandler);
+        post(url,key,value, objectCallbackHandler);
     }
 
     /**
@@ -77,13 +77,13 @@ public class HttpRequestHelper {
      * @param username
      * @param currentPage 当前页
      * @param pageSize
-     * @param callbackHandler
+     * @param objectCallbackHandler
      */
-    public void getHomeworkList(String username,String currentPage,String pageSize,CallbackHandler callbackHandler){
+    public void getHomeworkList(String username,String currentPage,String pageSize,ObjectCallbackHandler objectCallbackHandler){
         String url= ConstantValue.PATH_MY_HOMEWORK;
         String key[]=new String[]{"username","page","pageSize"};
         String value[]=new String[]{username,currentPage,pageSize};
-        post(url,key,value,callbackHandler);
+        post(url,key,value, objectCallbackHandler);
     }
 
     /**
@@ -93,7 +93,7 @@ public class HttpRequestHelper {
      * @param code 课程代码
      * @param callback
      */
-    public void getForumList(int page,int pageSize,String code,CallbackHandler callback){
+    public void getForumList(int page,int pageSize,String code,ObjectCallbackHandler callback){
         String url= ConstantValue.PATH_COURSE_FORUM;
         String key[]=new String[]{"page","pageSize","code"};
         String value[]=new String[]{String.valueOf(page),String.valueOf(pageSize),code};
@@ -107,7 +107,7 @@ public class HttpRequestHelper {
      * @param forumID 问题ID
      * @param callback
      */
-    public void getForumReplyList(int page,int pageSize,String forumID,CallbackHandler callback){
+    public void getForumReplyList(int page,int pageSize,String forumID,ObjectCallbackHandler callback){
         String url= ConstantValue.PATH_COURSE_FORUM_ALL;
         String key[]=new String[]{"page","pageSize","forumId"};
         String value[]=new String[]{String.valueOf(page),String.valueOf(pageSize),forumID};
@@ -132,7 +132,7 @@ public class HttpRequestHelper {
      * 获取课程类型
      * @param callback
      */
-    public void getCourseTypeList(CallbackHandler callback){
+    public void getCourseTypeList(ObjectCallbackHandler callback){
         String url=ConstantValue.PATH_COURSE_TYPE_LIST;
         post(url,new String[]{},new String[]{},callback);
     }
@@ -141,7 +141,7 @@ public class HttpRequestHelper {
      * 获取课程简介
      * @param callback
      */
-    public void getCourseOverview(String code,CallbackHandler callback){
+    public void getCourseOverview(String code,ObjectCallbackHandler callback){
         String url=ConstantValue.PATH_COURSE_DETAIL;
         post(url,new String[]{"code"},new String[]{code},callback);
     }
@@ -150,7 +150,7 @@ public class HttpRequestHelper {
      * 获取课程课件
      * @param callback
      */
-    public void getCourseware(String code,CallbackHandler callback){
+    public void getCourseware(String code,ObjectCallbackHandler callback){
         String url=ConstantValue.PATH_COURSE_WARE;
         post(url,new String[]{"code"},new String[]{code},callback);
     }
@@ -159,7 +159,7 @@ public class HttpRequestHelper {
      * 获取课程视频
      * @param callback
      */
-    public void getCourseVideo(String code,CallbackHandler callback){
+    public void getCourseVideo(String code,ObjectCallbackHandler callback){
         String url=ConstantValue.PATH_COURSE_VIDEO;
         post(url,new String[]{"code"},new String[]{code},callback);
     }

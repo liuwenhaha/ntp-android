@@ -14,11 +14,11 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.ntp.base.BaseActivity;
 import com.ntp.model.gson.ForumReplyGson;
 import com.ntp.network.HttpRequestHelper;
-import com.ntp.network.okhttp.CallbackHandler;
-import com.ntp.network.okhttp.GsonOkHttpResponse;
+import com.ntp.network.okhttp.ObjectCallbackHandler;
 import com.ntp.ui.R;
 import com.ntp.util.AppConfig;
 import com.ntp.util.AppUtil;
+import com.ntp.util.ErrorCodeUtil;
 import com.ntp.util.NetworkStateUtil;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
@@ -176,13 +176,12 @@ public class CourseForumReplyActivity extends BaseActivity implements PullToRefr
         }else {
             currentPage=1;
         }
-        GsonOkHttpResponse gsonOkHttpResponse=new GsonOkHttpResponse(ForumReplyGson.class);
-        HttpRequestHelper.getInstance().getForumReplyList(currentPage, 10, String.valueOf(forumId), new CallbackHandler<ForumReplyGson>(gsonOkHttpResponse) {
+        HttpRequestHelper.getInstance().getForumReplyList(currentPage, 10, String.valueOf(forumId), new ObjectCallbackHandler<ForumReplyGson>() {
             @Override
             public void onFailure(Request request, IOException e, int response) {
                 super.onFailure(request, e, response);
                 pullToRefreshView.onRefreshComplete();
-                showToast("加载失败");
+                showToast(ErrorCodeUtil.SERVER_ERROR);
             }
 
             @Override

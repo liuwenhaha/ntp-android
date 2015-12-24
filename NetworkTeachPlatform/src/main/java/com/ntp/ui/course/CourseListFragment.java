@@ -10,13 +10,13 @@ import com.ntp.base.BaseFragment;
 import com.ntp.model.gson.CoursePageInfoGson;
 import com.ntp.model.gson.CourseTypeGson;
 import com.ntp.network.HttpRequestHelper;
-import com.ntp.network.okhttp.CallbackHandler;
-import com.ntp.network.okhttp.GsonOkHttpResponse;
+import com.ntp.network.okhttp.ObjectCallbackHandler;
 import com.ntp.ui.R;
 import com.ntp.adapter.CourseAdapter;
 import com.ntp.dao.CourseDao;
 import com.ntp.dao.CourseTypeDao;
 import com.ntp.model.Course;
+import com.ntp.util.ErrorCodeUtil;
 import com.ntp.util.LogUtil;
 import com.ntp.util.NetworkStateUtil;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -108,12 +108,12 @@ public class CourseListFragment extends BaseFragment implements PullToRefreshBas
         }else {
             currentPage=1;
         }
-        GsonOkHttpResponse gsonOkHttpResponse=new GsonOkHttpResponse(CoursePageInfoGson.class);
-        HttpRequestHelper.getInstance().getCourseList(currentPage, 10, new CallbackHandler<CoursePageInfoGson>(gsonOkHttpResponse) {
+        HttpRequestHelper.getInstance().getCourseList(currentPage, 10, new ObjectCallbackHandler<CoursePageInfoGson>() {
             @Override
             public void onFailure(Request request, IOException e,int code) {
                 LogUtil.e(TAG, request.toString() + e.toString());
                 pullToRefreshView.onRefreshComplete();
+                showToast(ErrorCodeUtil.SERVER_ERROR);
             }
 
             @Override
@@ -159,11 +159,11 @@ public class CourseListFragment extends BaseFragment implements PullToRefreshBas
      * 更新课程类型，保存到数据库
      */
     public void updateCourseTypeData() {
-        GsonOkHttpResponse gsonOkHttpResponse=new GsonOkHttpResponse(CourseTypeGson.class);
-        HttpRequestHelper.getInstance().getCourseTypeList(new CallbackHandler<CourseTypeGson>(gsonOkHttpResponse) {
+        HttpRequestHelper.getInstance().getCourseTypeList(new ObjectCallbackHandler<CourseTypeGson>() {
             @Override
             public void onFailure(Request request, IOException e) {
                 LogUtil.e(TAG, request.toString() + e.toString());
+                showToast(ErrorCodeUtil.SERVER_ERROR);
             }
 
             @Override
